@@ -83,22 +83,10 @@
     \fi:
   }
 
-\cs_generate_variant:Nn \msg_error:nnnn { nnVn }
-\cs_generate_variant:Nn \prop_item:Nn { Ne, NV }
-\cs_generate_variant:Nn \prop_put:Nnn { Nen, Nee, NeV }
-\cs_generate_variant:Nn \regex_replace_all:NnN { NVN }
-\cs_generate_variant:Nn \seq_map_indexed_inline:Nn { cn }
-\cs_generate_variant:Nn \tl_const:Nn { ce }
-\cs_generate_variant:Nn \tl_log:n { x }
 \cs_generate_variant:Nn \tl_gput_right:Nn { Nf }
-\cs_generate_variant:Nn \tl_put_left:Nn { Nv }
 \prg_generate_conditional_variant:Nnn \clist_if_in:Nn { Ne } { TF }
 \prg_generate_conditional_variant:Nnn \prop_if_in:Nn { c } { T }
-\prg_generate_conditional_variant:Nnn \regex_match:Nn { NV } { TF }
 \prg_generate_conditional_variant:Nnn \str_if_eq:nn { en } { TF }
-\prg_generate_conditional_variant:Nnn \tl_if_eq:nn { en } { T, TF }
-\prg_generate_conditional_variant:Nnn \tl_if_head_eq_catcode:nN { VN } { TF }
-\prg_generate_conditional_variant:Nnn \tl_if_head_eq_meaning:nN { VN } { T, TF }
 
 \tl_new:N  \l__tblr_a_tl
 \tl_new:N  \l__tblr_b_tl
@@ -211,7 +199,7 @@
     \prop_gput:cnn
       { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
   }
-\cs_generate_variant:Nn \__tblr_prop_gput:nnn { nne, nnV, nen, nee, neV }
+\cs_generate_variant:Nn \__tblr_prop_gput:nnn { nne, nen, neV }
 
 \cs_new:Npn \__tblr_prop_item:nn #1 #2
   {
@@ -231,7 +219,6 @@
   {
     \prop_if_in:cnTF { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop }
   }
-\prg_generate_conditional_variant:Nnn \__tblr_prop_if_in:nn { nx } { T, F, TF }
 
 \cs_new_protected:Npn \__tblr_prop_log:n #1
   {
@@ -242,20 +229,6 @@
   {
     \prop_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } {#2}
   }
-
-\cs_new_protected:Npn \__tblr_prop_gput_if_larger:nnn #1 #2 #3
-  {
-    \__tblr_gput_if_larger:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
-  }
-\cs_generate_variant:Nn \__tblr_prop_gput_if_larger:nnn { nnx, nnV, nxn, nxx, nxV }
-
-\cs_new_protected:Npn \__tblr_prop_gadd_dimen_value:nnn #1 #2 #3
-  {
-    \__tblr_gadd_dimen_value:cnn
-      { g__tblr_#1_ \int_use:N \g_tblr_level_int _prop } { #2 } { #3 }
-  }
-\cs_generate_variant:Nn \__tblr_prop_gadd_dimen_value:nnn { nnx, nnV, nxn, nxx }
 
 %% Put the dimension to the prop list only if it's larger than the old one
 
@@ -271,16 +244,6 @@
   }
 \cs_generate_variant:Nn \__tblr_put_if_larger:Nnn { Nee, NnV }
 
-\cs_new_protected:Npn \__tblr_gput_if_larger:Nnn #1 #2 #3
-  {
-    \tl_set:Ne \l__tblr_put_if_larger_tl { \prop_item:Nn #1 { #2 } }
-    \bool_lazy_or:nnT
-      { \tl_if_empty_p:N \l__tblr_put_if_larger_tl }
-      { \dim_compare_p:nNn { #3 } > { \l__tblr_put_if_larger_tl } }
-      { \prop_gput:Nnn #1 { #2 } { #3 }  }
-  }
-\cs_generate_variant:Nn \__tblr_gput_if_larger:Nnn { cnn }
-
 %% Add the dimension to some key value of the prop list
 %% #1: the prop list, #2: the key, #3: the dimen to add
 
@@ -288,13 +251,6 @@
   {
     \prop_put:Nne #1 { #2 } { \dim_eval:n { \prop_item:Nn #1 { #2 } + #3 } }
   }
-\cs_generate_variant:Nn \__tblr_add_dimen_value:Nnn { cnn }
-
-\cs_new_protected:Npn \__tblr_gadd_dimen_value:Nnn #1 #2 #3
-  {
-    \prop_gput:Nne #1 { #2 } { \dim_eval:n { \prop_item:Nn #1 { #2 } + #3 } }
-  }
-\cs_generate_variant:Nn \__tblr_gadd_dimen_value:Nnn { cnn }
 
 %%% --------------------------------------------------------
 %%> \section{Data Structures Based on Token Lists}
@@ -643,7 +599,7 @@
       { \g__tblr_data_int_from_value_tl }
   }
 \cs_generate_variant:Nn \__tblr_data_gput:nnnn
-  { nnne, nnnV, nenn, nene, nenV, nVnn }
+  { nnne, nenn, nene, nenV, nVnn }
 
 %% #1: data name; #2: data index 1; #3: data index 2; #4: key; #5: value
 \cs_new_protected:Npn \__tblr_data_gput:nnnnn #1 #2 #3 #4 #5
@@ -655,7 +611,7 @@
       { \g__tblr_data_int_from_value_tl }
   }
 \cs_generate_variant:Nn \__tblr_data_gput:nnnnn
-  { nnnne, nnnnV, neenn, neene, neenV, neeen, nVVnn }
+  { neenn, neene, neenV, neeen }
 
 %% #1: data name; #2: data index; #3: key
 \cs_new:Npn \__tblr_data_item:nnn #1 #2 #3
@@ -747,7 +703,7 @@
       { \__tblr_data_key_to_int:nnn {#1} {#2} {#3} }
       { \g__tblr_data_int_from_value_tl }
   }
-\cs_generate_variant:Nn \__tblr_data_gput_if_larger:nnnn { nnne, nnnV, nene, nenV }
+\cs_generate_variant:Nn \__tblr_data_gput_if_larger:nnnn { nene }
 
 \cs_new_protected:Npn \__tblr_array_gput_if_larger:Nnn #1 #2 #3
   {
@@ -766,7 +722,7 @@
       { \g__tblr_data_int_from_value_tl }
   }
 \cs_generate_variant:Nn \__tblr_data_gadd_dimen_value:nnnn
-  { nnne, nnnV, nenn, nene }
+  { nenn, nene }
 
 \cs_new_protected:Npn \__tblr_array_gadd_value:Nnn #1 #2 #3
   {
@@ -1769,7 +1725,6 @@
     \keys_set:nn { tblr-cell-spec } { #2 }
     \__tblr_set_span_spec:VV \l__tblr_row_span_num_tl \l__tblr_col_span_num_tl
   }
-\cs_generate_variant:Nn \tblr_set_cell:nn { nV }
 
 \cs_new_protected:Npn \tblr_set_cell:nnnn #1 #2 #3 #4
   {
@@ -1846,7 +1801,7 @@
     \__tblr_data_gput:nnnnn { cell } {#1} {#2} {#3} {#4}
   }
 \cs_generate_variant:Nn \__tblr_cell_gput:nnnn
-  { nenn, ennn, eenn, nene, enne, eene }
+  { nenn, ennn }
 
 \tl_new:N \l__tblr_cell_text_tl
 
@@ -2109,7 +2064,6 @@
         \__tblr_cell_gput:nenn {##1} { \int_use:N \c@colnum } {#1} {#2}
       }
   }
-\cs_generate_variant:Nn \__tblr_column_gput_cell:nn { ne }
 
 \cs_new_protected:Npn \__tblr_preto_text_for_every_column_cell:n #1
   {
@@ -2276,7 +2230,6 @@
         \__tblr_cell_gput:ennn { \int_use:N \c@rownum } {##1} {#1} {#2}
       }
   }
-\cs_generate_variant:Nn \__tblr_row_gput_cell:nn { ne }
 
 \cs_new_protected:Npn \__tblr_preto_text_for_every_row_cell:n #1
   {
@@ -4633,7 +4586,7 @@
   {
     \prop_put:Nnn \l__tblr_element_styles_prop {#1} {#2}
   }
-\cs_generate_variant:Nn \__tblr_style_put:nn { nV, ne, en, eV }
+\cs_generate_variant:Nn \__tblr_style_put:nn { en, eV }
 
 \cs_new:Npn \__tblr_style_item:n #1
   {
@@ -6150,7 +6103,7 @@
     \int_step_inline:nn { \c@colcount }
       { \__tblr_build_hline_segment:nn { #1 } { ##1 } }
   }
-\cs_generate_variant:Nn \__tblr_build_hline:n { x, V }
+\cs_generate_variant:Nn \__tblr_build_hline:n { V }
 
 %% #1: row number, #2: column number
 \cs_new_protected:Npn \__tblr_build_hline_segment:nn #1 #2

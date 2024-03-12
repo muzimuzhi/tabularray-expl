@@ -127,6 +127,8 @@
 %% Some counters for row and column numbering.
 %% We may need to restore all LaTeX counters in measuring and building cells,
 %% so we must not define these counters with \newcounter command.
+%% Note that "colortbl" v1.f also defines LaTeX counter "rownum", see
+%% https://github.com/davidcarlisle/dpctex/commit/daffd42bce591b7454996a08824a7ee8933bea64
 \int_zero_new:N \c@rownum
 \int_zero_new:N \c@colnum
 \int_zero_new:N \c@rowcount

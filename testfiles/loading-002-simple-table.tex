@@ -1,0 +1,23 @@
+\input{regression-test}
+\documentclass{article}
+
+\ExplSyntaxOn
+\debug_on:n { all }
+\ExplSyntaxOff
+
+\usepackage{tabularray}
+
+\setbox0=\hbox{$a$} % trigger font info lines
+
+\begin{document}
+
+\START
+
+\begin{tblr}{hlines, vlines, colspec={lcr}}
+  One   & Two  & Three \\
+  Alpha & Beta & Gamma
+\end{tblr}
+
+\END
+
+\end{document}

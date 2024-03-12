@@ -270,7 +270,7 @@
       {
         \clist_map_inline:cn { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist }
           {
-            \tl_gclear:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_##1_tl }
+            \tl_gclear_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_##1_tl }
           }
       }
       { \clist_new:c { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } }
@@ -278,9 +278,13 @@
 
 \cs_new_protected:Npn \__tblr_spec_gput:nnn #1 #2 #3
   {
-    \tl_gset:cn
-      { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
-    \clist_gput_right:ce { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
+    \tl_if_exist:cF { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+      {
+        \tl_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
+      }
+      \tl_gset:cn
+        { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
+      \clist_gput_right:ce { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
   }
 \cs_generate_variant:Nn \__tblr_spec_gput:nnn { nne, nnV, nen, nee, neV }
 
@@ -564,8 +568,10 @@
       }
       {
         \int_gincr:N \g__tblr_data_str_value_count_int
+        \tl_new:c { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
         \tl_gset:ce { g__tblr_data_ \tl_to_str:n {#1} _to_int_tl }
           { \int_use:N \g__tblr_data_str_value_count_int }
+        \tl_new:c { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
         \tl_gset:cn
           { g__tblr_data_ \int_use:N \g__tblr_data_str_value_count_int _to_str_tl }
           { \exp_not:n {#1} }

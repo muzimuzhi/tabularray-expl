@@ -3714,7 +3714,7 @@
 %% All halign commands are defined at the beginning of the file
 \cs_new_protected:Npn \__tblr_make_vcell_text:NN #1 #2
   {
-    \dim_set:Nn \tex_hsize:D { #2 }
+    \dim_set:Nn \hsize { #2 }
     \TblrParboxRestore
     \cs:w __tblr_halign_command_ \g__tblr_cell_halign_tl : \cs_end:
     \__tblr_leave_vmode:
@@ -3737,7 +3737,7 @@
         \regex_replace_all:nnN { (\c{[A-Za-z]*}) ([A-Za-z]) } { \1 \  \2 } #1
         \regex_replace_all:nnN { . } { \c{string} \0 } #1
         \tl_set:Ne #1 { #1 \noexpand \empty }
-        \exp_args:NV \tex_scantokens:D #1
+        \exp_args:NV \scantokens #1
       }
   }
 
@@ -5500,7 +5500,7 @@
                       + \__tblr_box_height:N \l__tblr_table_firstfoot_box
                     }
                   \skip_vertical:n { \l_tmpb_dim }
-                  \tex_penalty:D 9999
+                  \penalty 9999
                   \skip_vertical:n { -\l_tmpb_dim }
                 \group_end:
               }
@@ -5852,7 +5852,7 @@
         \box_move_down:nn
           {
             ( \box_dp:N #1 - \box_ht:N #1 ) / 2
-            + \tex_fontdimen:D 22 \tex_textfont:D 2
+            + \fontdimen 22 \textfont 2
           }
           { \__tblr_get_vcenter_box:N #1 }
       }
@@ -5863,7 +5863,7 @@
     \hbox:n
       {
         $ \m@th \l__tblr_delim_left_tl
-        \tex_vcenter:D { \vbox_unpack_drop:N #1 }
+        \vcenter { \vbox_unpack_drop:N #1 }
         \l__tblr_delim_right_tl $
       }
   }

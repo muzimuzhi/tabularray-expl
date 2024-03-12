@@ -112,7 +112,8 @@
 \dim_new:N \l__tblr_wd_dim % width
 \box_new:N \l__tblr_a_box
 \box_new:N \l__tblr_b_box
-\box_new:N \l__tblr_cell_box % cell box
+% FIXME: \l__tblr_cell_box already used
+\box_new:N \l__tblr_c_box % cell box
 \box_new:N \l__tblr_d_box
 
 %% TODO: Joseph Wright may request changes of s/tmpa/tmp/g when there's
@@ -6077,7 +6078,7 @@
   {
     \tl_set:Ne \l__tblr_s_tl
       { \__tblr_prop_item:ne { inner } { rulesep } }
-    \vbox_set:Nn \l__tblr_cell_box
+    \vbox_set:Nn \l__tblr_c_box
       {
         %% add an empty hbox to support vbox width
         \hbox to \l__tblr_col_o_wd_dim {}
@@ -6103,7 +6104,7 @@
           }
         \skip_vertical:n { - \l__tblr_s_tl }
       }
-    \box_use:N \l__tblr_cell_box
+    \box_use:N \l__tblr_c_box
     \skip_horizontal:n { - \l__tblr_col_b_wd_dim }
   }
 
@@ -6324,10 +6325,10 @@
           }
         \skip_horizontal:n { - \l__tblr_s_tl }
       }
-    \vbox_set:Nn \l__tblr_cell_box { \box_use:N \l__tblr_a_box }
-    \box_set_ht:Nn \l__tblr_cell_box { \l__tblr_row_ht_dim }
-    \box_set_dp:Nn \l__tblr_cell_box { \l__tblr_row_dp_dim }
-    \box_use:N \l__tblr_cell_box
+    \vbox_set:Nn \l__tblr_c_box { \box_use:N \l__tblr_a_box }
+    \box_set_ht:Nn \l__tblr_c_box { \l__tblr_row_ht_dim }
+    \box_set_dp:Nn \l__tblr_c_box { \l__tblr_row_dp_dim }
+    \box_use:N \l__tblr_c_box
   }
 
 \dim_new:N \l__tblr_vline_aboveskip_dim
@@ -6556,14 +6557,14 @@
           }
         \hrule height ~ 0pt %% zero depth
       }
-    \vbox_set_to_ht:Nnn \l__tblr_cell_box
+    \vbox_set_to_ht:Nnn \l__tblr_c_box
       { \l__tblr_row_ht_dim - \l__tblr_row_abovesep_dim }
       {
         \box_use:N \l__tblr_b_box
         \vss
       }
     \skip_horizontal:n { \l__tblr_x_tl }
-    \box_use:N \l__tblr_cell_box
+    \box_use:N \l__tblr_c_box
     \skip_horizontal:n { \l__tblr_y_tl - \l__tblr_cell_wd_dim + \l__tblr_w_tl }
     \__tblr_hook_use:n { tabularray/cell/after }
   }

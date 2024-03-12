@@ -4632,6 +4632,7 @@
 
 \cs_new_protected:Npn \__tblr_def_template:n #1
   {
+    \tl_new:c { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
     \tl_set_eq:cN { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
       \l__tblr_template_code_tl
   }
@@ -4652,6 +4653,7 @@
 
 \cs_new_protected:Npn \__tblr_set_template:n #1
   {
+    \tl_clear_new:c { l__tblr_template_ #1 _default_tl }
     \tl_set_eq:cc { l__tblr_template_ #1 _default_tl }
       { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
   }
@@ -4761,11 +4763,13 @@
 
 \tl_if_exist:NF \tblrcontfootname
   {
+    \tl_new:N \tblrcontfootname
     \tl_set:Nn \tblrcontfootname { Continued ~ on ~ next ~ page }
   }
 
 \tl_if_exist:NF \tblrcontheadname
   {
+    \tl_new:N \tblrcontheadname
     \tl_set:Nn \tblrcontheadname { ( Continued ) }
   }
 

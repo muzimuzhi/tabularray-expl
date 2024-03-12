@@ -307,13 +307,6 @@
   }
 \cs_generate_variant:Nn \__tblr_spec_gput_if_larger:nnn { nne, nnV, nen, nee, neV }
 
-\cs_new_protected:Npn \__tblr_spec_gadd_dimen_value:nnn #1 #2 #3
-  {
-    \__tblr_spec_gput:nne {#1} {#2}
-      { \dim_eval:n { \__tblr_spec_item:ne {#1} {#2} + #3 } }
-  }
-\cs_generate_variant:Nn \__tblr_spec_gadd_dimen_value:nnn { nne, nnV, nen, nee }
-
 \cs_new_protected:Npn \__tblr_spec_log:n #1
   {
     \clist_gremove_duplicates:c
@@ -729,52 +722,6 @@
     \__tblr_intarray_gset:Nnn #1 {#2} { \intarray_item:Nn #1 {#2} + #3 }
   }
 \cs_generate_variant:Nn \__tblr_array_gadd_value:Nnn { cnn }
-
-\bool_new:N \g__tblr_use_intarray_bool
-\bool_gset_true:N \g__tblr_use_intarray_bool
-
-\AtBeginDocument
-  {
-    \bool_if:NF \g__tblr_use_intarray_bool
-      {
-        \cs_set_protected:Npn \__tblr_data_gput:nnnn #1 #2 #3 #4
-          {
-            \__tblr_spec_gput:nnn {#1} { [#2] / #3 } {#4}
-          }
-        \cs_set_protected:Npn \__tblr_data_gput:nnnnn #1 #2 #3 #4 #5
-          {
-            \__tblr_spec_gput:nnn {#1} { [#2][#3] / #4 } {#5}
-          }
-        \cs_set:Npn \__tblr_data_item:nnn #1 #2 #3
-          {
-            \__tblr_spec_item:nn {#1} { [#2] / #3 }
-          }
-        \cs_set:Npn \__tblr_data_item:nnnn #1 #2 #3 #4
-          {
-            \__tblr_spec_item:nn {#1} { [#2][#3] / #4 }
-          }
-        \cs_set_protected:Npn \__tblr_data_log:n #1
-          {
-            \__tblr_spec_log:n {#1}
-          }
-        \cs_set_protected:Npn \__tblr_data_gput_if_larger:nnnn #1 #2 #3 #4
-          {
-            \__tblr_spec_gput_if_larger:nnn {#1} { [#2] / #3 } {#4}
-          }
-        \cs_set_protected:Npn \__tblr_data_gput_if_larger:nnnnn #1 #2 #3 #4 #5
-          {
-            \__tblr_spec_gput_if_larger:nnn {#1} { [#2][#3] / #4 } {#5}
-          }
-        \cs_set_protected:Npn \__tblr_data_gadd_dimen_value:nnnn #1 #2 #3 #4
-          {
-            \__tblr_spec_gadd_dimen_value:nnn {#1} { [#2] / #3 } {#4}
-          }
-        \cs_set_protected:Npn \__tblr_data_gadd_dimen_value:nnnnn #1 #2 #3 #4 #5
-          {
-            \__tblr_spec_gadd_dimen_value:nnn {#1} { [#2][#3] / #4 } {#5}
-          }
-      }
-  }
 
 %%% --------------------------------------------------------
 %%> \section{Child Selectors}
@@ -2650,7 +2597,7 @@
     \LogTblrTracing { step = split ~ table}
     \__tblr_split_table:n {#3}
     \LogTblrTracing { command }
-    \bool_if:NT \g__tblr_use_intarray_bool { \__tblr_init_table_data: }
+    \__tblr_init_table_data:
     \LogTblrTracing { step = init ~ table ~ inner ~ spec}
     \__tblr_init_table_inner_spec:
     \LogTblrTracing { inner }

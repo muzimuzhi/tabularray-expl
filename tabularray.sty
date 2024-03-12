@@ -1058,8 +1058,8 @@
 %%> \section{Set Hlines and Vlines}
 %%% --------------------------------------------------------
 
-\tl_const:Nn \@tblr@dash { dash }
-\tl_const:Nn \@tblr@text { text }
+\tl_const:Nn \c__tblr_dash_tl { dash }
+\tl_const:Nn \c__tblr_text_tl { text }
 
 \regex_const:Nn \c__tblr_is_color_key_regex { ^[A-Za-z] }
 
@@ -1124,7 +1124,7 @@
   {
     \group_begin:
     \keys_set_groups:nnn { tblr-hline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text }
+    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_text_tl }
       {
         \__tblr_set_hline_num:n {#1}
         \tl_clear:N \l__tblr_hline_dash_tl
@@ -1200,8 +1200,8 @@
 
 \keys_define:nn { tblr-hline }
   {
-    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 },
-    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@text #1 },
+    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_dash_tl #1 },
+    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_text_tl #1 },
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
@@ -1220,7 +1220,7 @@
 \cs_new_protected:Npn \__tblr_hline_unknown_key:n #1
   {
     \prop_if_in:NnTF \g__tblr_defined_hdash_styles_prop {#1}
-      { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \@tblr@dash #1 } }
+      { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_dash_tl #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           { \tl_set:Nn \l__tblr_hline_fg_tl {#1} }
@@ -1366,7 +1366,7 @@
   {
     \group_begin:
     \keys_set_groups:nnn { tblr-vline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text }
+    \tl_if_eq:NnF \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_text_tl }
       {
         \__tblr_set_vline_num:n {#1}
         \tl_clear:N \l__tblr_vline_dash_tl
@@ -1442,8 +1442,8 @@
 
 \keys_define:nn { tblr-vline }
   {
-    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 },
-    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@text #1 },
+    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_dash_tl #1 },
+    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_text_tl #1 },
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_vline_fg_tl {#1},
@@ -1455,7 +1455,7 @@
 \cs_new_protected:Npn \__tblr_vline_unknown_key:n #1
   {
     \prop_if_in:NnTF \g__tblr_defined_vdash_styles_prop {#1}
-      { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \@tblr@dash #1 } }
+      { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_dash_tl #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           { \tl_set:Nn \l__tblr_vline_fg_tl {#1} }
@@ -3308,7 +3308,7 @@
       { \__tblr_spec_item:ne { vline } { [#1][#2](#3) / @dash } }
     \tl_set:Ne \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
     \tl_set:Ne \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
-    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
+    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \c__tblr_dash_tl
       {
         \__tblr_get_vline_dash_style:N \l__tblr_b_tl
         \xleaders \l__tblr_b_tl \vfil
@@ -3376,7 +3376,7 @@
       { \__tblr_spec_item:ne { hline } { [#1][#2](#3) / @dash } }
     \tl_set:Ne \l__tblr_a_tl { \tl_head:N \l__tblr_d_tl }
     \tl_set:Ne \l__tblr_b_tl { \tl_tail:N \l__tblr_d_tl }
-    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \@tblr@dash
+    \exp_args:NV \tl_if_eq:NNTF \l__tblr_a_tl \c__tblr_dash_tl
       {
         \__tblr_get_hline_dash_style:N \l__tblr_b_tl
         \xleaders \l__tblr_b_tl \hfil
@@ -3533,9 +3533,9 @@
 \tl_new:N \l__tblr_cell_cmd_tl
 \tl_new:N \l__tblr_cell_mode_tl
 \bool_new:N \l__tblr_cell_math_mode_bool
-\tl_const:Nn \l__tblr_cell_math_style_tl  { \relax }
-\tl_const:Nn \l__tblr_cell_imath_style_tl { \textstyle }
-\tl_const:Nn \l__tblr_cell_dmath_style_tl { \displaystyle }
+\tl_const:Nn \c__tblr_cell_math_style_tl  { \relax }
+\tl_const:Nn \c__tblr_cell_imath_style_tl { \textstyle }
+\tl_const:Nn \c__tblr_cell_dmath_style_tl { \displaystyle }
 
 %% Get cell text, #1: row number, #2: column number
 %% If the width of the cell is not set, split it with \\ and compute the width
@@ -3572,7 +3572,7 @@
       {
         \bool_set_true:N \l__tblr_cell_math_mode_bool
         \tl_put_left:Nv \l__tblr_c_tl
-          { l__tblr_cell_ \l__tblr_cell_mode_tl _style_tl }
+          { c__tblr_cell_ \l__tblr_cell_mode_tl _style_tl }
         \tl_put_left:Nn \l__tblr_c_tl { $ }
         \tl_put_right:Nn \l__tblr_c_tl { $ }
       }
@@ -5331,7 +5331,7 @@
 \bool_new:N \l__tblr_table_no_title_bool
 \bool_new:N \l__tblr_table_no_entry_bool
 \bool_new:N \l__tblr_table_no_label_bool
-\tl_const:Nn \c_tblr_none_tl { none }
+\tl_const:Nn \c__tblr_none_tl { none }
 
 \cs_new_protected:Npn \__tblr_set_table_label_entry:
   {
@@ -5341,9 +5341,9 @@
     \bool_set:Nn \l__tblr_table_no_title_bool
       { \tl_if_empty_p:N \lTblrCaptionTl }
     \bool_set:Nn \l__tblr_table_no_entry_bool
-      { \tl_if_eq_p:NN \lTblrEntryTl \c_tblr_none_tl }
+      { \tl_if_eq_p:NN \lTblrEntryTl \c__tblr_none_tl }
     \bool_set:Nn \l__tblr_table_no_label_bool
-      { \tl_if_eq_p:NN \lTblrLabelTl \c_tblr_none_tl }
+      { \tl_if_eq_p:NN \lTblrLabelTl \c__tblr_none_tl }
     \bool_if:NT \l__tblr_table_no_title_bool
       {
         \SetTblrTemplate { conthead-pre } { empty }
@@ -5783,13 +5783,13 @@
   }
 
 \tl_new:N \__tblr_vbox_align_tl
-\tl_const:Nn \__tblr_vbox_t_tl {t}
-\tl_const:Nn \__tblr_vbox_T_tl {T}
-\tl_const:Nn \__tblr_vbox_m_tl {m}
-\tl_const:Nn \__tblr_vbox_M_tl {M}
-\tl_const:Nn \__tblr_vbox_c_tl {c}
-\tl_const:Nn \__tblr_vbox_b_tl {b}
-\tl_const:Nn \__tblr_vbox_B_tl {B}
+\tl_const:Nn \c__tblr_vbox_t_tl {t}
+\tl_const:Nn \c__tblr_vbox_T_tl {T}
+\tl_const:Nn \c__tblr_vbox_m_tl {m}
+\tl_const:Nn \c__tblr_vbox_M_tl {M}
+\tl_const:Nn \c__tblr_vbox_c_tl {c}
+\tl_const:Nn \c__tblr_vbox_b_tl {b}
+\tl_const:Nn \c__tblr_vbox_B_tl {B}
 
 \regex_const:Nn \c__tblr_is_positive_integer_regex { ^ \d+ $ }
 \regex_const:Nn \c__tblr_is_negative_integer_regex { ^ - \d+ $ }
@@ -5808,22 +5808,22 @@
     \dim_set:Nn \l__tblr_t_dim { \box_ht:N #1 + \box_dp:N #1 }
     \tl_case:NnF \__tblr_vbox_align_tl
       {
-        \__tblr_vbox_m_tl
+        \c__tblr_vbox_m_tl
           { \__tblr_valign_whole_middle:N #1 }
-        \__tblr_vbox_c_tl
+        \c__tblr_vbox_c_tl
           { \__tblr_valign_whole_middle:N #1 }
-        \__tblr_vbox_M_tl
+        \c__tblr_vbox_M_tl
           { \__tblr_valign_whole_middle_row_or_border:N #1 }
-        \__tblr_vbox_t_tl
+        \c__tblr_vbox_t_tl
           { \__tblr_valign_whole_top:N #1 }
-        \__tblr_vbox_T_tl
+        \c__tblr_vbox_T_tl
           {
             \tl_set:Nn \__tblr_vbox_align_tl {1}
             \__tblr_valign_whole_at_row_from_above:N #1
           }
-        \__tblr_vbox_b_tl
+        \c__tblr_vbox_b_tl
           { \__tblr_valign_whole_bottom:N #1 }
-        \__tblr_vbox_B_tl
+        \c__tblr_vbox_B_tl
           {
             \tl_set:Ne \__tblr_vbox_align_tl { \int_use:N \c@rowcount }
             \__tblr_valign_whole_at_row_from_below:N #1
@@ -6460,7 +6460,7 @@
       { \__tblr_spec_item:ne { #3 } { [#1][#2](1) / @dash } }
     \tl_set:Ne \l__tblr_dash_value_head_tl { \tl_head:N \l__tblr_dash_value_tl }
     \tl_set:Ne \l__tblr_dash_value_tail_tl { \tl_tail:N \l__tblr_dash_value_tl }
-    \exp_args:NV \tl_if_eq:NNTF \l__tblr_dash_value_head_tl \@tblr@dash
+    \exp_args:NV \tl_if_eq:NNTF \l__tblr_dash_value_head_tl \c__tblr_dash_tl
       {
         \tl_set_eq:cN { lTblrCell #4 BorderStyleTl } \l__tblr_dash_value_tail_tl
         %% get border width

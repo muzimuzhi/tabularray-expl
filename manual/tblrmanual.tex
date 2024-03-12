@@ -1,0 +1,33 @@
+% -*- coding: utf-8 -*-
+% !TEX program = lualatex
+\documentclass[oneside]{book}
+
+\usepackage{docmute}
+
+\input{manual.sty}
+%\CodeHigh{lite}
+\renewcommand\dochighinput[2][]{}
+
+\begin{document}
+
+\input{tblrmanual-titlepage}
+
+\tableofcontents
+
+\input{tblrmanual-overview}
+
+\input{tblrmanual-basic-interfaces}
+
+\input{tblrmanual-extra-interfaces}
+
+\input{tblrmanual-long-tables}
+
+\input{tblrmanual-libraries}
+
+\input{tblrmanual-tips-and-tricks}
+
+\input{tblrmanual-history-and-future}
+
+\input{tblrmanual-implementation}
+
+\end{document}

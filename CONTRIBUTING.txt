@@ -8,9 +8,6 @@ Contribution to the Manual
 - The manual `tabularray.tex` is splitted into subfiles and put in manual folder.
   You can compile each subfile and see the output.
 
-- After editing subfiles in manual folder,
-  you need to run `texlua manual.lua` to generate `tabularray.tex` from subfiles.
-
 - Now you can create a pull request for your contribution.
 
 

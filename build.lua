@@ -1,9 +1,9 @@
 
 module = "tabularray"
 
-sourcefiles = {"tabularray.sty"}
+sourcefiles = { "tabularray.sty" }
 
-checkengines = {"xetex","pdftex"}
+checkengines = { "pdftex", "xetex" , "luatex" }
 checkruns = 2
 
 lvtext = ".tex"

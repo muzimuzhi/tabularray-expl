@@ -3,8 +3,7 @@ module = "tabularray"
 
 sourcefiles  = { "tabularray.sty" }
 
--- keep "pdftex" the last item in checkengines to please old ppmcheckpdf files
-checkengines = { "xetex", "luatex", "pdftex" }
+checkengines = { "pdftex", "xetex", "luatex" }
 stdengine    = "pdftex"
 checkruns    = 2
 

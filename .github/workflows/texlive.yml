@@ -5,7 +5,7 @@ name: Test tabularray in TeX Live
 on: [push, pull_request]
 
 jobs:
-  build-ubuntu:
+  test-l3build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -14,17 +14,11 @@ jobs:
       with:
         package-file: .github/workflows/texlive.package
         update-all-packages: true
-    - name: Install pdftoppm
-      run:
-        sudo apt-get install poppler-utils
     - name: Test tabularray with l3build
       run: |
         l3build check --halt-on-error --show-log-on-error
-    - name: Test tabularray with ppmcheckpdf
-      run: |
-        texlua buildend.lua
 
-  build-windows:
+  test-ppmcheckpdf:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -34,13 +28,14 @@ jobs:
         packages: wintools.windows # for pdftoppm
         package-file: .github/workflows/texlive.package
         update-all-packages: true
-    - name: Test tabularray with l3build
+    - name: Prepare pdf for ppmcheckpdf
       run: |
-        l3build check --halt-on-error --show-log-on-error
+        l3build check -epdftex --halt-on-error --show-log-on-error
     - name: Test tabularray with ppmcheckpdf
       run: |
         texlua buildend.lua
     - name: Upload png and md5
+      if: failure()
       uses: actions/upload-artifact@v4
       with:
         name: png-and-md5

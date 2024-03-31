@@ -1,0 +1,39 @@
+\documentclass{article}
+\pagestyle{empty}
+
+\input{regression-test}
+
+\usepackage{tabularray}
+
+\begin{document}
+
+\setbox0=\hbox{$h$\small$h$}
+
+\START
+
+\BEGINTEST{hline and vline, text}
+  \begin{tblr}{
+    hlines,
+    vlines,
+    hline{1}={text={\rlap{--h--}}},
+    vline{1}={text={v}},
+  }
+    a
+  \end{tblr}
+\ENDTEST
+
+\bigskip\hrule\bigskip
+
+% lvjr/tabularray#303
+\BEGINTEST{hline and vline, unexpandable text}
+  \begin{tblr}{
+    hlines,
+    vlines,
+    hline{1}={text={\def\x{}\small\rlap{--h--}}},
+    vline{1}={text={\textbf{v}}},
+  }
+    a
+  \end{tblr}
+\ENDTEST
+
+\end{document}

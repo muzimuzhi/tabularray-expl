@@ -1145,7 +1145,8 @@
   {
     \group_begin:
     \keys_set_groups:nnn { tblr/__hline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_text_tl }
+    \tl_if_eq:NnF \l__tblr_hline_dash_tl
+      { \exp_not:N \c__tblr_text_tl \exp_not:n {} }
       {
         \__tblr_set_hline_num:n {#1}
         \tl_clear:N \l__tblr_hline_dash_tl
@@ -1222,7 +1223,11 @@
 \keys_define:nn { tblr/__hline }
   {
     dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_dash_tl #1 },
-    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \c__tblr_text_tl #1 },
+    text .code:n =
+      {
+        \tl_set:Nn \l__tblr_hline_dash_tl
+          { \exp_not:N \c__tblr_text_tl \exp_not:n {#1} }
+      } ,
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
@@ -1387,7 +1392,8 @@
   {
     \group_begin:
     \keys_set_groups:nnn { tblr/__vline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_text_tl }
+    \tl_if_eq:NnF \l__tblr_vline_dash_tl
+      { \exp_not:N \c__tblr_text_tl \exp_not:n {} }
       {
         \__tblr_set_vline_num:n {#1}
         \tl_clear:N \l__tblr_vline_dash_tl
@@ -1464,7 +1470,11 @@
 \keys_define:nn { tblr/__vline }
   {
     dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_dash_tl #1 },
-    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \c__tblr_text_tl #1 },
+    text .code:n =
+      {
+        \tl_set:Nn \l__tblr_vline_dash_tl
+          { \exp_not:N \c__tblr_text_tl \exp_not:n {#1} }
+      } ,
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_vline_fg_tl {#1},

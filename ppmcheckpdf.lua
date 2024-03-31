@@ -5,8 +5,8 @@
 -- Repository: https://github.com/lvjr/ppmcheckpdf
 -- License: The LaTeX Project Public License 1.3c
 
-ppmcheckpdf_version = "2024B"
-ppmcheckpdf_date = "2024-01-21"
+ppmcheckpdf_version = "2024B.2"
+ppmcheckpdf_date = "2024-04-01"
 
 --------------------------------------------
 ---- source code from l3build.lua
@@ -36,7 +36,8 @@ dofile("build.lua")
 
 build_require("variables")
 
-imgext = imgext or ".png"
+local imgext = imgext or ".png"
+local failed = {}
 
 local md5 = require("md5")
 
@@ -110,10 +111,11 @@ local function ppmcheckpdf(job)
     local oldmd5 = readfile(md5file)
     if newmd5 == oldmd5 then
       errorlevel = 0
-      print("md5 check passed for " .. imgname)
+      print("  " .. imgname)
     else
       errorlevel = 1
-      print("md5 check failed for " .. imgname)
+      print("  " .. imgname .. "          --> failed")
+      failed[#failed + 1] = imgname
       local imgdiffexe = os.getenv("imgdiffexe")
       if imgdiffexe then
         local oldimg = abspath(testfiledir) .. "/" .. imgname
@@ -121,7 +123,7 @@ local function ppmcheckpdf(job)
         local diffname = job .. ".diff.png"
         local cmd = imgdiffexe .. " " .. oldimg .. " " .. newimg
                     .. " -compose src " .. diffname
-        print("creating image diff file " .. diffname)
+        print("  creating image diff file " .. diffname)
         run(testdir, cmd)
       elseif arg[1] == "save" then
         saveimgmd5(imgname, md5file, newmd5)
@@ -138,6 +140,7 @@ local function main()
   local errorlevel = 0
   local pattern = "%" .. pdfext .. "$"
   local files = getfiles(testdir, pattern)
+  print("Running md5 checks on\n")
   for _, v in ipairs(files) do
     pdftoimg(testdir, v)
     pattern = "^" .. jobname(v):gsub("%-", "%%-") .. "%-%d+%" .. imgext .. "$"
@@ -161,4 +164,12 @@ local function main()
 end
 
 local errorlevel = main()
-if os.type == "windows" then os.exit(errorlevel) end
+if errorlevel ~= 0 then
+  print("\nMd5 checks failed with images")
+  for _, i in ipairs(failed) do
+    print("  - " .. i)
+  end
+else
+  print("\nAll md5 checks passed")
+end
+os.exit(errorlevel)

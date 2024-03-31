@@ -19,18 +19,20 @@ jobs:
         l3build check --halt-on-error --show-log-on-error
 
   test-ppmcheckpdf:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Install TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        packages: wintools.windows # for pdftoppm
         package-file: .github/workflows/texlive.package
         update-all-packages: true
-    - name: Prepare pdf for ppmcheckpdf
+    - name: Install pdftoppm
       run: |
-        l3build check -epdftex --halt-on-error --show-log-on-error
+        sudo apt-get install poppler-utils
+    - name: Prepare PDFs for ppmcheckpdf
+      run: |
+        l3build check -epdftex --halt-on-error
     - name: Test tabularray with ppmcheckpdf
       run: |
         texlua buildend.lua

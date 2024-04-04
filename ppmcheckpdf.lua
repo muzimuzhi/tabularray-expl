@@ -97,7 +97,7 @@ local function pdftoimg(path, pdf)
 end
 
 local function saveimgmd5(imgname, md5file, newmd5)
-  print("save md5 and image files for " .. imgname)
+  print("Saving md5 and image files for " .. imgname)
   cp(imgname, testdir, testfiledir)
   writefile(md5file, newmd5)
 end

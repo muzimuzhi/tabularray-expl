@@ -5,7 +5,7 @@ Contributing to the Manual (manual is unmaintained in `tabularray-dev`)
 - You need to compile the manual files with LuaLaTeX,
   because it is rather slow to compile them with XeLaTeX or PDFLaTeX.
 
-- The manual `tabularray.tex` is splitted into subfiles and put in manual folder.
+- The manual `tabularray.tex` is split into subfiles and put in manual folder.
   You can compile each subfile and see the output.
 
 - Now you can create a pull request for your contribution.

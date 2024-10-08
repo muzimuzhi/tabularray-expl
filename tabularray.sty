@@ -284,9 +284,9 @@
       {
         \tl_new:c { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl }
       }
-      \tl_gset:cn
-        { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
-      \clist_gput_right:ce { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
+    \tl_gset:cn
+      { g__tblr_spec_ \int_use:N \g_tblr_level_int _#1_#2_tl } {#3}
+    \clist_gput_right:ce { g__tblr_#1_ \int_use:N \g_tblr_level_int _clist } {#2}
   }
 \cs_generate_variant:Nn \__tblr_spec_gput:nnn { nne, nnV, nen, nee, neV }
 
@@ -2856,7 +2856,7 @@
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
   {
     \int_set:Nn \l__tblr_a_int
-      { \cs:w g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl \cs_end: }
+      { \tl_use:c { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } }
     \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
     \int_compare:nNnTF {\l__tblr_a_int} < {0}
       {
@@ -4659,7 +4659,8 @@
 
 \cs_new_protected:Npn \__tblr_def_template:n #1
   {
-    \tl_new:c { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+    \tl_if_exist:cF { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      { \tl_new:c { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl } }
     \tl_set_eq:cN { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
       \l__tblr_template_code_tl
   }
@@ -4678,11 +4679,23 @@
     \ignorespaces
   }
 
+\msg_new:nnn { tabularray } { template-undefined }
+  {
+    Undefined ~ template ~ "#2" ~ for ~ element ~ "#1".
+  }
 \cs_new_protected:Npn \__tblr_set_template:n #1
   {
-    \tl_clear_new:c { l__tblr_template_ #1 _default_tl }
-    \tl_set_eq:cc { l__tblr_template_ #1 _default_tl }
-      { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+    \tl_if_exist:cTF { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      {
+        \tl_if_exist:cF { l__tblr_template_ #1 _default_tl }
+          { \tl_new:c { l__tblr_template_ #1 _default_tl } }
+        \tl_set_eq:cc { l__tblr_template_ #1 _default_tl }
+          { l__tblr_template_ #1 _ \l__tblr_template_name_tl _tl }
+      }
+      {
+        \msg_error:nnee { tabularray } { template-undefined }
+          { #1 } { \l__tblr_template_name_tl }
+      }
   }
 \cs_generate_variant:Nn \__tblr_set_template:n { V }
 
@@ -7105,8 +7118,8 @@
 
 %% Library counter for resetting all counters
 
-\tl_new:N \__tblr_saved_trial_counters_tl
-\tl_new:N \__tblr_saved_cell_counters_tl
+\tl_new:N \l__tblr_saved_trial_counters_tl
+\tl_new:N \l__tblr_saved_cell_counters_tl
 
 \cs_new_protected:Npn \__tblr_save_counters:n #1 { }
 \cs_new_protected:Npn \__tblr_restore_counters:n #1 { }
@@ -7120,12 +7133,12 @@
     \cs_set_protected:Npn \__tblr_save_counters:n ##1
       {
         \def \@elt ####1 { \global\value{####1} = \the\value{####1} \relax }
-        \tl_set:ce { __tblr_saved_ ##1 _counters_tl } { \cl@@ckpt }
+        \tl_set:ce { l__tblr_saved_ ##1 _counters_tl } { \cl@@ckpt }
         \let \@elt = \relax
       }
     \cs_set_protected:Npn \__tblr_restore_counters:n ##1
       {
-        \tl_use:c { __tblr_saved_ ##1 _counters_tl }
+        \tl_use:c { l__tblr_saved_ ##1 _counters_tl }
       }
   }
 

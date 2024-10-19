@@ -12,6 +12,8 @@ jobs:
     - name: Install TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
+        # avoid "Cache already exists" warnings
+        cache: false
         package-file: .github/workflows/texlive.package
         update-all-packages: true
     - name: Test tabularray with l3build
@@ -25,8 +27,6 @@ jobs:
     - name: Install TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        # avoid "Cache already exists" warnings
-        cache: false
         package-file: .github/workflows/texlive.package
         update-all-packages: true
     - name: Install pdftoppm

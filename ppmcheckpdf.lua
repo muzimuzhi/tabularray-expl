@@ -2,11 +2,12 @@
 
 -- Description: Convert PDF to PNG and compare PNG files after l3build
 -- Copyright: 2024 (c)  Jianrui Lyu <tolvjr@163.com>
+--            2024 (c)  Yukai Chou <muzimuzhi@gmail.com>
 -- Repository: https://github.com/lvjr/ppmcheckpdf
 -- License: The LaTeX Project Public License 1.3c
 
-ppmcheckpdf_version = "2024B.2"
-ppmcheckpdf_date = "2024-04-01"
+ppmcheckpdf_version = "2024B.3"
+ppmcheckpdf_date = "2024-10-20"
 
 --------------------------------------------
 ---- source code from l3build.lua
@@ -97,7 +98,7 @@ local function pdftoimg(path, pdf)
 end
 
 local function saveimgmd5(imgname, md5file, newmd5)
-  print("Saving md5 and image files for " .. imgname)
+  print("Saving MD5 and image files for " .. imgname)
   cp(imgname, testdir, testfiledir)
   writefile(md5file, newmd5)
 end
@@ -140,7 +141,7 @@ local function main()
   local errorlevel = 0
   local pattern = "%" .. pdfext .. "$"
   local files = getfiles(testdir, pattern)
-  print("Running md5 checks on\n")
+  print("Running MD5 checks on\n")
   for _, v in ipairs(files) do
     pdftoimg(testdir, v)
     pattern = "^" .. jobname(v):gsub("%-", "%%-") .. "%-%d+%" .. imgext .. "$"
@@ -165,11 +166,11 @@ end
 
 local errorlevel = main()
 if errorlevel ~= 0 then
-  print("\nMd5 checks failed with images")
+  print("\nMD5 checks failed with images")
   for _, i in ipairs(failed) do
     print("  - " .. i)
   end
 else
-  print("\nAll md5 checks passed")
+  print("\nAll MD5 checks passed")
 end
 os.exit(errorlevel)

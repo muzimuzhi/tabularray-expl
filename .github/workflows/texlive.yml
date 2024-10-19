@@ -30,7 +30,8 @@ jobs:
     - name: Install pdftoppm
       run: |
         sudo apt-get install poppler-utils
-    - name: Prepare PDFs for ppmcheckpdf
+    - name: Prepare PDFTeX-generated PDFs for ppmcheckpdf
+      # because existing .png and .md5 files are based on PDFTeX-generated PDFs
       run: |
         l3build check -epdftex --halt-on-error
     - name: Test tabularray with ppmcheckpdf

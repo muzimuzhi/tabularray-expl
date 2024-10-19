@@ -2,7 +2,17 @@
 
 name: Test tabularray in TeX Live
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types:
+      # added "ready_for_review"
+      # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+      [opened, ready_for_review, reopened, synchronize]
+  push:
+  schedule:
+    # at 12:21 UTC (20:21 CST/UTC +8) on every Friday
+    - cron: "21 12 * * 5"
+  workflow_dispatch:
 
 jobs:
   test-l3build:

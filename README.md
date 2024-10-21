@@ -2,6 +2,10 @@
 
 [![Test suite](https://github.com/muzimuzhi/tabularray-dev/actions/workflows/texlive.yml/badge.svg)](https://github.com/muzimuzhi/tabularray-dev/actions/workflows/texlive.yml)
 
+Branches
+- `develop` is the default branch
+- `main` tracks https://github.com/lvjr/tabularray/tree/main
+
 The rest of the README is preserved as-is from the upstream source https://github.com/lvjr/tabularray.
 
 ------

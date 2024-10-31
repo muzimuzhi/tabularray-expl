@@ -1,7 +1,31 @@
+##
 ## scheme(s)
+##
 scheme-basic
-## package(s)
+##
+## development versions
+##
+l3backend-dev
+l3kernel-dev
+latex-amsmath-dev
+latex-base-dev
+latex-bin-dev
+latex-firstaid-dev
+latex-graphics-dev
+latex-lab-dev
+latex-tools-dev
+xelatex-dev
+##
+## stable packages corresponding to dev versions
+##
 amsmath
+firstaid
+graphics
+latex-lab
+tools       # provides needed array.sty and calc.sty
+##
+## misc packages
+##
 blindtext
 booktabs
 cm-super    # to normalize font used by \textbullet, for test table-011
@@ -12,7 +36,6 @@ etoolbox
 functional
 fp          # one of "diagbox" dependencies
 geometry
-graphics
 hyperref    # also provides needed nameref.sty
 l3build
 lm          # provides needed lmodern.sty
@@ -22,7 +45,6 @@ ninecolors
 pict2e      # one of "diagbox" dependencies
 # shortvrb  # provided by the "latex" texlive package
 siunitx
-tools       # provides needed array.sty and calc.sty
 varwidth
 zref
 xcolor

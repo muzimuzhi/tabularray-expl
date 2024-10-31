@@ -16,6 +16,10 @@ on:
 
 jobs:
   test-l3build:
+    strategy:
+      matrix:
+        l3build-opt: ["", "--dev"]
+    name: l3build tests${{ matrix.l3build-opt != '' && '(latex-dev)'}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -28,9 +32,14 @@ jobs:
         update-all-packages: true
     - name: Test tabularray with l3build
       run: |
-        l3build check --halt-on-error --show-log-on-error
+        l3build check --halt-on-error --show-log-on-error \
+          ${{ matrix.l3build-opt }}
 
   test-ppmcheckpdf:
+    strategy:
+      matrix:
+        l3build-opt: ["", "--dev"]
+    name: ppmcheckpdf tests${{ matrix.l3build-opt != '' && '(latex-dev)'}}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -45,7 +54,8 @@ jobs:
     - name: Prepare PDFTeX-generated PDFs for ppmcheckpdf
       # because existing .png and .md5 files are based on PDFTeX-generated PDFs
       run: |
-        l3build check -epdftex --halt-on-error
+        l3build check -epdftex --halt-on-error \
+          ${{ matrix.l3build-opt }}
     - name: Test tabularray with ppmcheckpdf
       run: |
         texlua buildend.lua

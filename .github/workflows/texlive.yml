@@ -18,8 +18,12 @@ jobs:
   test-l3build:
     strategy:
       matrix:
-        l3build-opt: ["", "--dev"]
-    name: l3build tests${{ matrix.l3build-opt != '' && '(latex-dev)'}}
+        include:
+          - format: "latex"
+            l3build-opt: ""
+          - format: "latex-dev"
+            l3build-opt: "--dev"
+    name: l3build tests ${{ format('({0})', matrix.format) }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -38,8 +42,12 @@ jobs:
   test-ppmcheckpdf:
     strategy:
       matrix:
-        l3build-opt: ["", "--dev"]
-    name: ppmcheckpdf tests${{ matrix.l3build-opt != '' && '(latex-dev)'}}
+        include:
+          - format: "latex"
+            l3build-opt: ""
+          - format: "latex-dev"
+            l3build-opt: "--dev"
+    name: ppmcheckpdf tests ${{ format('({0})', matrix.format) }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

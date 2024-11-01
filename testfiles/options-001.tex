@@ -1,0 +1,25 @@
+\input{regression-test}
+\documentclass{article}
+
+\ExplSyntaxOn
+\debug_on:n { check-declarations , check-expressions , deprecation }
+\ExplSyntaxOff
+
+\usepackage{tabularray}
+
+\setbox0=\hbox{$a$} % trigger font info lines
+
+\begin{document}
+
+\START
+
+\BEGINTEST{Unknown options}
+  \begin{tblr}{hlines, vlines{1}, unknown-xxx}
+    a & b \\
+    c & d
+  \end{tblr}
+\ENDTEST
+
+\end{document}
+
+\END

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Step tracing is disabled by default
+- Unknown options now raise errors instead of being silently ignored
 
 ### Deprecated
 

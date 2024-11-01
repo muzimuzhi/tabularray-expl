@@ -3050,13 +3050,18 @@
 
 \regex_const:Nn \c__tblr_split_key_name_regex { ^ ( [a-z] + ) ( . * ) }
 
+\msg_new:nnn { tabularray } { unknown-option }
+  { Unknown ~ option ~ "#1". }
+
 \cs_new_protected:Npn \__tblr_table_special_key:nn #1 #2
   {
     \regex_extract_once:NnNT \c__tblr_split_key_name_regex {#1} \l__tblr_tmpa_seq
       {
         \tl_set:Ne \l__tblr_a_tl { \seq_item:Nn \l__tblr_tmpa_seq {2} }
         \tl_set_rescan:Nne \l__tblr_b_tl {} { \seq_item:Nn \l__tblr_tmpa_seq {3} }
-        \cs:w __tblr_set_ \l__tblr_a_tl _aux:Vn \cs_end: \l__tblr_b_tl {#2}
+        \cs_if_exist_use:cTF { __tblr_set_ \l__tblr_a_tl _aux:Vn }
+          { \l__tblr_b_tl {#2} }
+          { \msg_error:nnn { tabularray } { unknown-option} {#1} }
       }
   }
 \cs_generate_variant:Nn \__tblr_table_special_key:nn { Vn }

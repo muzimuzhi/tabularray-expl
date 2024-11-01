@@ -3,8 +3,10 @@ module = "tabularray"
 
 sourcefiles  = { "tabularray.sty" }
 
-checkengines = { "pdftex", "xetex", "luatex" }
+checkengines = { "pdftex" }
 stdengine    = "pdftex"
 checkruns    = 2
 
 lvtext = ".tex"
+
+checkconfigs = { "build", "config-new" }

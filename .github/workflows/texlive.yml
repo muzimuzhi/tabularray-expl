@@ -15,39 +15,53 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-l3build:
+  tests-new:
     strategy:
       matrix:
-        tool: [l3build, ppmcheckpdf]
         format: [latex, latex-dev]
-    name: ${{ format('{0} tests ({1})', matrix.tool, matrix.format) }}
+    name: ${{ format('Tests ({0})', matrix.format) }}
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-
     - name: Setup TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
         package-file: .github/workflows/texlive.package
         update-all-packages: true
 
-    - name: Check new tests
-      if: matrix.tool == 'l3build'
+    - name: Run tests
       run: |
         l3build check -cconfig-new --halt-on-error --show-saves \
           ${{ matrix.format == 'latex-dev' && '--dev' || '' }}
 
-    # note: old tests are only checked using pdftex, which is also the 
-    # engine used to generate .png and .md5 files in "./testfiles".
-    - name: Check old tests with l3build
-      if: matrix.tool == 'ppmcheckpdf'
+  tests-old:
+    strategy:
+      matrix:
+        format: [latex, latex-dev]
+
+    name: ${{ format('Old tests ({0})', matrix.format) }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup TeX Live
+      uses: teatimeguest/setup-texlive-action@v3
+      with:
+        package-file: .github/workflows/texlive.package
+        update-all-packages: true
+    - name: Install pdftoppm
+      run: |
+        sudo apt-get install poppler-utils
+
+    # note: old tests in "./testfiles" are only checked using pdftex,
+    # which is also the engine used to generate .png and .md5 files.
+    - name: Run old tests with l3build
       run: |
         l3build check -cbuild --halt-on-error --show-saves \
           ${{ matrix.format == 'latex-dev' && '--dev' || '' }}
 
-    - name: Check old tests with ppmcheckpdf
-      if: matrix.tool == 'ppmcheckpdf'
+    - name: Run old tests with ppmcheckpdf
       id: ppmcheckpdf
       run: |
         texlua buildend.lua

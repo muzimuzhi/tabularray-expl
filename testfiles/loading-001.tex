@@ -1,15 +1,12 @@
 \input{regression-test}
 \documentclass{article}
 
-\START
-
-\OMIT
 \ExplSyntaxOn
 \sys_ensure_backend:
-\debug_on:n { all }
-\debug_off:n { log-functions }
+\debug_on:n { check-declarations , check-expressions , deprecation }
 \ExplSyntaxOff
-\TIMO
+
+\START
 
 \usepackage{tabularray}
 

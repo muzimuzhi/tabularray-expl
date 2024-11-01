@@ -32,7 +32,7 @@ jobs:
 
     - name: Run tests
       run: |
-        l3build check -cconfig-new --halt-on-error --show-saves \
+        l3build check -cbuild --halt-on-error --show-saves \
           ${{ matrix.format == 'latex-dev' && '--dev' || '' }}
 
   tests-old:
@@ -54,11 +54,11 @@ jobs:
       run: |
         sudo apt-get install poppler-utils
 
-    # note: old tests in "./testfiles" are only checked using pdftex,
+    # note: old tests in "./testfiles-old" are only checked using pdftex,
     # which is also the engine used to generate .png and .md5 files.
     - name: Run old tests with l3build
       run: |
-        l3build check -cbuild --halt-on-error --show-saves \
+        l3build check -cconfig-old --halt-on-error --show-saves \
           ${{ matrix.format == 'latex-dev' && '--dev' || '' }}
 
     - name: Run old tests with ppmcheckpdf

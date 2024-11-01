@@ -33,9 +33,14 @@ end
 build_require("file-functions")
 
 release_date = "2021-04-26" -- for old build.lua file
+-- FIXME: add support for cli option "-c/--config <config>"
 dofile("build.lua")
+dofile("config-old.lua")
 
 build_require("variables")
+
+local configname = "config-old"
+testdir = testdir .. "-" .. configname
 
 local imgext = imgext or ".png"
 local failed = {}

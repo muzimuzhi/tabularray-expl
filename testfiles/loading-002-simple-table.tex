@@ -2,7 +2,7 @@
 \documentclass{article}
 
 \ExplSyntaxOn
-\debug_on:n { all }
+\sys_load_debug:
 \ExplSyntaxOff
 
 \usepackage{tabularray}
@@ -10,6 +10,10 @@
 \setbox0=\hbox{$a$} % trigger font info lines
 
 \begin{document}
+
+\ExplSyntaxOn
+\debug_on:n { all }
+\ExplSyntaxOff
 
 \START
 

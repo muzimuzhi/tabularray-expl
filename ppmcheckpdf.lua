@@ -73,6 +73,7 @@ local function getfiles(path, pattern)
      insert(files, entry)
     end
   end
+  table.sort(files)
   return files
 end
 

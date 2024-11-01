@@ -142,7 +142,7 @@ local function main()
   local errorlevel = 0
   local pattern = "%" .. pdfext .. "$"
   local files = getfiles(testdir, pattern)
-  print("Running MD5 checks on\n")
+  print("Running PPM checks on\n")
   for _, v in ipairs(files) do
     pdftoimg(testdir, v)
     pattern = "^" .. jobname(v):gsub("%-", "%%-") .. "%-%d+%" .. imgext .. "$"
@@ -167,11 +167,11 @@ end
 
 local errorlevel = main()
 if errorlevel ~= 0 then
-  print("\nMD5 checks failed with images")
+  print("\n  PPM Checks failed with images\n")
   for _, i in ipairs(failed) do
     print("  - " .. i)
   end
 else
-  print("\nAll MD5 checks passed")
+  print("\n  All PPM checks passed\n")
 end
 os.exit(errorlevel)

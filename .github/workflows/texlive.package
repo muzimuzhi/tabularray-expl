@@ -12,7 +12,7 @@ latex-base-dev
 latex-bin-dev
 latex-firstaid-dev
 latex-graphics-dev
-latex-lab-dev
+# latex-lab-dev # seems not needed
 latex-tools-dev
 xelatex-dev
 ##
@@ -21,7 +21,7 @@ xelatex-dev
 amsmath
 firstaid
 graphics
-latex-lab
+# latex-lab  # seems not needed
 tools       # provides needed array.sty and calc.sty
 ##
 ## misc packages

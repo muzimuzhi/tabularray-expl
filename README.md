@@ -1,6 +1,6 @@
 # tabularray-dev
 
-[![Test suite](https://github.com/muzimuzhi/tabularray-dev/actions/workflows/texlive.yml/badge.svg)](https://github.com/muzimuzhi/tabularray-dev/actions/workflows/texlive.yml)
+[![Test suite](https://github.com/muzimuzhi/tabularray-dev/actions/workflows/check.yml/badge.svg)](https://github.com/muzimuzhi/tabularray-dev/actions/workflows/check.yml)
 
 Branches
 - `develop` is the default branch

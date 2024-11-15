@@ -130,7 +130,7 @@ local function saveimgmd5(imgname, md5file, newmd5)
 end
 
 local function ppmcheckpdf(job)
-  rm(testdir, "*.diff.png")
+  rm(testdir, job .."-*.diff.png")
   local errorlevel
   local imgname = job .. imgext
   local md5file = testfiledir .. "/" .. job .. ".md5"

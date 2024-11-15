@@ -2,6 +2,9 @@ This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 (tabularray.sty
 Package: tabularray ....-..-.. v... Typeset tabulars and arrays with LaTeX3
+(zutil.sty
+Package: zutil ....-..-.. v... Z's utilities, l3seq part
+)
 \l__tblr_a_int=\count...
 \l__tblr_dp_dim=\dimen...
 \l__tblr_ht_dim=\dimen...

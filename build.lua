@@ -1,7 +1,7 @@
 
 module = "tabularray"
 
-sourcefiles  = { "tabularray.sty" }
+sourcefiles  = { "tabularray.sty", "zutil.sty" }
 
 checkengines = { "pdftex", "xetex", "luatex" }
 stdengine    = "pdftex"

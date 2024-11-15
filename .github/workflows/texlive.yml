@@ -15,11 +15,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests-new:
+  tests:
     strategy:
       matrix:
-        format: [latex, latex-dev]
-    name: ${{ format('Tests ({0})', matrix.format) }}
+        config: ["build", "config-old"]
+        option: ["", "--dev"]
+    name: "Tests: ${{ matrix.config }}${{ matrix.option != '' && ' (latex-dev)' || '' }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -32,37 +33,19 @@ jobs:
 
     - name: Run tests
       run: |
-        l3build check -cbuild --halt-on-error --show-saves \
-          ${{ matrix.format == 'latex-dev' && '--dev' || '' }}
+        l3build check \
+          -c${{ matrix.config }} --halt-on-error --show-saves \
+          ${{ matrix.option }}
 
-  tests-old:
-    strategy:
-      matrix:
-        format: [latex, latex-dev]
-
-    name: ${{ format('Old tests ({0})', matrix.format) }}
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Setup TeX Live
-      uses: teatimeguest/setup-texlive-action@v3
-      with:
-        package-file: .github/workflows/texlive.package
-        update-all-packages: true
+    # imagemagick is pre-installed on Ubuntu 22.04 image
+    # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md#installed-apt-packages
     - name: Install ppmcheckpdf dependencies
+      if: matrix.config == 'config-old'
       run: |
         sudo apt-get install imagemagick poppler-utils
 
-    # note: old tests in "./testfiles-old" are only checked using pdftex,
-    # which is also the engine used to generate .png and .md5 files.
-    - name: Run old tests with l3build
-      run: |
-        l3build check -cconfig-old --halt-on-error --show-saves \
-          ${{ matrix.format == 'latex-dev' && '--dev' || '' }}
-
-    - name: Run old tests with ppmcheckpdf
-      id: ppmcheckpdf
+    - name: Check tests with ppmcheckpdf
+      if: matrix.config == 'config-old'
       run: |
         texlua ppmcheckpdf.lua
 

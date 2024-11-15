@@ -64,7 +64,7 @@ jobs:
     - name: Run old tests with ppmcheckpdf
       id: ppmcheckpdf
       run: |
-        texlua buildend.lua
+        texlua ppmcheckpdf.lua
 
     # TODO: generate a list of files related to failed tests, then
     # upload all them (.tex, .log, .pdf, .png, .md5, etc.)

@@ -50,9 +50,9 @@ jobs:
       with:
         package-file: .github/workflows/texlive.package
         update-all-packages: true
-    - name: Install pdftoppm
+    - name: Install ppmcheckpdf dependencies
       run: |
-        sudo apt-get install poppler-utils
+        sudo apt-get install imagemagick poppler-utils
 
     # note: old tests in "./testfiles-old" are only checked using pdftex,
     # which is also the engine used to generate .png and .md5 files.
@@ -66,12 +66,13 @@ jobs:
       run: |
         texlua buildend.lua
 
-    ## TODO: only save updated png and md5 files
-    # - name: Upload png and md5
-    #   if: matrix.tool == 'ppmcheckpdf' && steps.ppmcheckpdf.outcome == 'failure'
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: png-and-md5
-    #     path: |
-    #       testfiles/*.png
-    #       testfiles/*.md5
+    # TODO: generate a list of files related to failed tests, then
+    # upload all them (.tex, .log, .pdf, .png, .md5, etc.)
+    - name: Upload diff files
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: tabularray-diffs
+        path: |
+          build/**/*.diff
+          build/**/*.diff.png

@@ -43,6 +43,26 @@ local configname = "config-old"
 testdir = testdir .. "-" .. configname
 
 local imgext = imgext or ".png"
+-- Unlike that in Lua 5.3, texlua's `os.execute` still returns a single
+-- value, representing the error level.
+-- https://github.com/latex3/l3build/pull/333
+local imgdiffexe
+if os.type ~= "windows" then
+  local errorlevel = os.execute("command -v magick 2>&1 >/dev/null")
+  -- "0" is not a falsy value in Lua; "nil" is the only one
+  if errorlevel == 0 then
+    -- "magick" is availabel since imagemagick v7
+    -- https://askubuntu.com/a/1315605
+    imgdiffexe = "magick compare"
+  else
+    errorlevel = os.execute("command -v compare 2>&1 >/dev/null")
+    if errorlevel == 0 then
+      imgdiffexe = "compare"
+    end
+  end
+end
+imgdiffexe = os.getenv("imgdiffexe") or imgdiffexe
+
 local failed = {}
 
 local md5 = require("md5")
@@ -110,6 +130,7 @@ local function saveimgmd5(imgname, md5file, newmd5)
 end
 
 local function ppmcheckpdf(job)
+  rm(testdir, "*.diff.png")
   local errorlevel
   local imgname = job .. imgext
   local md5file = testfiledir .. "/" .. job .. ".md5"
@@ -123,17 +144,16 @@ local function ppmcheckpdf(job)
       errorlevel = 1
       print("  " .. imgname .. "          --> failed")
       failed[#failed + 1] = imgname
-      local imgdiffexe = os.getenv("imgdiffexe")
-      if imgdiffexe then
+      if arg[1] == "save" then
+        saveimgmd5(imgname, md5file, newmd5)
+      elseif imgdiffexe then
         local oldimg = abspath(testfiledir) .. "/" .. imgname
         local newimg = abspath(testdir) .. "/" .. imgname
         local diffname = job .. ".diff.png"
-        local cmd = imgdiffexe .. " " .. oldimg .. " " .. newimg
-                    .. " -compose src " .. diffname
-        print("  creating image diff file " .. diffname)
+        local cmd = imgdiffexe .. " -compose src " .. 
+                      oldimg .. " " .. newimg .. " " .. diffname
+        print("Creating image diff file " .. diffname)
         run(testdir, cmd)
-      elseif arg[1] == "save" then
-        saveimgmd5(imgname, md5file, newmd5)
       end
     end
   else
@@ -172,7 +192,12 @@ end
 
 local errorlevel = main()
 if errorlevel ~= 0 then
-  print("\n  PPM Checks failed with images\n")
+  if arg[1] == "save" then
+    errorlevel = 0
+    print("\n  PPM check files saved for\n")
+  else
+    print("\n  PPM checks failed with images\n")
+  end
   for _, i in ipairs(failed) do
     print("  - " .. i)
   end

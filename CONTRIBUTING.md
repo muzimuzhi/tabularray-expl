@@ -19,12 +19,17 @@ Contributing to the Code
   - Install `pdftoppm` program. 
     - Windows: `tlmgr install wintools.windows`
     - Ubuntu: `apt-get install poppler-utils`
-    - MacOS: `brew install poppler`
+    - macOS: `brew install poppler`
+  - Install `magick` program.
+    - Windows: see https://imagemagick.org/script/download.php#windows
+    - Ubuntu: `apt-get install imagemagick`
+    - macOS: `brew install imagemagick`
 
 - Run tests
   - Run `l3build check` to compile test files.
   - Run `texlua buildend.lua` to compare MD5 checksums for test outputs of `pdftex` engine.
     - The `buildend.lua` calls `ppmcheckpdf.lua` (both are contained in this repository), which then uses `pdftoppm` program to convert PDF to PNG and makes MD5 checksums.
+    - On non-Windows systems, when ImageMagick CLI program `magick` is available, `ppmcheckpdf.lua` also creates `.diff.md5` diff images for failed tests.
 
 - Update test results
     - Run `l3build save <name>...` to update corresponding `testfiles/<name>.tlg` files.

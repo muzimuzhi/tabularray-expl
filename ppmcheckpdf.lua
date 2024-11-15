@@ -6,8 +6,8 @@
 -- Repository: https://github.com/lvjr/ppmcheckpdf
 -- License: The LaTeX Project Public License 1.3c
 
-ppmcheckpdf_version = "2024B.3"
-ppmcheckpdf_date = "2024-10-20"
+ppmcheckpdf_version = "0.4"
+ppmcheckpdf_date = "2024-11-16"
 
 --------------------------------------------
 ---- source code from l3build.lua
@@ -43,21 +43,24 @@ local configname = "config-old"
 testdir = testdir .. "-" .. configname
 
 local imgext = imgext or ".png"
--- Unlike that in Lua 5.3, texlua's `os.execute` still returns a single
--- value, representing the error level.
--- https://github.com/latex3/l3build/pull/333
+local imgdiffext = imgdiffext or ".diff.png"
+-- was "-compose src" in ppmcheckpdf CTAN package
+local _imgdiffopt = " -highlight blue"
 local imgdiffexe
 if os.type ~= "windows" then
+  -- Unlike that in Lua 5.3, texlua's `os.execute` still returns a single
+  -- value, representing the exit code.
+  -- https://github.com/latex3/l3build/pull/333
   local errorlevel = os.execute("command -v magick 2>&1 >/dev/null")
   -- "0" is not a falsy value in Lua; "nil" is the only one
   if errorlevel == 0 then
-    -- "magick" is availabel since imagemagick v7
+    -- "magick" needs imagemagick v7 or newer
     -- https://askubuntu.com/a/1315605
-    imgdiffexe = "magick compare"
+    imgdiffexe = "magick compare" .. _imgdiffopt
   else
     errorlevel = os.execute("command -v compare 2>&1 >/dev/null")
     if errorlevel == 0 then
-      imgdiffexe = "compare"
+      imgdiffexe = "compare" .. _imgdiffopt
     end
   end
 end
@@ -149,8 +152,8 @@ local function ppmcheckpdf(job)
       elseif imgdiffexe then
         local oldimg = abspath(testfiledir) .. "/" .. imgname
         local newimg = abspath(testdir) .. "/" .. imgname
-        local diffname = job .. ".diff.png"
-        local cmd = imgdiffexe .. " -compose src " .. 
+        local diffname = job .. imgdiffext
+        local cmd = imgdiffexe .. " " ..
                       oldimg .. " " .. newimg .. " " .. diffname
         print("Creating image diff file " .. diffname)
         run(testdir, cmd)

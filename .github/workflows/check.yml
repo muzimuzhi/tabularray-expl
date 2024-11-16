@@ -31,6 +31,14 @@ jobs:
         package-file: .github/tl_package
         update-all-packages: true
 
+    - name: Run zutil tests
+      if: matrix.config == 'build'
+      run: |
+        cd zutil
+        l3build check \
+          --halt-on-error --show-saves \
+          ${{ matrix.option }}
+
     - name: Run tabularray tests
       run: |
         cd tabularray

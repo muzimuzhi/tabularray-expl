@@ -4,9 +4,11 @@
 %%
 %% l3seq extras
 %%
-\msg_new:nnnn { zutil } { seq/empty-delimiter }
-  { Empty~delimiter~is~not~supported~in~#1. }
-  { I~will~skip~setting~#2. }
+\msg_new:nnn { zutil } { seq/empty-delimiter }
+  {
+    Empty~delimiter~is~not~supported~in~#1. \\
+    The~existing~definition~of~'#2'~will~not~be~altered.
+  }
 
 \cs_new_protected:Npn \zutil_seq_set_split_keep_braces:Nnn #1
   {
@@ -25,8 +27,8 @@
 % holds the user function, i.e. \zutil_seq_set_split_keep_braces:Nnn,
 % for use in error message.
 %
-% l3seq internals \__seq_set_split:Nw, \__seq_set_split_end:, and
-% \l__seq_internal_a_tl are used.
+% l3seq internals \__seq_set_split:Nw and \l__seq_internal_a_tl, along
+% with the undefined delimiter \__seq_set_split_end:, are used.
 \cs_new_protected:Npn \__zutil_seq_set_split:NNNNnn #1#2#3#4#5#6
   {
     \tl_if_empty:nTF {#5}

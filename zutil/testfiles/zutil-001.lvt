@@ -1,0 +1,10 @@
+\input{regression-test}
+\documentclass{article}
+
+\ExplSyntaxOn
+\debug_on:n { check-declarations , check-expressions, deprecation }
+\ExplSyntaxOff
+
+\START
+\usepackage{zutil}
+\END

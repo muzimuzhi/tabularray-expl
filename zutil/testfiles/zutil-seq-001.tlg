@@ -1,0 +1,43 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: zutil_seq_set_split_keep_braces:Nnn
+============================================================
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {}.
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {a}
+>  {}.
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {a}
+>  {b}.
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {a}
+>  {b}
+>  {c}
+>  {{|}}
+>  {{ |{} }}
+>  {d}.
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {Hello,}
+>  {world,}
+>  {my}
+>  {name}
+>  {is}
+>  {LaTeX!}.
+! Package zutil Error: Empty delimiter is not supported in \zutil_seq_set_split_keep_braces:Nnn .
+(zutil)                The existing definition of '\l_tmpa_seq ' will not be altered.
+Type <return> to continue.
+ ...                                              
+l. ...}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+The sequence \l_tmpa_seq contains the items (without outer braces):
+>  {Hello,}
+>  {world,}
+>  {my}
+>  {name}
+>  {is}
+>  {LaTeX!}.
+============================================================

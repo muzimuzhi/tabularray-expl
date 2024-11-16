@@ -47,7 +47,8 @@ jobs:
     - name: Check tests with ppmcheckpdf
       if: matrix.config == 'config-old'
       run: |
-        texlua ppmcheckpdf.lua
+        cd tabularray
+        texlua buildend.lua
 
     # TODO: generate a list of files related to failed tests, then
     # upload all them (.tex, .log, .pdf, .png, .md5, etc.)

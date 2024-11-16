@@ -20,19 +20,19 @@ Contributing to the Code
     - Windows: `tlmgr install wintools.windows`
     - Ubuntu: `apt-get install poppler-utils`
     - macOS: `brew install poppler`
-  - Install ImageMagick.
+  - (optional) Install ImageMagick.
     - Windows: see https://imagemagick.org/script/download.php#windows
     - Ubuntu: `apt-get install imagemagick`
     - macOS: `brew install imagemagick`
 
 - Run tests
-  - Run `l3build check` to compile test files.
-  - Run `texlua ppmcheckpdf.lua` to compare MD5 checksums for test outputs of `pdftex` engine.
-    - This uses a local `ppmcheckpdf.lua`, instead of the one provided by [`ppmchecmpdf`](https://ctan.org/pkg/ppmcheckpdf) CTAN package.
-    - On non-Windows systems, when ImageMagick is installed (by checking existence of `magick` or `compare`), `.diff.md5` diff images are created (under `./build/test/config-old`) for failed tests.
+  - In the root dir, run `l3build check` to check all tests.
+  - Then in `./tabularray`, run `texlua buildend.lua` to PDF output of `testfiles-old` tests, by comparing md5 of images converted from PDF page by page.
+    - This uses a local `./support/ppmcheckpdf.lua`, instead of the one provided by [`ppmchecmpdf`](https://ctan.org/pkg/ppmcheckpdf) CTAN package.
+    - On non-Windows systems, when ImageMagick is installed (by checking existence of `magick` or `compare`), `.diff.png` diff images are created (under `./build/test/config-old`) for failed tests.
+  - See also steps in `./.github/workflows/check.yml`.
 
 - Update test results
-    - Run `l3build save <name>...` to update corresponding `testfiles/<name>.tlg` files.
-    - Run `l3build save -cconfig-old <name>...` to update corresponding `testfiles-old/<name>.tlg` files.
-    - Run `l3build save -e<engine> <name>...` to create or update corresponding `testfiles/<name>.<engine>.tlg` files.
-    - After `l3build check -cconfig-old` passes, run `texlua buildend.lua save` to update all `testfiles/*.{png,md5}` files which failed the ppm check.
+    - In `./tabularray` or `./zutil`, run `l3build save [-c<config>] [-e<engine>] <name>...` to update corresponding `testfiles/<name>.[<engine>.]tlg` file(s). Then check if the updates are expected.
+      - Consult the `l3build` doc for more info.
+    - In `./tabularray`, after `l3build check -cconfig-old` passes, run `texlua buildend.lua save` to update all `testfiles/*.{png,md5}` files which failed the ppm check. Then check if the updated `.png` are expected.

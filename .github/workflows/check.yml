@@ -31,8 +31,9 @@ jobs:
         package-file: .github/tl_package
         update-all-packages: true
 
-    - name: Run tests
+    - name: Run tabularray tests
       run: |
+        cd tabularray
         l3build check \
           -c${{ matrix.config }} --halt-on-error --show-saves \
           ${{ matrix.option }}
@@ -44,7 +45,7 @@ jobs:
       run: |
         sudo apt-get install imagemagick poppler-utils
 
-    - name: Check tests with ppmcheckpdf
+    - name: Check tabularray tests with ppmcheckpdf
       if: matrix.config == 'config-old'
       run: |
         cd tabularray

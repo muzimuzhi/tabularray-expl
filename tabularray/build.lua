@@ -1,13 +1,17 @@
-
 module = "tabularray"
 
-sourcefiles  = { "tabularray.sty", "zutil.sty" }
 
-checkengines = { "pdftex", "xetex", "luatex" }
-stdengine    = "pdftex"
-checkruns    = 2
-checksuppfiles = { "regression-test.cfg" }
+maindir         = ".."
+checkdeps       = { maindir .. "/zutil"}
+
+sourcefiles     = { "tabularray.sty" }
+
+-- "checkengines" and "checksuppfiles" are overwritten in config-old.lua
+checkengines    = { "pdftex", "xetex", "luatex" }
+stdengine       = "pdftex"
+checkruns       = 2
+checksuppfiles  = { "regression-test.cfg", "ppmcheckpdf.lua" }
 
 lvtext = ".tex"
 
-checkconfigs = { "build", "config-old" }
+checkconfigs    = { "build", "config-old" }

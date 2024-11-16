@@ -1,5 +1,5 @@
-testfiledir  = "testfiles-old"
+testfiledir     = "testfiles-old"
 
-checkengines = { "pdftex" }
-stdengine    = "pdftex"
-checksuppfiles = { }
+-- overwrite configs inherited from "tabularray/build.lua"
+checkengines    = { "pdftex" }
+checksuppfiles  = { }

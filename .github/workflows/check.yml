@@ -25,11 +25,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
         package-file: .github/tl_package
         update-all-packages: true
+
+    # imagemagick is pre-installed on Ubuntu 22.04 image
+    # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md#installed-apt-packages
+    - name: Install ppmcheckpdf dependencies
+      if: matrix.config == 'config-old'
+      run: |
+        sudo apt-get install imagemagick poppler-utils
 
     - name: Run zutil tests
       if: matrix.config == 'build'
@@ -45,13 +53,6 @@ jobs:
         l3build check \
           -c${{ matrix.config }} --halt-on-error --show-saves \
           ${{ matrix.option }}
-
-    # imagemagick is pre-installed on Ubuntu 22.04 image
-    # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md#installed-apt-packages
-    - name: Install ppmcheckpdf dependencies
-      if: matrix.config == 'config-old'
-      run: |
-        sudo apt-get install imagemagick poppler-utils
 
     - name: Check tabularray tests with ppmcheckpdf
       if: matrix.config == 'config-old'

@@ -18,6 +18,14 @@
   }
 \cs_generate_variant:Nn \zutil_seq_set_split_keep_braces:Nnn { NnV }
 
+\cs_new_protected:Npn \zutil_seq_gset_split_keep_braces:Nnn #1
+  {
+    \__zutil_seq_set_split:NNNNnn
+      \__kernel_tl_gset:Nx \__zutil_seq_trim_spaces:n #1
+      \zutil_seq_gset_split_keep_braces:Nnn
+  }
+\cs_generate_variant:Nn \zutil_seq_gset_split_keep_braces:Nnn { NnV }
+
 % This implementation is quicker than adding another \prg_do_nothing:
 % and \exp_args:No trick to \__zutil_seq_set_split:Nw and
 % \__zutil_seq_set_split:w, resp.

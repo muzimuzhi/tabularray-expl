@@ -26,10 +26,14 @@
 
 \bigskip\hrule\bigskip
 
+% Since 523d07f (feat: keep braces when splitting, 2024-11-16),
+% multiline cells with more than one pairs of braces are not supported
+% anymore.
+% Leave the following table as-is, to avoid updating .{png,md5}.
 \BEGINTEST{testing multiline cells with three pairs of braces}%#90
 \centering
 \begin{tblr}{hlines,vlines}
-{one line cell} & {two line \\ text} \\
+{{{one line cell}}} & {two line \\ text} \\
 \end{tblr}
 \ENDTEST
 

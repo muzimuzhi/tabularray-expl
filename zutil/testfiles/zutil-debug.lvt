@@ -1,0 +1,32 @@
+\input{regression-test}
+\documentclass{minimal}
+
+\usepackage{zutil}
+
+\ExplSyntaxOn
+
+\debug_on:n { check-declarations , deprecation }
+
+\START
+
+\TEST{zutil_debug:nn}{
+  % "label" key
+  \zutil_debug:nn { label=label } { test }
+  \zutil_debug:nn { label=label, label=l2, label=l3 } { test }
+  % unknown key as label
+  \zutil_debug:nn { Label } { test }
+  \zutil_debug:nn { Label, l2, l3 } { test }
+  % expansion on labels
+  \zutil_debug:nn { label=\c_novalue_tl, \c_novalue_tl, e=\c_novalue_tl} {test}
+}
+
+\TEST{zutil_debug:n,~ zutil_debug:N}{
+  \zutil_debug:n { \c_novalue_tl }
+  \zutil_debug:e { \c_novalue_tl }
+  \zutil_debug:N \c_novalue_tl
+  \zutil_debug:c { my_novalue_tl }
+}
+
+\ExplSyntaxOff
+
+\END

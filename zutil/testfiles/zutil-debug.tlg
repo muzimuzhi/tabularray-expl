@@ -1,0 +1,21 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: zutil_debug:nn
+============================================================
+! debug [label] >>test<<
+! debug [label]l2/l3 >>test<<
+! debug [Label] >>test<<
+! debug [Label]l2/l3 >>test<<
+! debug [-NoValue-]\c_novalue_tl/-NoValue- >>test<<
+============================================================
+============================================================
+TEST 2: zutil_debug:n, zutil_debug:N
+============================================================
+! debug >>\c_novalue_tl <<
+! debug >>-NoValue-<<
+! debug >>-NoValue-<<
+! debug >>undefined<<
+============================================================
+***************
+[test] 0 error(s) encountered.

@@ -5,6 +5,7 @@
 % TODO: if
 % TODO: \zutil_debug_set:n, perhaps also \zutil_set:n?
 % TODO: reset labels
+% TODO: choose how debug info is used, log, term, collect
 
 \tl_new:N    \l__zutil_debug_label_tl
 \seq_new:N   \l__zutil_debug_sublabels_seq
@@ -104,22 +105,31 @@
 % :nN and its variants
 % nN, nc, eN, ec forms
 \cs_new_protected:Npn \zutil_debug:nN #1#2
-  { \zutil_debug:ne {#1} { \cs_replacement_spec:N #2 } }
+  { \zutil_debug:ne {#1} { \__zutil_debug_use:N #2 } }
 \cs_new_protected:Npn \zutil_debug:nc #1#2
-  { \zutil_debug:ne {#1} { \cs_replacement_spec:c {#2} } }
+  {
+    \zutil_debug:ne {#1} { \__zutil_debug_use:c {#2} }
+  }
 \cs_generate_variant:Nn \zutil_debug:nN { e }
 \cs_generate_variant:Nn \zutil_debug:nc { e }
 
+\cs_new:Npn \__zutil_debug_use:N #1
+  {
+    \__zutil_cs_if_defined:NTF #1
+      { \cs_replacement_spec:N #1 } { \tl_to_str:n { undefined } }
+  }
+\cs_new:Npn \__zutil_debug_use:c #1
+  {
+    \__zutil_cs_if_defined:cTF {#1}
+      { \cs_replacement_spec:c {#1} } { \tl_to_str:n { undefined } }
+  }
 
 % :n, :N and their variations, accepting only the text
 % n, e, N, c
 \cs_new_protected:Npn \zutil_debug:n { \zutil_debug:nn {} }
 \cs_generate_variant:Nn \zutil_debug:n { e }
-
-\cs_new_protected:Npn \zutil_debug:N #1
-  { \zutil_debug:e { \cs_replacement_spec:N #1 } }
-\cs_new_protected:Npn \zutil_debug:c #1
-  { \zutil_debug:e { \cs_replacement_spec:c {#1} } }
+\cs_new_protected:Npn \zutil_debug:N { \zutil_debug:nN {} }
+\cs_new_protected:Npn \zutil_debug:c { \zutil_debug:nc {} }
 
 
 % LaTeX2e interfaces

@@ -59,8 +59,9 @@
   , label .value_required:n = true
   , e .code:n = \exp_args:Ne \__zutil_debug_set_label:n {#1}
   , e .value_required:n = true
-    % treat unknown keys as label and drop their values, if any
-    % TODO: raise an info and define unknown key at hand?
+    % unknown keys are treated as string labels and their values are
+    % always dropped, if any.
+    % pity "unknown .value_forbidden:n = true" doesn't work
   , unknown .code:n =
       \exp_args:No \__zutil_debug_set_label:n {\l_keys_key_str}
   , 

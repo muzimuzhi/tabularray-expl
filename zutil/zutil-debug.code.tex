@@ -1,0 +1,151 @@
+\ProvidesExplFile {zutil-debug.code.tex} {2024-11-19} {0.1}
+  {Z's utilities for debugging}
+
+\tl_new:N    \l__zutil_debug_label_tl
+\seq_new:N   \l__zutil_debug_sublabels_seq
+\bool_new:N  \l__zutil_debug_labeled_bool
+\bool_new:N  \l__zutil_debug_do_bool
+
+\bool_set_true:N \l__zutil_debug_do_bool
+
+% IDEA: if \iow_wrap:nnnN is needed, then this would be more
+%       like \tl_log:n. Also note \tl_show:n uses \tex_showtokens:D.
+% hmm this gets more complicated
+% #1 : keyval = options, #2 : tl = debug text
+\cs_new_protected:Npn \zutil_debug:nn #1#2
+  {
+    \group_begin:
+    \tl_if_blank:nF {#1}
+      { \keys_set:nn { zutil/debug } {#1} }
+    \bool_if:NT \l__zutil_debug_do_bool
+      {
+        % e-type expansion is needed by \iow_newline:
+        \zutil_debug_do:e
+          {
+            % pretend it's an error, so can be filtered out by TeXstudio
+            !~debug~
+            % TBD: which way is better/quicker, \exp_not:n or
+            %      \exp_args:No \cmd { \tl_to_str:n {#1} }?
+            \bool_if:NT \l__zutil_debug_labeled_bool
+              {
+                % output forms
+                % [label1]
+                % [label1]label2/label3/.../labeln
+                [ \l__zutil_debug_label_tl ]
+                \seq_use:Nn \l__zutil_debug_sublabels_seq {/} ~
+              }
+            % to wrap the text, \zutil_debug:nn has to be the base
+            \zutil_debug_use_text:n { \exp_not:n {#2} }
+            \iow_newline:
+          }
+      }
+    \group_end:
+  }
+\cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
+
+\keys_define:nn { zutil/debug }
+  {
+    label .code:n = \__zutil_debug_set_label:n {#1}
+  , label .value_required:n = true
+  , e .code:n = \exp_args:Ne \__zutil_debug_set_label:n {#1}
+  , e .value_required:n = true
+    % treat unknown keys as label and drop their values, if any
+    % TODO: raise an info and define unknown key at hand?
+  , unknown .code:n =
+      \exp_args:No \__zutil_debug_set_label:n {\l_keys_key_str}
+  , 
+  }
+
+\cs_new_protected:Npn \__zutil_debug_set_label:n
+  {
+    \bool_if:NTF \l__zutil_debug_labeled_bool
+      {
+        \seq_put_right:Nn \l__zutil_debug_sublabels_seq
+      }
+      {
+        \bool_set_true:N \l__zutil_debug_labeled_bool
+        \tl_set:Nn \l__zutil_debug_label_tl
+      }
+  }
+
+% centric public toggle
+% \iow_term:n writes to both terminal and log; \iow_log:n writes to log only
+\cs_new_eq:NN \zutil_debug_do:n \iow_term:n
+\cs_generate_variant:Nn \zutil_debug_do:n { e }
+% \cs_new_eq:NN \zutil_debug_do:n \use_none:n % turn off
+
+\cs_new:Npn \zutil_debug_use_label:n #1
+  { [#1] }
+\cs_new:Npn \zutil_debug_use_text:n #1
+  { >>#1<< }
+
+% if do next debug; can be used as a prefix/decorator, so we don't need
+% separate \zutil_debug_if:nn and friends
+%
+% usage:
+%   \zutil_debug_if:n {<bool expr>}
+%   \zutil_debug:n {<text>}
+\cs_new_protected:Npn \zutil_debug_if:n
+  {
+    \bool_set:Nn \l__zutil_debug_do_bool
+  }
+
+% :nn variations
+\cs_new_protected:Npn \zutil_debug:nN #1#2
+  { \zutil_debug:ne {#1} { \cs_replacement_spec:N #2 } }
+\cs_new_protected:Npn \zutil_debug:nc #1#2
+  { \zutil_debug:ne {#1} { \cs_replacement_spec:c {#2} } }
+\cs_generate_variant:Nn \zutil_debug:nN { e }
+\cs_generate_variant:Nn \zutil_debug:nc { e }
+
+% :n and its variations
+\cs_new_protected:Npn \zutil_debug:n { \zutil_debug:nn {} }
+\cs_generate_variant:Nn \zutil_debug:n { e }
+
+\cs_new_protected:Npn \zutil_debug:N #1
+  { \zutil_debug:e { \cs_replacement_spec:N #1 } }
+\cs_new_protected:Npn \zutil_debug:c #1
+  { \zutil_debug:e { \cs_replacement_spec:c {#1} } }
+
+% LaTeX2e versions
+% pros: shorter names and perhaps more config possibilities
+% cons: no arg-spec and expansion indication
+\NewDocumentCommand \ZutilDebug { o m }
+  {
+    \group_begin:
+    \IfValueT {#1} { \ZutilDebugSet {#1} }
+    \__zutil_debug:n {#2}
+    \group_end:
+  }
+
+\NewDocumentCommand \ZutilDebugSet { m }
+  {
+    
+  }
+
+\iffalse
+  \ZutilDebug {<text> | \<command>}
+  \ZutilDebug [<label> | <kv-list>] {<text> | \<command>}
+
+  <kv-list>
+    label = <label> : tl
+    cell-label = true | false
+    if = <bool expr> : tl
+    expand = true | false
+    csname = true | false
+\fi
+
+% unfortunate long function names
+%
+% for tabularray, auto label with [<row>,<col>]
+\cs_new_protected:Npn \zutil_debug_tblr_cell:n 
+  { \__tblr_debug_cell:nw \zutil_debug:nn }
+\cs_new_protected:Npn \zutil_debug_tblr_cell:e
+  { \__tblr_debug_cell:nw \zutil_debug:ne }
+\cs_new_protected:Npn \zutil_debug_tblr_cell:N
+  { \__tblr_debug_cell:nw \zutil_debug:nN }
+\cs_new_protected:Npn \zutil_debug_tblr_cell:c
+  { \__tblr_debug_cell:nw \zutil_debug:nc }
+
+\cs_new_protected:Npn \zutil_debug_tblr_cell:nw #1
+  { \exp_args:Ne #1 { \the\c@rownum , \the\c@colnum } }

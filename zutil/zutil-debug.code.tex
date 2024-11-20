@@ -4,6 +4,7 @@
 % TODO: level (+, _)
 % TODO: if
 % TODO: \zutil_debug_set:n, perhaps also \zutil_set:n?
+% TODO: reset labels
 
 \tl_new:N    \l__zutil_debug_label_tl
 \seq_new:N   \l__zutil_debug_sublabels_seq
@@ -129,7 +130,7 @@
     \zutil_debug:nn {#1} {#2}
   }
 
-\NewDocumentCommand \ZutilDebugSet { O{} m }
+\NewDocumentCommand \ZutilDebugCmd { O{} m }
   {
     \zutil_debug:nN {#1} #2
   }

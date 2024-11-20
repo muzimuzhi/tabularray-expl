@@ -1,6 +1,10 @@
 \ProvidesExplFile {zutil-debug.code.tex} {2024-11-19} {0.1}
   {Z's utilities for debugging}
 
+% TODO: level (+, _)
+% TODO: if
+% TODO: \zutil_debug_set:n, perhaps also \zutil_set:n?
+
 \tl_new:N    \l__zutil_debug_label_tl
 \seq_new:N   \l__zutil_debug_sublabels_seq
 \bool_new:N  \l__zutil_debug_labeled_bool
@@ -19,7 +23,6 @@
       { \keys_set:nn { zutil/debug } {#1} }
     \bool_if:NT \l__zutil_debug_do_bool
       {
-        % e-type expansion is needed by \iow_newline:
         \zutil_debug_do:e
           {
             % pretend it's an error, so can be filtered out by TeXstudio
@@ -43,6 +46,8 @@
   }
 \cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
 
+
+% key-value processing
 \keys_define:nn { zutil/debug }
   {
     label .code:n = \__zutil_debug_set_label:n {#1}
@@ -68,16 +73,18 @@
       }
   }
 
+
 % centric public toggle
 % \iow_term:n writes to both terminal and log; \iow_log:n writes to log only
 \cs_new_eq:NN \zutil_debug_do:n \iow_term:n
 \cs_generate_variant:Nn \zutil_debug_do:n { e }
 % \cs_new_eq:NN \zutil_debug_do:n \use_none:n % turn off
 
-\cs_new:Npn \zutil_debug_use_label:n #1
-  { [#1] }
+% \cs_new:Npn \zutil_debug_use_label:n #1
+%   { [#1] }
 \cs_new:Npn \zutil_debug_use_text:n #1
   { >>#1<< }
+
 
 % if do next debug; can be used as a prefix/decorator, so we don't need
 % separate \zutil_debug_if:nn and friends
@@ -90,7 +97,9 @@
     \bool_set:Nn \l__zutil_debug_do_bool
   }
 
-% :nn variations
+
+% :nN and its variants
+% nN, nc, eN, ec forms
 \cs_new_protected:Npn \zutil_debug:nN #1#2
   { \zutil_debug:ne {#1} { \cs_replacement_spec:N #2 } }
 \cs_new_protected:Npn \zutil_debug:nc #1#2
@@ -98,7 +107,9 @@
 \cs_generate_variant:Nn \zutil_debug:nN { e }
 \cs_generate_variant:Nn \zutil_debug:nc { e }
 
-% :n and its variations
+
+% :n, :N and their variations, accepting only the text
+% n, e, N, c
 \cs_new_protected:Npn \zutil_debug:n { \zutil_debug:nn {} }
 \cs_generate_variant:Nn \zutil_debug:n { e }
 
@@ -107,45 +118,23 @@
 \cs_new_protected:Npn \zutil_debug:c #1
   { \zutil_debug:e { \cs_replacement_spec:c {#1} } }
 
-% LaTeX2e versions
-% pros: shorter names and perhaps more config possibilities
+
+% LaTeX2e interfaces
+% pros: shorter names
 % cons: no arg-spec and expansion indication
-\NewDocumentCommand \ZutilDebug { o m }
+\NewDocumentCommand \ZutilDebug { O{} m }
   {
-    \group_begin:
-    \IfValueT {#1} { \ZutilDebugSet {#1} }
-    \__zutil_debug:n {#2}
-    \group_end:
+    \zutil_debug:nn {#1} {#2}
   }
 
-\NewDocumentCommand \ZutilDebugSet { m }
+\NewDocumentCommand \ZutilDebugSet { O{} m }
   {
-    
+    \zutil_debug:nN {#1} #2
   }
 
-\iffalse
-  \ZutilDebug {<text> | \<command>}
-  \ZutilDebug [<label> | <kv-list>] {<text> | \<command>}
 
-  <kv-list>
-    label = <label> : tl
-    cell-label = true | false
-    if = <bool expr> : tl
-    expand = true | false
-    csname = true | false
-\fi
-
-% unfortunate long function names
-%
-% for tabularray, auto label with [<row>,<col>]
-\cs_new_protected:Npn \zutil_debug_tblr_cell:n 
-  { \__tblr_debug_cell:nw \zutil_debug:nn }
-\cs_new_protected:Npn \zutil_debug_tblr_cell:e
-  { \__tblr_debug_cell:nw \zutil_debug:ne }
-\cs_new_protected:Npn \zutil_debug_tblr_cell:N
-  { \__tblr_debug_cell:nw \zutil_debug:nN }
-\cs_new_protected:Npn \zutil_debug_tblr_cell:c
-  { \__tblr_debug_cell:nw \zutil_debug:nc }
-
-\cs_new_protected:Npn \zutil_debug_tblr_cell:nw #1
-  { \exp_args:Ne #1 { \the\c@rownum , \the\c@colnum } }
+% tabularray support
+\keys_define:nn { zutil/debug }
+  {
+    tblr .meta:n = { label = {\the\c@rownum , \the\c@colnum } }
+  }

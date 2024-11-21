@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 (zutil.sty
-Package: zutil ....-..-.. v... Z's utilities, all modules pre-loaded
+Package: zutil ....-..-.. v... Z's utilities
 (zutil-debug.code.tex
 File: zutil-debug.code.tex ....-..-.. v... Z's utilities for debugging
 \l__zutil_debug_level_int=\count...

@@ -1,22 +1,19 @@
 \ProvidesExplPackage {zutil} {2024-11-21} {0.2}
-  {Z's\space utilities,\space all\space modules\space pre-loaded}
+  {Z's\space utilities}
 
 
-\cs_if_exist:NF \zutil_set:n
+% curried
+\cs_new_protected:Npn \zutil_set:n
   {
-    % curried
-    \cs_new_protected:Npn \zutil_set:n
-      {
-        \keys_set:nn { zutil }
-      }
+    \keys_set:nn { zutil }
+  }
 
-    \cs_new_protected:Npn \zutil_load_module:n #1
+\cs_new_protected:Npn \zutil_load_module:n #1
+  {
+    \cs_if_exist:cF { __zutil_module_[#1]_loaded: }
       {
-        \cs_if_exist:cF { __zutil_module_[#1]_loaded: }
-          {
-            \cs_gset:cn { __zutil_module_[#1]_loaded: } {}
-            \file_input:n { zutil-#1.code.tex }
-          }
+        \cs_gset:cn { __zutil_module_[#1]_loaded: } {}
+        \file_input:n { zutil-#1.code.tex }
       }
   }
 

@@ -3,11 +3,11 @@ Don't change this file in any respect.
 ============================================================
 TEST 1: zutil_debug:nn
 ============================================================
-! debug [label] >>test<<
-! debug [label]l2/l3 >>test<<
-! debug [Label] >>test<<
-! debug [Label]l2/l3 >>test<<
-! debug [-NoValue-]\c_novalue_tl/-NoValue- >>test<<
+! debug [label] >>text<<
+! debug [label]l2/l3 >>text<<
+! debug [Label] >>text<<
+! debug [Label]l2/l3 >>text<<
+! debug [-NoValue-]\c_novalue_tl/-NoValue- >>text<<
 ============================================================
 ============================================================
 TEST 2: zutil_debug:n, zutil_debug:N
@@ -16,6 +16,21 @@ TEST 2: zutil_debug:n, zutil_debug:N
 ! debug >>-NoValue-<<
 ! debug >>-NoValue-<<
 ! debug >>undefined<<
+============================================================
+============================================================
+TEST 3: zutil_debug_set:n
+============================================================
+! debug [Label] >>text<<
+! debug [config]l2/ln >>text<<
+! debug [Label] >>text<<
+============================================================
+============================================================
+TEST 4: zutil_debug_set:n and tblr
+============================================================
+! debug [beg] >>text<<
+! debug [0,1] >>text<<
+! debug [1,1] >>text<<
+! debug [end] >>text<<
 ============================================================
 ***************
 [test] 0 error(s) encountered.

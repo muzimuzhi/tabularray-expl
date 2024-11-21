@@ -23,7 +23,9 @@
   {
     \group_begin:
     \tl_if_blank:nF {#1}
-      { \keys_set:nn { zutil/debug } {#1} }
+      {
+        \keys_set_exclude_groups:nnn { zutil/debug } {config} {#1}
+      }
     \bool_if:NT \l__zutil_debug_do_bool
       {
         \zutil_debug_do:e
@@ -49,6 +51,12 @@
   }
 \cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
 
+% curried
+\cs_new_protected:Npn \zutil_debug_set:n
+  {
+    \keys_set:nn { zutil/debug }
+  }
+
 
 % key-value processing
 % - \zutil_debug:nn should accept as few pre-defined keys as possible
@@ -63,8 +71,15 @@
     % always dropped, if any.
     % pity "unknown .value_forbidden:n = true" doesn't work
   , unknown .code:n =
-      \exp_args:No \__zutil_debug_set_label:n {\l_keys_key_str}
-  , 
+      \exp_args:No \__zutil_debug_set_label:n { \l_keys_key_str }
+  % keys available to \zutil_debug_set:n only
+  , reset-labels .code:n =
+    {
+      \bool_set_false:N \l__zutil_debug_labeled_bool
+      \tl_clear:N \l__zutil_debug_label_tl
+      \seq_clear:N \l__zutil_debug_sublabels_seq
+    }
+  , reset-labels .groups:n = { config }
   }
 
 \cs_new_protected:Npn \__zutil_debug_set_label:n
@@ -149,7 +164,11 @@
 
 
 % tabularray support
-\keys_define:nn { zutil/debug }
+\hook_gput_code:nnn { package/tabularray/after } { zutil/debug }
   {
-    tblr .meta:n = { label = {\the\c@rownum , \the\c@colnum } }
+    \keys_define:nn { zutil/debug }
+      {
+        % expansion is delayed to use of this label
+        tblr .meta:n = { label = { \the\c@rownum , \the\c@colnum } }
+      }
   }

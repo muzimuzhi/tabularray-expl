@@ -11,13 +11,13 @@
 
 \TEST{zutil_debug:nn}{
   % "label" key
-  \zutil_debug:nn { label=label } { test }
-  \zutil_debug:nn { label=label, label=l2, label=l3 } { test }
+  \zutil_debug:nn { label=label } { text }
+  \zutil_debug:nn { label=label, label=l2, label=l3 } { text }
   % unknown key as label
-  \zutil_debug:nn { Label } { test }
-  \zutil_debug:nn { Label, l2, l3 } { test }
+  \zutil_debug:nn { Label } { text }
+  \zutil_debug:nn { Label, l2, l3 } { text }
   % expansion on labels
-  \zutil_debug:nn { label=\c_novalue_tl, \c_novalue_tl, e=\c_novalue_tl} {test}
+  \zutil_debug:nn { label=\c_novalue_tl, \c_novalue_tl, e=\c_novalue_tl} {text}
 }
 
 \TEST{zutil_debug:n,~ zutil_debug:N}{
@@ -25,6 +25,30 @@
   \zutil_debug:e { \c_novalue_tl }
   \zutil_debug:N \c_novalue_tl
   \zutil_debug:c { my_novalue_tl }
+}
+
+% \TEST is run in a group
+\TEST{zutil_debug_set:n}{
+  \zutil_debug:nn { Label } { text }
+  \zutil_debug_set:n { label=config, l2 }
+  \zutil_debug:nn { ln } { text }
+  \zutil_debug_set:n { reset-labels }
+  \zutil_debug:nn { Label } { text }
+}
+
+\OMIT
+\usepackage{tabularray}
+\TIMO
+
+\TEST{zutil_debug_set:n~and~tblr}{
+  \zutil_debug:nn { beg } { text }
+  \zutil_debug_set:n { tblr }
+  \stepcounter{colnum}
+  \zutil_debug:nn { } { text }
+  \stepcounter{rownum}
+  \zutil_debug:nn { } { text }
+  \zutil_debug_set:n { reset-labels }
+  \zutil_debug:nn { end } { text }
 }
 
 \ExplSyntaxOff

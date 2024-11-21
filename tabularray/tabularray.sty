@@ -33,7 +33,9 @@
   \usepackage{xparse}
 }
 
-\RequirePackage{zutil}
+\cs_if_exist:NTF \zutil_set:n
+  { \zutil_load_module:n { tblr } }
+  { \RequirePackage{zutil-tblr} }
 
 \AtBeginDocument{
   \@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}

@@ -3,11 +3,8 @@ module = "zutil"
 
 maindir         = ".."
 
-sourcefiles     =
-  {
-    "zutil.sty"
-  , "zutil-debug.code.tex"
-  }
+sourcefiles     = { "*.sty", "*.code.tex" }
+installfiles    = { "*.sty", "*.code.tex" }
 
 checkengines    = { "pdftex", "xetex", "luatex" }
 stdengine       = "pdftex"

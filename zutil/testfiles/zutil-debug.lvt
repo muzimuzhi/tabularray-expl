@@ -9,7 +9,7 @@
 
 \START
 
-\TEST{zutil_debug:nn}{
+\TEST{labels}{
   % "label" key
   \zutil_debug:nn { label=label } { text }
   \zutil_debug:nn { label=label, label=l2, label=l3 } { text }
@@ -20,7 +20,7 @@
   \zutil_debug:nn { label=\c_novalue_tl, \c_novalue_tl, e=\c_novalue_tl} {text}
 }
 
-\TEST{zutil_debug:n,~ zutil_debug:N}{
+\TEST{\zutil_debug:n,~ \zutil_debug:N}{
   \zutil_debug:n { \c_novalue_tl }
   \zutil_debug:e { \c_novalue_tl }
   \zutil_debug:N \c_novalue_tl
@@ -28,12 +28,16 @@
 }
 
 % \TEST is run in a group
-\TEST{zutil_debug_set:n}{
+\TEST{reset-labels}{
   \zutil_debug:nn { Label } { text }
   \zutil_debug_set:n { label=config, l2 }
   \zutil_debug:nn { reset-labels, ln } { text }
   \zutil_debug_set:n { reset-labels }
   \zutil_debug:nn { Label } { text }
+}
+
+\TEST{negative~level~raises~error}{
+  \zutil_debug:nn { - } { lv0 }
 }
 
 \TEST{level~options}{
@@ -60,6 +64,11 @@
 
   \zutil_debug_set:n { reset-labels }
   \zutil_debug:nn { end } { lv0 }
+}
+
+\TEST{\zutil_debug:nn~ignores~config~options}{
+  \zutil_debug:nn { Label, reset-labels } { text }
+  \zutil_debug:nn { +, reset-level } { text }
 }
 
 \OMIT

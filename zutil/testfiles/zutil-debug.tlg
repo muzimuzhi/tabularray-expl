@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: zutil_debug:nn
+TEST 1: labels
 ============================================================
 ! debug [label] >>text<<
 ! debug [label]l2/l3 >>text<<
@@ -10,7 +10,7 @@ TEST 1: zutil_debug:nn
 ! debug [-NoValue-]\c_novalue_tl/-NoValue- >>text<<
 ============================================================
 ============================================================
-TEST 2: zutil_debug:n, zutil_debug:N
+TEST 2: \zutil_debug:n , \zutil_debug:N 
 ============================================================
 ! debug >>\c_novalue_tl <<
 ! debug >>-NoValue-<<
@@ -18,14 +18,21 @@ TEST 2: zutil_debug:n, zutil_debug:N
 ! debug >>undefined<<
 ============================================================
 ============================================================
-TEST 3: zutil_debug_set:n
+TEST 3: reset-labels
 ============================================================
 ! debug [Label] >>text<<
 ! debug [config]l2/ln >>text<<
 ! debug [Label] >>text<<
 ============================================================
 ============================================================
-TEST 4: level options
+TEST 4: negative level raises error
+============================================================
+! Package zutil Error: Invalid negative debugging level.
+(zutil)                Level will be set to zero.
+! debug >>lv0<<
+============================================================
+============================================================
+TEST 5: level options
 ============================================================
 ! debug [beg] >>lv0<<
 ! debug [...] >>lv0<<
@@ -44,7 +51,13 @@ TEST 4: level options
 ! debug [end] >>lv0<<
 ============================================================
 ============================================================
-TEST 5: tblr
+TEST 6: \zutil_debug:nn ignores config options
+============================================================
+! debug [Label] >>text<<
+! debug   >>text<<
+============================================================
+============================================================
+TEST 7: tblr
 ============================================================
 ! debug [beg] >>text<<
 ! debug [0,1]   >>text<<
@@ -52,4 +65,4 @@ TEST 5: tblr
 ! debug [end] >>text<<
 ============================================================
 ***************
-[test] 0 error(s) encountered.
+[test] 1 error(s) encountered.

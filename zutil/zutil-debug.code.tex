@@ -2,19 +2,17 @@
   {Z's\space utilities\space for\space debugging}
 
 % TODO: do not load by default
-% TODO: level (+, _)
 % TODO: if
 % TODO: choose how debug info is used, log, term, collect
 
-% label, reset-labels
+% label
 \tl_new:N    \l__zutil_debug_label_tl
 \seq_new:N   \l__zutil_debug_sublabels_seq
 \bool_new:N  \l__zutil_debug_labeled_bool
-% level, reset-levels
+% level
 \int_new:N   \l__zutil_debug_level_int
 % if
 \bool_new:N  \l__zutil_debug_do_bool
-
 \bool_set_true:N \l__zutil_debug_do_bool
 
 % IDEA: if \iow_wrap:nnnN is needed, then this would be more
@@ -49,14 +47,6 @@
     \group_end:
   }
 \cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
-
-% #1 : bool = if labeled?
-% #2 : tl-var = main label
-% #3 : seq-var = sub-labels
-\cs_new:Npn \zutil_debug_use_label:NNN #1#2#3
-  {
-
-  }
 
 % #1 : tl = expandable formatted labels
 % #2 : int = level
@@ -98,15 +88,15 @@
   , label .value_required:n = true
   , e     .code:n   = \exp_args:Ne \__zutil_debug_set_label:n {#1}
   , e     .value_required:n = true
-  , +     .code:n   = \int_incr:N \l__zutil_debug_level_int
+  , +     .code:n   = \__zutil_debug_incr_level:
   , +     .value_forbidden:n = true
   , +     .groups:n = { global }
-  , -     .code:n   = \int_decr:N \l__zutil_debug_level_int
+  , -     .code:n   = \__zutil_debug_decr_level:
   , -     .groups:n = { global }
   , -     .value_forbidden:n = true
-  , +.    .code:n   = \int_incr:N \l__zutil_debug_level_int
+  , +.    .code:n   = \__zutil_debug_incr_level:
   , +.    .value_forbidden:n = true
-  , -.    .code:n   = \int_decr:N \l__zutil_debug_level_int
+  , -.    .code:n   = \__zutil_debug_decr_level:
   , -.    .value_forbidden:n = true
     % unknown keys are treated as string labels and their values are
     % always dropped, if any.

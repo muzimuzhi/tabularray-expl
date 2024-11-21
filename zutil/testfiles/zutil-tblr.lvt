@@ -28,6 +28,18 @@
   \seq_log:N \l_tmpa_seq
 }
 
+\TEST{\__zutil_cs_if_defined:NTF}{
+  \__zutil_cs_if_defined:NTF \zutil_set:n     \TRUE \ERROR
+  \__zutil_cs_if_defined:NTF \scan_stop:      \TRUE \ERROR
+  \__zutil_cs_if_defined:NTF \tex_undefined:D \ERROR \TRUE
+}
+
+\TEST{\__zutil_cs_if_defined:cTF}{
+  \__zutil_cs_if_defined:cTF { zutil_set:n }      \TRUE \ERROR
+  \__zutil_cs_if_defined:cTF { scan_stop: }       \TRUE \ERROR
+  \__zutil_cs_if_defined:cTF { tex_undefined:D }  \ERROR \TRUE
+}
+
 \ExplSyntaxOff
 
 \END

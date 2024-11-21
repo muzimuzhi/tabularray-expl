@@ -1,1 +1,11 @@
 * text=auto
+
+# overwrite language detection and stats on GitHub
+# https://github.com/github-linguist/linguist/blob/main/docs/overrides.md
+# TBD: how to classify .tlg files?
+*.def linguist-language=tex
+*.cfg linguist-language=tex
+*.lvt linguist-language=tex
+*.pvt linguist-language=tex
+tabularray-doc/** linguist-documentation
+*.html linguist-generated

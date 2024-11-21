@@ -19,7 +19,10 @@ jobs:
     strategy:
       matrix:
         config: ["build", "config-old"]
-        option: ["", "--dev"]
+        # TODO: find a way to handle different testfiles when checking
+        #       with latex and latex-dev
+        # option: ["", "--dev"]
+        option: [""]
     name: "Tests: ${{ matrix.config }}${{ matrix.option != '' && ' (latex-dev)' || '' }}"
     runs-on: ubuntu-latest
 
@@ -29,7 +32,7 @@ jobs:
     - name: Setup TeX Live
       uses: teatimeguest/setup-texlive-action@v3
       with:
-        package-file: .github/tl_package
+        package-file: .github/tl_packages
         update-all-packages: true
 
     # imagemagick is pre-installed on Ubuntu 22.04 image
@@ -66,7 +69,7 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: tabularray-diffs
+        name: tblr-diffs${{ matrix.config == 'config-old' && 'config-old' || '' }}${{ matrix.option != '' && '-dev' || '' }}
         path: |
           build/**/*.diff
           build/**/*.diff.png

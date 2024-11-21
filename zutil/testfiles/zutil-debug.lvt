@@ -71,23 +71,6 @@
   \zutil_debug:nn { +, reset-level } { text }
 }
 
-\OMIT
-\usepackage{tabularray}
-\TIMO
-
-\TEST{tblr}{
-  \zutil_debug:nn { beg } { text }
-
-  \zutil_debug_set:n { tblr, + }
-  \stepcounter{colnum}
-  \zutil_debug:nn { } { text }
-  \stepcounter{rownum}
-  \zutil_debug:nn { } { text }
-
-  \zutil_debug_set:n { reset-labels, - }
-  \zutil_debug:nn { end } { text }
-}
-
 \ExplSyntaxOff
 
 \END

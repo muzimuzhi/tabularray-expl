@@ -84,10 +84,12 @@
 
 \keys_define:nn { zutil/debug }
   {
+    % label keys
     label .code:n   = \__zutil_debug_set_label:n {#1}
   , label .value_required:n = true
   , e     .code:n   = \exp_args:Ne \__zutil_debug_set_label:n {#1}
   , e     .value_required:n = true
+    % level keys
   , +     .code:n   = \__zutil_debug_incr_level:
   , +     .value_forbidden:n = true
   , +     .groups:n = { global }
@@ -103,7 +105,7 @@
     % pity "unknown .value_forbidden:n = true" doesn't work
   , unknown .code:n =
       \exp_args:No \__zutil_debug_set_label:n { \l_keys_key_str }
-  % keys available to \zutil_debug_set:n only
+    % keys available to \zutil_debug_set:n only
   , reset-labels .code:n =
     {
       \bool_set_false:N \l__zutil_debug_labeled_bool
@@ -120,7 +122,7 @@
   , reset-level  .value_forbidden:n = true
   }
 
-% process label options
+% process label keys
 \cs_new_protected:Npn \__zutil_debug_set_label:n
   {
     \bool_if:NTF \l__zutil_debug_labeled_bool
@@ -133,7 +135,7 @@
       }
   }
 
-% process level manipulation options
+% process level keys
 \cs_new_protected:Npn \__zutil_debug_incr_level:
   {
     \int_incr:N \l__zutil_debug_level_int
@@ -153,17 +155,7 @@
         \msg_error:nn { zutil } { debug/negative-level }
         \int_zero:N \l__zutil_debug_level_int
       }
-    % \__zutil_debug_set_level:Vc
-    %   \l__zutil_debug_level_int
-    %   { g__zutil_debug_level_ \int_use:N \l__zutil_debug_level_int _str }
   }
-
-% \cs_new_protected:Npn \__zutil_debug_set_level:n #1
-%   {
-
-%   }
-% \cs_generate_variant:Nn \__zutil_debug_set_level:n { V }
-
 
 % if do next debug; can be used as a prefix/decorator, so we don't need
 % separate \zutil_debug_if:nn and friends
@@ -180,7 +172,9 @@
 % :nN and its variants
 % nN, nc, eN, ec forms
 \cs_new_protected:Npn \zutil_debug:nN #1#2
-  { \zutil_debug:ne {#1} { \__zutil_debug_use:N #2 } }
+  {
+    \zutil_debug:ne {#1} { \__zutil_debug_use:N #2 }
+  }
 \cs_new_protected:Npn \zutil_debug:nc #1#2
   {
     \zutil_debug:ne {#1} { \__zutil_debug_use:c {#2} }
@@ -199,7 +193,7 @@
       { \cs_replacement_spec:c {#1} } { \tl_to_str:n { undefined } }
   }
 
-% :n, :N and their variations, accepting only the text
+% :n, :N and their variations, taking only the text
 % n, e, N, c
 \cs_new_protected:Npn \zutil_debug:n { \zutil_debug:nn {} }
 \cs_generate_variant:Nn \zutil_debug:n { e }
@@ -209,7 +203,7 @@
 
 % LaTeX2e interfaces
 % pros: shorter names
-% cons: no arg-spec and expansion indication
+% cons: harder expansion indication (no c, e-type)
 \NewDocumentCommand \ZutilDebug { O{} m }
   {
     \zutil_debug:nn {#1} {#2}
@@ -226,7 +220,7 @@
   {
     \keys_define:nn { zutil/debug }
       {
-        % expansion is delayed to use of this label
+        % expansion is delayed to use of labels
         tblr .meta:n = { label = { \the\c@rownum , \the\c@colnum } }
       }
   }

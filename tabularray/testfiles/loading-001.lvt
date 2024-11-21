@@ -7,6 +7,8 @@
 
 \START
 
+\AddToHook{package/zutil/before}{\OMIT}
+\AddToHook{package/zutil/after}{\TIMO}
 \usepackage{tabularray}
 
 \END

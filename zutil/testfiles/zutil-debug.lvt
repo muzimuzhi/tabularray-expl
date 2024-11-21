@@ -1,0 +1,76 @@
+\input{regression-test}
+\documentclass{minimal}
+
+\usepackage{zutil}
+
+\ExplSyntaxOn
+
+\debug_on:n { check-declarations , deprecation }
+
+\START
+
+\TEST{labels}{
+  % "label" key
+  \zutil_debug:nn { label=label } { text }
+  \zutil_debug:nn { label=label, label=l2, label=l3 } { text }
+  % unknown key as label
+  \zutil_debug:nn { Label } { text }
+  \zutil_debug:nn { Label, l2, l3 } { text }
+  % expansion on labels
+  \zutil_debug:nn { label=\c_novalue_tl, \c_novalue_tl, e=\c_novalue_tl} {text}
+}
+
+\TEST{\zutil_debug:n,~ \zutil_debug:N}{
+  \zutil_debug:n { \c_novalue_tl }
+  \zutil_debug:e { \c_novalue_tl }
+  \zutil_debug:N \c_novalue_tl
+  \zutil_debug:c { my_novalue_tl }
+}
+
+% \TEST is run in a group
+\TEST{reset-labels}{
+  \zutil_debug:nn { Label } { text }
+  \zutil_debug_set:n { label=config, l2 }
+  \zutil_debug:nn { reset-labels, ln } { text }
+  \zutil_debug_set:n { reset-labels }
+  \zutil_debug:nn { Label } { text }
+}
+
+\TEST{negative~level~raises~error}{
+  \zutil_debug:nn { - } { lv0 }
+}
+
+\TEST{level~options}{
+  \zutil_debug:nn { beg } { lv0 }
+
+  \zutil_debug_set:n { ... }
+  \zutil_debug:nn {    } { lv0 }
+  \zutil_debug:nn { +  } { lv1 }
+  \zutil_debug:nn {    } { lv1 }
+  \zutil_debug:nn { +  } { lv2 }
+  \zutil_debug:nn {    } { lv2 }
+  \zutil_debug:nn { +. } { lv3 }
+
+  \zutil_debug_set:n { reset-level }
+  \zutil_debug:nn {    } { lv0 }
+  \zutil_debug_set:n { +, + }
+
+  \zutil_debug:nn { +. } { lv3 }
+  \zutil_debug:nn {    } { lv2 }
+  \zutil_debug:nn {    } { lv2 }
+  \zutil_debug:nn { -  } { lv1 }
+  \zutil_debug:nn {    } { lv1 }
+  \zutil_debug:nn { -  } { lv0 }
+
+  \zutil_debug_set:n { reset-labels }
+  \zutil_debug:nn { end } { lv0 }
+}
+
+\TEST{\zutil_debug:nn~ignores~config~options}{
+  \zutil_debug:nn { Label, reset-labels } { text }
+  \zutil_debug:nn { +, reset-level } { text }
+}
+
+\ExplSyntaxOff
+
+\END

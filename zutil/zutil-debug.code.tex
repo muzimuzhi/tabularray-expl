@@ -1,0 +1,226 @@
+\ProvidesExplFile {zutil-debug.code.tex} {2024-11-21} {0.2}
+  {Z's\space utilities\space for\space debugging}
+
+% TODO: do not load by default
+% TODO: if. May need a new bool expr parser
+% TODO: choose how debug info is used, log, term, collect
+
+% label
+\tl_new:N    \l__zutil_debug_label_tl
+\seq_new:N   \l__zutil_debug_sublabels_seq
+\bool_new:N  \l__zutil_debug_labeled_bool
+% level
+\int_new:N   \l__zutil_debug_level_int
+% if
+\bool_new:N  \l__zutil_debug_do_bool
+\bool_set_true:N \l__zutil_debug_do_bool
+
+% IDEA: if \iow_wrap:nnnN is needed, then this would be more
+%       like \tl_log:n. Also note \tl_show:n uses \tex_showtokens:D.
+% hmm this gets more complicated
+% #1 : keyval = options, #2 : tl = debug text
+\cs_new_protected:Npn \zutil_debug:nn #1#2
+  {
+    \keys_set_groups:nnn { zutil/debug } { global } { #1 }
+    \group_begin:
+    \keys_set_exclude_groups:nnn { zutil/debug } { config, global } {#1}
+    \bool_if:NT \l__zutil_debug_do_bool
+      {
+        \zutil_debug_do:e
+          {
+            % pretend it's an error, so can be filtered out by TeXstudio
+            !~debug~
+            \bool_if:NT \l__zutil_debug_labeled_bool
+              {
+                % output forms
+                % [label1]
+                % [label1]label2/label3/.../labeln
+                [ \l__zutil_debug_label_tl ]
+                \seq_use:Nn \l__zutil_debug_sublabels_seq {/} ~
+              }
+            % TBD: which way is better/quicker, \exp_not:n or
+            %      \exp_args:No \cmd { \tl_to_str:n {#1} }?
+            \zutil_debug_use_text:n { \exp_not:n {#2} }
+            \iow_newline:
+          }
+      }
+    \group_end:
+  }
+\cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
+
+% #1 : tl = expandable formatted labels
+% #2 : int = level
+% #3 : tl = expandable formatted text
+\cs_new:Npn \zutil_debug_use_level:nNn #1#2#3
+  {
+    #1
+    \prg_replicate:nn {#2} { \c_space_tl \c_space_tl }
+    #3
+  }
+
+% centric public toggle
+% \iow_term:n writes to both terminal and log; \iow_log:n writes to log only
+\cs_new_eq:NN \zutil_debug_do:n \iow_term:n
+\cs_generate_variant:Nn \zutil_debug_do:n { e }
+% \cs_new_eq:NN \zutil_debug_do:n \use_none:n % turn off
+
+% \cs_new:Npn \zutil_debug_use_label:n #1
+%   { [#1] }
+\cs_new:Npn \zutil_debug_use_text:n #1
+  {
+    \prg_replicate:nn {\l__zutil_debug_level_int} { \c_space_tl \c_space_tl } >>#1<<
+  }
+
+
+% key-value processing
+% - \zutil_debug:nn should accept as few pre-defined keys as possible
+% - \zutiL_debug_set:n may accept a bit more keys
+
+% curried
+\cs_new_protected:Npn \zutil_debug_set:n
+  {
+    \keys_set:nn { zutil/debug }
+  }
+
+\keys_define:nn { zutil/debug }
+  {
+    % label keys
+    label .code:n   = \__zutil_debug_set_label:n {#1}
+  , label .value_required:n = true
+  , e     .code:n   = \exp_args:Ne \__zutil_debug_set_label:n {#1}
+  , e     .value_required:n = true
+    % level keys
+  , +     .code:n   = \__zutil_debug_incr_level:
+  , +     .value_forbidden:n = true
+  , +     .groups:n = { global }
+  , -     .code:n   = \__zutil_debug_decr_level:
+  , -     .groups:n = { global }
+  , -     .value_forbidden:n = true
+  , +.    .code:n   = \__zutil_debug_incr_level:
+  , +.    .value_forbidden:n = true
+  , -.    .code:n   = \__zutil_debug_decr_level:
+  , -.    .value_forbidden:n = true
+    % unknown keys are treated as string labels and their values are
+    % always dropped, if any.
+    % pity "unknown .value_forbidden:n = true" doesn't work
+  , unknown .code:n =
+      \exp_args:No \__zutil_debug_set_label:n { \l_keys_key_str }
+    % keys available to \zutil_debug_set:n only
+  , reset-labels .code:n =
+    {
+      \bool_set_false:N \l__zutil_debug_labeled_bool
+      \tl_clear:N \l__zutil_debug_label_tl
+      \seq_clear:N \l__zutil_debug_sublabels_seq
+    }
+  , reset-labels .value_forbidden:n = true
+  , reset-labels .groups:n = { config }
+  , reset-label  .meta:n = { reset-labels }
+  , reset-label  .value_forbidden:n = true
+  , reset-label  .groups:n = { config }
+  , reset-level  .code:n = \int_zero:N \l__zutil_debug_level_int
+  , reset-level  .groups:n = { config }
+  , reset-level  .value_forbidden:n = true
+  }
+
+% process label keys
+\cs_new_protected:Npn \__zutil_debug_set_label:n
+  {
+    \bool_if:NTF \l__zutil_debug_labeled_bool
+      {
+        \seq_put_right:Nn \l__zutil_debug_sublabels_seq
+      }
+      {
+        \bool_set_true:N \l__zutil_debug_labeled_bool
+        \tl_set:Nn \l__zutil_debug_label_tl
+      }
+  }
+
+% process level keys
+\cs_new_protected:Npn \__zutil_debug_incr_level:
+  {
+    \int_incr:N \l__zutil_debug_level_int
+    % \__zutil_debug_set_level:V \l__zutil_debug_level_int
+  }
+
+\msg_new:nnn { zutil } { debug/negative-level }
+  {
+    Invalid~negative~debugging~level. \\
+    Level~will~be~set~to~zero.
+  }
+\cs_new_protected:Npn \__zutil_debug_decr_level:
+  {
+    \int_decr:N \l__zutil_debug_level_int
+    \int_compare:nNnT \l__zutil_debug_level_int < 0
+      {
+        \msg_error:nn { zutil } { debug/negative-level }
+        \int_zero:N \l__zutil_debug_level_int
+      }
+  }
+
+% if do next debug; can be used as a prefix/decorator, so we don't need
+% separate \zutil_debug_if:nn and friends
+%
+% usage:
+%   \zutil_debug_if:n {<bool expr>}
+%   \zutil_debug:n {<text>}
+\cs_new_protected:Npn \zutil_debug_if:n
+  {
+    \bool_set:Nn \l__zutil_debug_do_bool
+  }
+
+
+% :nN and its variants
+% nN, nc, eN, ec forms
+\cs_new_protected:Npn \zutil_debug:nN #1#2
+  {
+    \zutil_debug:ne {#1} { \__zutil_debug_use:N #2 }
+  }
+\cs_new_protected:Npn \zutil_debug:nc #1#2
+  {
+    \zutil_debug:ne {#1} { \__zutil_debug_use:c {#2} }
+  }
+\cs_generate_variant:Nn \zutil_debug:nN { e }
+\cs_generate_variant:Nn \zutil_debug:nc { e }
+
+\cs_new:Npn \__zutil_debug_use:N #1
+  {
+    \__zutil_cs_if_defined:NTF #1
+      { \cs_replacement_spec:N #1 } { \tl_to_str:n { undefined } }
+  }
+\cs_new:Npn \__zutil_debug_use:c #1
+  {
+    \__zutil_cs_if_defined:cTF {#1}
+      { \cs_replacement_spec:c {#1} } { \tl_to_str:n { undefined } }
+  }
+
+% :n, :N and their variations, taking only the text
+% n, e, N, c
+\cs_new_protected:Npn \zutil_debug:n { \zutil_debug:nn {} }
+\cs_generate_variant:Nn \zutil_debug:n { e }
+\cs_new_protected:Npn \zutil_debug:N { \zutil_debug:nN {} }
+\cs_new_protected:Npn \zutil_debug:c { \zutil_debug:nc {} }
+
+
+% LaTeX2e interfaces
+% pros: shorter names
+% cons: harder expansion indication (no c, e-type)
+\NewDocumentCommand \ZutilDebug { O{} m }
+  {
+    \zutil_debug:nn {#1} {#2}
+  }
+
+\NewDocumentCommand \ZutilDebugCmd { O{} m }
+  {
+    \zutil_debug:nN {#1} #2
+  }
+
+
+% tabularray support
+\hook_gput_code:nnn { package/tabularray/after } { zutil/debug }
+  {
+    \keys_define:nn { zutil/debug }
+      {
+        % expansion is delayed to use of labels
+        tblr .meta:n = { label = { \the\c@rownum , \the\c@colnum } }
+      }
+  }

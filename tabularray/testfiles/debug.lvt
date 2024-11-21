@@ -1,0 +1,28 @@
+\input{regression-test}
+\documentclass{minimal}
+
+\usepackage{tabularray}
+\usepackage{zutil}
+
+\ExplSyntaxOn
+
+\debug_on:n { check-declarations , deprecation }
+
+\START
+
+\TEST{tblr}{
+  \zutil_debug:nn { beg } { text }
+
+  \zutil_debug_set:n { tblr, + }
+  \stepcounter{colnum}
+  \zutil_debug:nn { } { text }
+  \stepcounter{rownum}
+  \zutil_debug:nn { } { text }
+
+  \zutil_debug_set:n { reset-labels, - }
+  \zutil_debug:nn { end } { text }
+}
+
+\ExplSyntaxOff
+
+\END

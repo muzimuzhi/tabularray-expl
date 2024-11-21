@@ -1,7 +1,12 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 (zutil.sty
-Package: zutil ....-..-.. v... Z's utilities, l3seq part
-)
+Package: zutil ....-..-.. v... Z's utilities
+(zutil-debug.code.tex
+File: zutil-debug.code.tex ....-..-.. v... Z's utilities for debugging
+\l__zutil_debug_level_int=\count...
+) (zutil-tblr.code.tex
+File: zutil-debug.code.tex ....-..-.. v... Z's utilities for tabularray
+))
 ***************
 [test] 0 error(s) encountered.

@@ -86,4 +86,10 @@
 %% modules
 %%
 
+% curried
+\cs_new_protected:Npn \zutil_set:n
+  {
+    \keys_set:nn { zutil }
+  }
+
 \file_input:n { zutil-debug.code.tex }

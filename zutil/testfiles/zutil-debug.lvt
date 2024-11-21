@@ -31,23 +31,51 @@
 \TEST{zutil_debug_set:n}{
   \zutil_debug:nn { Label } { text }
   \zutil_debug_set:n { label=config, l2 }
-  \zutil_debug:nn { ln } { text }
+  \zutil_debug:nn { reset-labels, ln } { text }
   \zutil_debug_set:n { reset-labels }
   \zutil_debug:nn { Label } { text }
+}
+
+\TEST{level~options}{
+  \zutil_debug:nn { beg } { lv0 }
+
+  \zutil_debug_set:n { ... }
+  \zutil_debug:nn {    } { lv0 }
+  \zutil_debug:nn { +  } { lv1 }
+  \zutil_debug:nn {    } { lv1 }
+  \zutil_debug:nn { +  } { lv2 }
+  \zutil_debug:nn {    } { lv2 }
+  \zutil_debug:nn { +. } { lv3 }
+
+  \zutil_debug_set:n { reset-level }
+  \zutil_debug:nn {    } { lv0 }
+  \zutil_debug_set:n { +, + }
+
+  \zutil_debug:nn { +. } { lv3 }
+  \zutil_debug:nn {    } { lv2 }
+  \zutil_debug:nn {    } { lv2 }
+  \zutil_debug:nn { -  } { lv1 }
+  \zutil_debug:nn {    } { lv1 }
+  \zutil_debug:nn { -  } { lv0 }
+
+  \zutil_debug_set:n { reset-labels }
+  \zutil_debug:nn { end } { lv0 }
 }
 
 \OMIT
 \usepackage{tabularray}
 \TIMO
 
-\TEST{zutil_debug_set:n~and~tblr}{
+\TEST{tblr}{
   \zutil_debug:nn { beg } { text }
-  \zutil_debug_set:n { tblr }
+
+  \zutil_debug_set:n { tblr, + }
   \stepcounter{colnum}
   \zutil_debug:nn { } { text }
   \stepcounter{rownum}
   \zutil_debug:nn { } { text }
-  \zutil_debug_set:n { reset-labels }
+
+  \zutil_debug_set:n { reset-labels, - }
   \zutil_debug:nn { end } { text }
 }
 

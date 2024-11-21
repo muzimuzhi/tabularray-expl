@@ -6,9 +6,13 @@
 % TODO: if
 % TODO: choose how debug info is used, log, term, collect
 
+% label, reset-labels
 \tl_new:N    \l__zutil_debug_label_tl
 \seq_new:N   \l__zutil_debug_sublabels_seq
 \bool_new:N  \l__zutil_debug_labeled_bool
+% level, reset-levels
+\int_new:N   \l__zutil_debug_level_int
+% if
 \bool_new:N  \l__zutil_debug_do_bool
 
 \bool_set_true:N \l__zutil_debug_do_bool
@@ -19,19 +23,15 @@
 % #1 : keyval = options, #2 : tl = debug text
 \cs_new_protected:Npn \zutil_debug:nn #1#2
   {
+    \keys_set_groups:nnn { zutil/debug } { global } { #1 }
     \group_begin:
-    \tl_if_blank:nF {#1}
-      {
-        \keys_set_exclude_groups:nnn { zutil/debug } {config} {#1}
-      }
+    \keys_set_exclude_groups:nnn { zutil/debug } { config, global } {#1}
     \bool_if:NT \l__zutil_debug_do_bool
       {
         \zutil_debug_do:e
           {
             % pretend it's an error, so can be filtered out by TeXstudio
             !~debug~
-            % TBD: which way is better/quicker, \exp_not:n or
-            %      \exp_args:No \cmd { \tl_to_str:n {#1} }?
             \bool_if:NT \l__zutil_debug_labeled_bool
               {
                 % output forms
@@ -40,7 +40,8 @@
                 [ \l__zutil_debug_label_tl ]
                 \seq_use:Nn \l__zutil_debug_sublabels_seq {/} ~
               }
-            % to wrap the text, \zutil_debug:nn has to be the base
+            % TBD: which way is better/quicker, \exp_not:n or
+            %      \exp_args:No \cmd { \tl_to_str:n {#1} }?
             \zutil_debug_use_text:n { \exp_not:n {#2} }
             \iow_newline:
           }
@@ -49,22 +50,64 @@
   }
 \cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
 
-% curried
-\cs_new_protected:Npn \zutil_debug_set:n
+% #1 : bool = if labeled?
+% #2 : tl-var = main label
+% #3 : seq-var = sub-labels
+\cs_new:Npn \zutil_debug_use_label:NNN #1#2#3
   {
-    \keys_set:nn { zutil/debug }
+
+  }
+
+% #1 : tl = expandable formatted labels
+% #2 : int = level
+% #3 : tl = expandable formatted text
+\cs_new:Npn \zutil_debug_use_level:nNn #1#2#3
+  {
+    #1
+    \prg_replicate:nn {#2} { \c_space_tl \c_space_tl }
+    #3
+  }
+
+% centric public toggle
+% \iow_term:n writes to both terminal and log; \iow_log:n writes to log only
+\cs_new_eq:NN \zutil_debug_do:n \iow_term:n
+\cs_generate_variant:Nn \zutil_debug_do:n { e }
+% \cs_new_eq:NN \zutil_debug_do:n \use_none:n % turn off
+
+% \cs_new:Npn \zutil_debug_use_label:n #1
+%   { [#1] }
+\cs_new:Npn \zutil_debug_use_text:n #1
+  {
+    \prg_replicate:nn {\l__zutil_debug_level_int} { \c_space_tl \c_space_tl } >>#1<<
   }
 
 
 % key-value processing
 % - \zutil_debug:nn should accept as few pre-defined keys as possible
 % - \zutiL_debug_set:n may accept a bit more keys
+
+% curried
+\cs_new_protected:Npn \zutil_debug_set:n
+  {
+    \keys_set:nn { zutil/debug }
+  }
+
 \keys_define:nn { zutil/debug }
   {
-    label .code:n = \__zutil_debug_set_label:n {#1}
+    label .code:n   = \__zutil_debug_set_label:n {#1}
   , label .value_required:n = true
-  , e .code:n = \exp_args:Ne \__zutil_debug_set_label:n {#1}
-  , e .value_required:n = true
+  , e     .code:n   = \exp_args:Ne \__zutil_debug_set_label:n {#1}
+  , e     .value_required:n = true
+  , +     .code:n   = \int_incr:N \l__zutil_debug_level_int
+  , +     .value_forbidden:n = true
+  , +     .groups:n = { global }
+  , -     .code:n   = \int_decr:N \l__zutil_debug_level_int
+  , -     .groups:n = { global }
+  , -     .value_forbidden:n = true
+  , +.    .code:n   = \int_incr:N \l__zutil_debug_level_int
+  , +.    .value_forbidden:n = true
+  , -.    .code:n   = \int_decr:N \l__zutil_debug_level_int
+  , -.    .value_forbidden:n = true
     % unknown keys are treated as string labels and their values are
     % always dropped, if any.
     % pity "unknown .value_forbidden:n = true" doesn't work
@@ -77,9 +120,17 @@
       \tl_clear:N \l__zutil_debug_label_tl
       \seq_clear:N \l__zutil_debug_sublabels_seq
     }
+  , reset-labels .value_forbidden:n = true
   , reset-labels .groups:n = { config }
+  , reset-label  .meta:n = { reset-labels }
+  , reset-label  .value_forbidden:n = true
+  , reset-label  .groups:n = { config }
+  , reset-level  .code:n = \int_zero:N \l__zutil_debug_level_int
+  , reset-level  .groups:n = { config }
+  , reset-level  .value_forbidden:n = true
   }
 
+% process label options
 \cs_new_protected:Npn \__zutil_debug_set_label:n
   {
     \bool_if:NTF \l__zutil_debug_labeled_bool
@@ -92,17 +143,36 @@
       }
   }
 
+% process level manipulation options
+\cs_new_protected:Npn \__zutil_debug_incr_level:
+  {
+    \int_incr:N \l__zutil_debug_level_int
+    % \__zutil_debug_set_level:V \l__zutil_debug_level_int
+  }
 
-% centric public toggle
-% \iow_term:n writes to both terminal and log; \iow_log:n writes to log only
-\cs_new_eq:NN \zutil_debug_do:n \iow_term:n
-\cs_generate_variant:Nn \zutil_debug_do:n { e }
-% \cs_new_eq:NN \zutil_debug_do:n \use_none:n % turn off
+\msg_new:nnn { zutil } { debug/negative-level }
+  {
+    Invalid~negative~debugging~level. \\
+    Level~will~be~set~to~zero.
+  }
+\cs_new_protected:Npn \__zutil_debug_decr_level:
+  {
+    \int_decr:N \l__zutil_debug_level_int
+    \int_compare:nNnT \l__zutil_debug_level_int < 0
+      {
+        \msg_error:nn { zutil } { debug/negative-level }
+        \int_zero:N \l__zutil_debug_level_int
+      }
+    % \__zutil_debug_set_level:Vc
+    %   \l__zutil_debug_level_int
+    %   { g__zutil_debug_level_ \int_use:N \l__zutil_debug_level_int _str }
+  }
 
-% \cs_new:Npn \zutil_debug_use_label:n #1
-%   { [#1] }
-\cs_new:Npn \zutil_debug_use_text:n #1
-  { >>#1<< }
+% \cs_new_protected:Npn \__zutil_debug_set_level:n #1
+%   {
+
+%   }
+% \cs_generate_variant:Nn \__zutil_debug_set_level:n { V }
 
 
 % if do next debug; can be used as a prefix/decorator, so we don't need

@@ -731,7 +731,7 @@
         \clist_log:N \g_tblr_used_child_selectors_clist
       }
       {
-        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_childs_arg_spec_tl
+        \__tblr_make_ltcmd_arg_spec:nnN { #2 } { #3 } \l__tblr_childs_arg_spec_tl
         \exp_args:NcV \NewDocumentCommand
           { __tblr_child_selector_ #1 :w } \l__tblr_childs_arg_spec_tl { #4 }
         \clist_gput_right:Nn \g_tblr_used_child_selectors_clist { #1 }
@@ -740,7 +740,7 @@
 \cs_generate_variant:Nn \__tblr_new_child_selector_aux:nnnn { ennn }
 
 %% #1: argument number, #2: optional argument default, #3: result tl
-\cs_new_protected:Npn \__tblr_make_xparse_arg_spec:nnN #1 #2 #3
+\cs_new_protected:Npn \__tblr_make_ltcmd_arg_spec:nnN #1 #2 #3
   {
     \tl_clear:N #3
     \int_compare:nNnT { #1 } > { 0 }
@@ -884,46 +884,52 @@
 
 \NewDocumentCommand \NewTableCommand { m O{0} o m }
   {
-    \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
+    \__tblr_if_table_command:NTF #1
       {
         \msg_error:nnn { tabularray } { defined-table-command } { #1 }
         \clist_log:N \g__tblr_table_commands_clist
       }
       {
-        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
+        % tmpa = csname of the table command
+        % tmpb = ltcmd arg-spec of the table command
+        \tl_set:Ne \l__tblr_tmpa_tl { \cs_to_str:N #1 }
+        \__tblr_make_ltcmd_arg_spec:nnN { #2 } { #3 } \l__tblr_tmpb_tl
         \exp_args:NcV \NewDocumentCommand
-          { __tblr_table_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
+          { __tblr_table_cmd_ \l__tblr_tmpa_tl :w } \l__tblr_tmpb_tl { #4 }
         %% we can not use \cs_if_exist:NTF here (see issue #328)
         \__zutil_cs_if_defined:NTF #1
           {
-            \cs_set_eq:cN { __tblr_table_command_ \cs_to_str:N #1 _saved:w } #1
+            \cs_set_eq:cN { __tblr_table_cmd_ \l__tblr_tmpa_tl _saved:w } #1
           }
           {
             \exp_args:NcV \NewDocumentCommand
-              { __tblr_table_command_ \cs_to_str:N #1 _saved:w } \l__tblr_a_tl { }
+              { __tblr_table_cmd_ \l__tblr_tmpa_tl _saved:w } \l__tblr_tmpb_tl { }
           }
-        \tl_new:c { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl }
+        \tl_new:c { g__tblr_table_cmd_ \l__tblr_tmpa_tl _arg_numb_tl }
         \IfValueTF { #3 }
           {
-            \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {-#2}
+            \tl_gset:cn { g__tblr_table_cmd_ \l__tblr_tmpa_tl _arg_numb_tl } {-#2}
           }
           {
-            \tl_gset:cn { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } {#2}
+            \tl_gset:cn { g__tblr_table_cmd_ \l__tblr_tmpa_tl _arg_numb_tl } {#2}
           }
         \clist_gput_right:Nn \g__tblr_table_commands_clist { #1 }
       }
   }
 
+\cs_new:Npn \__tblr_if_table_command:NTF #1
+  { \__zutil_cs_if_defined:cTF { __tblr_table_cmd_ \cs_to_str:N #1 :w } }
+
 \cs_new_protected:Npn \__tblr_enable_table_commands:
   {
     \clist_map_inline:Nn \g__tblr_table_commands_clist
-      { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 :w } }
+      { \cs_set_eq:Nc ##1 { __tblr_table_cmd_ \cs_to_str:N ##1 :w } }
   }
 
 \cs_new_protected:Npn \__tblr_disable_table_commands:
   {
     \clist_map_inline:Nn \g__tblr_table_commands_clist
-      { \cs_set_eq:Nc ##1 { __tblr_table_command_ \cs_to_str:N ##1 _saved:w } }
+      { \cs_set_eq:Nc ##1 { __tblr_table_cmd_ \cs_to_str:N ##1 _saved:w } }
   }
 
 \cs_new_protected:Npn \__tblr_execute_table_commands:
@@ -980,7 +986,7 @@
         \clist_log:N \g__tblr_content_commands_clist
       }
       {
-        \__tblr_make_xparse_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
+        \__tblr_make_ltcmd_arg_spec:nnN { #2 } { #3 } \l__tblr_a_tl
         \exp_args:NcV \NewDocumentCommand
           { __tblr_content_command_ \cs_to_str:N #1 :w } \l__tblr_a_tl { #4 }
         \clist_gput_right:Nn \g__tblr_content_commands_clist { #1 }
@@ -2410,7 +2416,7 @@
         \str_log:c { g_tblr_used_ \g__tblr_column_or_row_tl _types_str }
       }
       {
-        \__tblr_make_xparse_arg_spec:nnN {#2} {#3} \l__tblr_a_tl
+        \__tblr_make_ltcmd_arg_spec:nnN {#2} {#3} \l__tblr_a_tl
         \exp_args:NcV \NewDocumentCommand
           { tblr_ \g__tblr_column_or_row_tl _type_ #1 } \l__tblr_a_tl
           {
@@ -2822,7 +2828,7 @@
   {
     \tl_if_single_token:nTF {#1}
       {
-        \clist_if_in:NnTF \g__tblr_table_commands_clist { #1 }
+        \__tblr_if_table_command:NTF #1
           { \__tblr_extract_one_table_command:N #1 }
           {
             \token_if_eq_meaning:NNF #1 \q_stop

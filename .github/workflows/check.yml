@@ -39,8 +39,10 @@ jobs:
     # https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md#installed-apt-packages
     - name: Install ppmcheckpdf dependencies
       if: matrix.config == 'config-old'
-      run: |
-        sudo apt-get install imagemagick poppler-utils
+      # actively maintained
+      uses: gerlero/apt-install@v1
+      with:
+        packages: imagemagick poppler-utils
 
     - name: Run zutil tests
       if: matrix.config == 'build'

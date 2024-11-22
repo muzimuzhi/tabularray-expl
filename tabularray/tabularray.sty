@@ -114,6 +114,8 @@
 \box_new:N    \l__tblr_tmpa_box
 \box_new:N    \l__tblr_tmpb_box
 
+\quark_new:N \q__tblr_stop
+
 %% Total number of tblr tables
 \int_new:N \g__tblr_table_count_int
 
@@ -2703,11 +2705,11 @@
     \cs_set_protected:Npn \__tblr_expand_table_body_aux:w ##1 #2
       {
         \tl_put_right:Nn #1 {##1}
-        \peek_meaning:NTF \q_stop
+        \peek_meaning:NTF \q__tblr_stop
           { \use_none:n }
           { \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w #2 }
       }
-    \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w \l__tblr_tmpa_tl #2 \q_stop
+    \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w \l__tblr_tmpa_tl #2 \q__tblr_stop
   }
 
 %% Split table content to a sequence of lines
@@ -2817,7 +2819,7 @@
   {
     \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
     \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
-    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:n #1 \q_stop
+    \exp_last_unbraced:No \__tblr_extract_table_commands_aux: #1 \q__tblr_stop
     \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
       {
         \__tblr_prop_gput:neV { command }
@@ -2827,20 +2829,50 @@
     \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
   }
 
-%% #1 maybe a single token or multiple tokens from a pair of braces
-\cs_new_protected:Npn \__tblr_extract_table_commands_next:n #1
+\cs_new_protected:Npn \__tblr_extract_table_commands_aux:
   {
-    \tl_if_single_token:nTF {#1}
+    \peek_after:Nw \__tblr_extract_table_commands_auxi:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxi:
+  {
+    % if \q__tblr_stop, stop
+    % if space, skip one space and continue
+    % if macro,
+    %   if table command, extract and continue
+    %   otherwise stop and collect
+    % otherwise, stop and collect the remaining as real cell text
+    \token_case_meaning:NnF \l_peek_token
       {
-        \__tblr_if_table_command:NTF #1
-          { \__tblr_extract_one_table_command:N #1 }
+        \q__tblr_stop
+          { \__tblr_save_real_cell_text:w \prg_do_nothing: }
+        \c_space_token
+          % similar to \peek_remove_spaces:n, especially its internal
+          % \__peek_true_remove:w, but quicker, as we already know the
+          % next token IS space
           {
-            \token_if_eq_meaning:NNF #1 \q_stop
-              { \__tblr_save_real_cell_text:w #1 }
+            \tex_afterassignment:D \__tblr_extract_table_commands_aux:
+            \cs_set_eq:NN \__tblr_unused:w
           }
       }
-      % prefix #1 with \prg_do_nothing: to prevent brace stripping
-      { \__tblr_save_real_cell_text_aux:w \prg_do_nothing: {#1} }
+      {
+        \token_if_macro:NTF \l_peek_token
+          { \__tblr_extract_table_commands_auxii:N }
+          { \__tblr_save_real_cell_text:w \prg_do_nothing: }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxii:N #1
+  {
+    % the csname matters in deciding whether it's a table command or not,
+    % thus we must test on the real command, not \l_peek_token
+    \__tblr_if_table_command:NTF #1
+      {
+        \__tblr_extract_one_table_command:N #1
+      }
+      {
+        \__tblr_save_real_cell_text:w \prg_do_nothing: #1
+      }
   }
 
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
@@ -2877,16 +2909,10 @@
         \int_decr:N \l__tblr_a_int
         \__tblr_extract_table_command_arg_m:n
       }
-      { \__tblr_extract_table_commands_next:n }
+      { \__tblr_extract_table_commands_aux: }
   }
 
-%% The outermost set of braces of cell text #1 will be removed
-\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \q_stop
-  {
-    \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
-  }
-
-\cs_new_protected:Npn \__tblr_save_real_cell_text_aux:w #1 \q_stop
+\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \q__tblr_stop
   {
     % o-type expansion is used to digest \prg_do_nothing:
     \tl_set:No \l__tblr_saved_cell_text_after_table_commands_tl {#1}
@@ -7224,7 +7250,7 @@
         \cs_set_protected:Npn \__tblr_evaluate_table_body_aux:w ####1 ##2
           {
             \tl_gput_right:Nn \g__tblr_functional_result_tl {####1}
-            \peek_meaning:NTF \q_stop { \use_none:n } {##2}
+            \peek_meaning:NTF \q__tblr_stop { \use_none:n } {##2}
           }
         \fun_run_return_processor:nn
           {
@@ -7232,7 +7258,7 @@
           }
           {
             \exp_last_unbraced:NV
-              \__tblr_evaluate_table_body_aux:w ##1 ##2 \q_stop
+              \__tblr_evaluate_table_body_aux:w ##1 ##2 \q__tblr_stop
           }
         \tl_set_eq:NN ##1 \g__tblr_functional_result_tl
       }

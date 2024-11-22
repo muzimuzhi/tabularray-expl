@@ -27,9 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - `text` as hline/vline was fully expanded (lvjr/tabularray#303)
-- No extra braces are stripped when splitting table into cells.
+- No braces are stripped from cells (lvjr/tabularray#501, #4)
   Now to protect non-number `S`-column cells, only one pair of braces
-  is needed, rather than three pairs as before. (lvjr/tabularray#501)
+  is needed, rather than three pairs as before.
 
 ### Security
 

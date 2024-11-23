@@ -847,7 +847,8 @@
       { \clist_put_right:Nn \l_tblr_childs_clist {##1} }
   }
 
-\regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] $ }
+% s/$/\Z/g in regex to not interfere with the syntax highlighting
+\regex_const:Nn \c__tblr_child_name_regex { ^ [U-Z] \Z }
 
 \msg_new:nnn { tabularray } { named-index-out-of-bound }
   { Named ~ index ~ ``#1'' ~ (#2) ~ out ~ of ~ bound ~ [1, ~ #3].  }
@@ -1740,8 +1741,9 @@
     fg      .code:n = \__tblr_cell_gput:ne { foreground } {#1},
     font    .code:n = \__tblr_cell_gput:nn { font } { #1 \selectfont },
     mode    .code:n = \__tblr_cell_gput:nn { mode } {#1},
-    $       .meta:n = { mode = math },
-    $$      .meta:n = { mode = dmath },
+    % moved to EOF as unpaired "$"/"$$" interferes with syntax highlighting
+    % $       .meta:n = { mode = math },
+    % $$      .meta:n = { mode = dmath },
     cmd     .code:n = \__tblr_cell_gput:nn { cmd } {#1},
     preto   .code:n = \__tblr_cell_preto_text:n {#1},
     appto   .code:n = \__tblr_cell_appto_text:n {#1},
@@ -1970,8 +1972,9 @@
     fg        .code:n = \__tblr_column_gput_cell:nn { foreground } {#1},
     font      .code:n = \__tblr_column_gput_cell:nn { font } { #1 \selectfont },
     mode      .code:n = \__tblr_column_gput_cell:nn { mode } {#1},
-    $         .meta:n = { mode = math },
-    $$        .meta:n = { mode = dmath },
+    % moved to EOF
+    % $         .meta:n = { mode = math },
+    % $$        .meta:n = { mode = dmath },
     cmd       .code:n = \__tblr_column_gput_cell:nn { cmd } {#1},
     wd        .code:n = \__tblr_column_gput:ne { width } { \dim_eval:n {#1} },
     co        .code:n = \__tblr_column_gput:ne { coefficient } {#1},
@@ -2040,7 +2043,8 @@
       }
   }
 
-\regex_const:Nn \c__tblr_is_number_key_regex { ^[\+\-]? (\d+|\d*\.\d+)$ }
+% \Z marks the end of subject, like the traditional $ in regex
+\regex_const:Nn \c__tblr_is_number_key_regex { ^[\+\-]? (\d+|\d*\.\d+) \Z }
 
 \cs_new_protected:Npn \__tblr_column_unknown_key:n #1
   {
@@ -2137,8 +2141,9 @@
     fg        .code:n = \__tblr_row_gput_cell:nn { foreground } {#1},
     font      .code:n = \__tblr_row_gput_cell:nn { font } { #1 \selectfont },
     mode      .code:n = \__tblr_row_gput_cell:nn { mode } {#1},
-    $         .meta:n = { mode = math },
-    $$        .meta:n = { mode = dmath },
+    % moved to EOF
+    % $         .meta:n = { mode = math },
+    % $$        .meta:n = { mode = dmath },
     cmd       .code:n = \__tblr_row_gput_cell:nn { cmd } {#1},
     ht        .code:n = \__tblr_row_gput:ne { height } { \dim_eval:n {#1} },
     co        .code:n = \__tblr_row_gput:ne { coefficient } {#1},
@@ -2793,7 +2798,8 @@
   }
 
 \regex_const:Nn \c__tblr_trim_left_par_space_regex { ^ \c{par} ? \s * }
-\regex_const:Nn \c__tblr_trim_right_space_par_regex { \s * \c{par} ? $ }
+% \Z marks the end-of-subject, like the $ in regex
+\regex_const:Nn \c__tblr_trim_right_space_par_regex { \s * \c{par} ? \Z }
 
 \cs_new_protected:Npn \__tblr_trim_par_space_tokens:N #1
   {
@@ -3168,7 +3174,8 @@
     \__tblr_outer_gput_spec:ne {#1} { \__tblr_spec_item:nn { outer } { #1 } \exp_not:n { #2 } }
   }
 
-\regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + $ }
+% \Z marks the end-of-subject, just like the $ in traditional regex
+\regex_const:Nn \c__tblr_option_key_name_regex { ^ [A-Za-z\-] + \Z }
 
 \msg_new:nnn { tabularray } { unknown-outer-key }
   { Unknown ~ outer ~ key ~ name ~ #1! }
@@ -7384,3 +7391,22 @@
       }
   }
 
+% Unavoidable unpaired "$" and "$$" moved here
+
+\keys_define:nn { tblr/__cell-spec }
+  {
+    $       .meta:n = { mode = math },
+    $$      .meta:n = { mode = dmath },
+  }
+
+\keys_define:nn { tblr/__col }
+  {
+    $         .meta:n = { mode = math },
+    $$        .meta:n = { mode = dmath },
+  }
+
+\keys_define:nn { tblr/__row }
+  {
+    $         .meta:n = { mode = math },
+    $$        .meta:n = { mode = dmath },
+  }

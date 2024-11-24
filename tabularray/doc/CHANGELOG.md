@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Removed declaration of historic v2021 release
+- Removed dependency `ninecolors`
 
 ### Fixed
 

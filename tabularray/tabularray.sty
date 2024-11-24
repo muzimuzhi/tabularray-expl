@@ -31,7 +31,6 @@
 \RequirePackage{zutil}
 
 \AtBeginDocument{
-  \@ifpackageloaded{xcolor}{\RequirePackage{ninecolors}}{}
   \@ifpackageloaded{hyperref}{
     \newenvironment{tblrNoHyper}{\NoHyper}{\endNoHyper}
   }{

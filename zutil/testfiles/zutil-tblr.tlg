@@ -34,6 +34,7 @@ The sequence \l_tmpa_seq contains the items (without outer braces):
 >  {name}
 >  {is}
 >  {LaTeX!}.
+[test] 1 error(s) encountered in this test.
 ============================================================
 ============================================================
 TEST 2: \__zutil_cs_if_defined:NTF 

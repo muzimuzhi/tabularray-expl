@@ -30,6 +30,7 @@ TEST 4: negative level raises error
 ! Package zutil Error: Invalid negative debugging level.
 (zutil)                Level will be set to zero.
 ! debug >>lv0<<
+[test] 1 error(s) encountered in this test.
 ============================================================
 ============================================================
 TEST 5: level options

@@ -27,13 +27,11 @@
 
 \RequirePackage{zutil}
 
-\AtBeginDocument{
-  \IfPackageLoadedTF{hyperref}{
-    \NewDocumentEnvironment{tblrNoHyper}{}{\NoHyper}{\endNoHyper}
-  }{
-    \NewDocumentEnvironment{tblrNoHyper}{}{}{}
+\NewDocumentEnvironment{tblrNoHyper}{}{}{}
+\hook_gput_code:nnn { package/hyperref/after } { . }
+  {
+    \RenewDocumentEnvironment{tblrNoHyper}{}{\NoHyper}{\endNoHyper}
   }
-}
 
 \NewDocumentCommand \TblrParboxRestore { } { \@parboxrestore }
 
@@ -4707,10 +4705,16 @@
 
 \tl_new:N \l__tblr_use_color_tl
 
-\NewDocumentCommand \UseTblrColor { m }
+% FIXME: "color" package is not supported?
+\NewDocumentCommand \UseTblrColor { m } {}
+\hook_gput_code:nnn { package/xcolor/after } { . }
   {
-    \tl_set:Ne \l__tblr_use_color_tl { \GetTblrStyle {#1} { fg } }
-    \tl_if_empty:NF \l__tblr_use_color_tl { \color { \l__tblr_use_color_tl } }
+    \RenewDocumentCommand \UseTblrColor { m }
+      {
+        \tl_set:Ne \l__tblr_use_color_tl { \GetTblrStyle {#1} { fg } }
+        \tl_if_empty:NF \l__tblr_use_color_tl
+          { \color { \l__tblr_use_color_tl } }
+      }
   }
 
 %% All halign commands are defined at the beginning of the file
@@ -4740,12 +4744,6 @@
     \tl_set:Ne \l__tblr_use_indent_tl { \GetTblrStyle {#1} { indent } }
     \tl_if_empty:NF \l__tblr_use_indent_tl
       { \exp_args:NNV \setlength \parindent \l__tblr_use_indent_tl }
-  }
-
-\AtBeginDocument
-  {
-    \IfPackageLoadedTF{xcolor}
-      {}{\RenewDocumentCommand \UseTblrColor {m} {}}
   }
 
 %% #1: head/foot element; #2: template name

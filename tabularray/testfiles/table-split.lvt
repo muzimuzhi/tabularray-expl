@@ -33,7 +33,7 @@
 
 % https://github.com/muzimuzhi/tabularray-dev/issues/4
 \BEGINTEST{keep braces when extracting table commands}
-% leading braced cell text should be saved as-is
+% leading braces in cell text should be saved as-is
 \begin{tblr}{l}
   a & {a} & {a}a & {a} a \\
 \end{tblr}
@@ -46,6 +46,18 @@
 \end{tblr}
 \ENDTEST
 
+\BEGINTEST{reserve implicit space tokens}
+\ExplSyntaxOn
+\begin{tblr}{l}
+  ~ a ~
+    & \SetCell{} ~ \SetCell{} ~ a \\
+  \c_space_tl a \c_space_tl
+    & \SetCell{} \c_space_tl \SetCell{} \c_space_tl a \c_space_tl \\
+  \c_space_token a \c_space_token 
+    & \SetCell{} \c_space_token \SetCell{} \c_space_token a \c_space_token
+\end{tblr}
+\ExplSyntaxOff
+\ENDTEST
 
 \SetTblrTracing{+column = @col-width}
 

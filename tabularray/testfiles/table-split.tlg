@@ -37,7 +37,18 @@ TEST 2: keep braces when extracting table commands
 >  {[2][2]}  =>  {{a}}.
 ============================================================
 ============================================================
-TEST 3: multiline cells
+TEST 3: reserve implicit space tokens
+============================================================
+> The spec list text_1 contains the pairs:.
+>  {[1][1]}  =>  {a}.
+>  {[1][2]}  =>  {a}.
+>  {[2][1]}  =>  {\c_space_tl a\c_space_tl }.
+>  {[2][2]}  =>  {\c_space_tl \SetCell {}\c_space_tl a\c_space_tl }.
+>  {[3][1]}  =>  {a\c_space_token }.
+>  {[3][2]}  =>  {a\c_space_token }.
+============================================================
+============================================================
+TEST 4: multiline cells
 ============================================================
 > The spec list text_1 contains the pairs:.
 >  {[1][1]}  =>  {p}.

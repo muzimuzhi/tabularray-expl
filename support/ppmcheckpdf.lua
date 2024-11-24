@@ -35,7 +35,7 @@ build_require("file-functions")
 local imgext = imgext or ".png"
 local imgdiffext = imgdiffext or ".diff.png"
 -- was "-compose src" in ppmcheckpdf CTAN package
-local _imgdiffopt = " -highlight blue"
+local _imgdiffopt = " -highlight-color blue"
 local imgdiffexe
 if os.type ~= "windows" then
   -- Unlike that in Lua 5.3, texlua's `os.execute` still returns a single

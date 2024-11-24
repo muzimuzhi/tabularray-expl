@@ -114,7 +114,8 @@
 \box_new:N    \l__tblr_tmpa_box
 \box_new:N    \l__tblr_tmpb_box
 
-\quark_new:N \q__tblr_stop
+\tl_new:N     \l__tblr_text_tl
+\quark_new:N  \q__tblr_stop
 
 %% Total number of tblr tables
 \int_new:N \g__tblr_table_count_int
@@ -2769,13 +2770,13 @@
     \int_zero:N \c@colnum
     \seq_map_inline:Nn \l__tblr_tmpa_seq
       {
-        \tl_set:Nn \l__tblr_tmpa_tl { ##1 }
-        \__tblr_remove_braces:N \l__tblr_tmpa_tl
-        \__tblr_trim_par_space_tokens:N \l__tblr_tmpa_tl
+        \tl_set:Nn \l__tblr_text_tl { ##1 }
+        \__tblr_remove_braces:N \l__tblr_text_tl
+        \__tblr_trim_par_space_tokens:N \l__tblr_text_tl
         \int_incr:N \c@colnum
-        \__tblr_extract_table_commands:N \l__tblr_tmpa_tl
-        \__tblr_trim_par_space_tokens:N \l__tblr_tmpa_tl
-        \__tblr_spec_gput:neV { text } { [#1][\int_use:N \c@colnum] } \l__tblr_tmpa_tl
+        \__tblr_extract_table_commands:N \l__tblr_text_tl
+        \__tblr_trim_par_space_tokens:N \l__tblr_text_tl
+        \__tblr_spec_gput:neV { text } { [#1][\int_use:N \c@colnum] } \l__tblr_text_tl
       }
     %% Decrease row count by 1 if the last row has only one empty cell text
     %% We need to do it here since the > or < column type may add text to cells
@@ -2783,7 +2784,7 @@
       {
         { \int_compare_p:nNn {#1} = {\c@rowcount} }
         { \int_compare_p:nNn {\c@colnum} = {1} }
-        { \tl_if_empty_p:N \l__tblr_tmpa_tl }
+        { \tl_if_empty_p:N \l__tblr_text_tl }
       }
       { \int_decr:N \c@rowcount }
       {
@@ -2812,21 +2813,21 @@
 
 %% Extract table commands defined with \NewTableCommand from cell text
 
-\tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
-\tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
+\tl_new:N \l__tblr_cell_table_cmds_tl
+\tl_new:N \l__tblr_cell_real_text_tl
 
 \cs_new_protected:Npn \__tblr_extract_table_commands:N #1
   {
-    \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
-    \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
+    \tl_clear:N \l__tblr_cell_table_cmds_tl
+    \tl_clear:N \l__tblr_cell_real_text_tl
     \exp_last_unbraced:No \__tblr_extract_table_commands_aux: #1 \q__tblr_stop
-    \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
+    \tl_if_empty:NF \l__tblr_cell_table_cmds_tl
       {
         \__tblr_prop_gput:neV { command }
           {[\int_use:N \c@rownum][\int_use:N \c@colnum]}
-          \l__tblr_saved_table_commands_before_cell_text_tl
+          \l__tblr_cell_table_cmds_tl
       }
-    \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
+    \tl_set_eq:NN #1 \l__tblr_cell_real_text_tl
   }
 
 \cs_new_protected:Npn \__tblr_extract_table_commands_aux:
@@ -2879,7 +2880,7 @@
   {
     \int_set:Nn \l__tblr_a_int
       { \tl_use:c { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } }
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
+    \tl_put_right:Nn \l__tblr_cell_table_cmds_tl {#1}
     \int_compare:nNnTF {\l__tblr_a_int} < {0}
       {
         \int_set:Nn \l__tblr_a_int { \int_abs:n {\l__tblr_a_int} - 1 }
@@ -2892,13 +2893,13 @@
 
 \cs_new_protected:Npn \__tblr_extract_table_command_arg_o:w [#1]
   {
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { [#1] }
+    \tl_put_right:Nn \l__tblr_cell_table_cmds_tl { [#1] }
     \__tblr_extract_table_command_arg_next:
   }
 
 \cs_new_protected:Npn \__tblr_extract_table_command_arg_m:n #1
   {
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { {#1} }
+    \tl_put_right:Nn \l__tblr_cell_table_cmds_tl { {#1} }
     \__tblr_extract_table_command_arg_next:
   }
 
@@ -2915,7 +2916,7 @@
 \cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \q__tblr_stop
   {
     % o-type expansion is used to digest \prg_do_nothing:
-    \tl_set:No \l__tblr_saved_cell_text_after_table_commands_tl {#1}
+    \tl_set:No \l__tblr_cell_real_text_tl {#1}
   }
 
 %%% --------------------------------------------------------

@@ -10,31 +10,28 @@
 %%> \section{Scratch Variables and Function Variants}
 %%% --------------------------------------------------------
 
-\NeedsTeXFormat{LaTeX2e}[2018-04-01]
+\NeedsTeXFormat{LaTeX2e}[2024-11-01]
 
 \ProvidesExplPackage{tabularray}{2024-02-16}{2024A}
   {Typeset tabulars and arrays with LaTeX3}
 
-%% \IfFormatAtLeastTF, xparse and lthooks are added in LaTeX 2020-10-01
-%% Note that \@ifl@t@r or \@ifpackagelater means 'this date or later'
-\msg_new:nnn { tabularray } { latex-too-old }
+\msg_new:nnn { tabularray } { dep-too-old }
   {
-    Your ~ LaTeX ~ release ~ is ~ too ~ old. \\
-    Please ~ update ~ it ~ to ~ 2020-10-01 ~ first.
+    You~have~release~'#2'~of~#1,~
+    but~tabularay~requires~'#3'~or~newer.
   }
-\@ifl@t@r\fmtversion{2020-10-01}{}{
-  %% Support TeX Live 2020 on Overleaf
-  \msg_warning:nn { tabularray } { latex-too-old }
-  \usepackage{xparse}
-}
+
+% TODO: check dep versions: latex2e, l3kernel, zutil...
+%       Any warnings/errors are less helpful than a "polyfill"
+%       (borrowed from js world).
 
 \RequirePackage{zutil}
 
 \AtBeginDocument{
-  \@ifpackageloaded{hyperref}{
-    \newenvironment{tblrNoHyper}{\NoHyper}{\endNoHyper}
+  \IfPackageLoadedTF{hyperref}{
+    \NewDocumentEnvironment{tblrNoHyper}{}{\NoHyper}{\endNoHyper}
   }{
-    \newenvironment{tblrNoHyper}{}{}
+    \NewDocumentEnvironment{tblrNoHyper}{}{}{}
   }
 }
 
@@ -4747,7 +4744,8 @@
 
 \AtBeginDocument
   {
-    \@ifpackageloaded{xcolor}{}{\RenewDocumentCommand \UseTblrColor {m} {}}
+    \IfPackageLoadedTF{xcolor}
+      {}{\RenewDocumentCommand \UseTblrColor {m} {}}
   }
 
 %% #1: head/foot element; #2: template name

@@ -71,7 +71,12 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: tblr-diffs${{ matrix.config == 'config-old' && 'config-old' || '' }}${{ matrix.option != '' && '-dev' || '' }}
+        # example names:
+        #   - tblr-diffs
+        #   - tblr-diffs-dev
+        #   - tblr-diffs-config-old
+        #   - tblr-diffs-config-old-dev
+        name: tblr-diffs${{ matrix.config != '' && format('-{0}', matrix.config) || '' }}${{ matrix.option != '' && '-dev' || '' }}
         path: |
           build/**/*.diff
           build/**/*.diff.png

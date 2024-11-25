@@ -23,7 +23,8 @@ jobs:
         #       with latex and latex-dev
         # option: ["", "--dev"]
         option: [""]
-    name: "Tests: ${{ matrix.config }}${{ matrix.option != '' && ' (latex-dev)' || '' }}"
+    name: "Tests: ${{ matrix.config }}\
+      ${{ matrix.option != '' && ' (latex-dev)' || '' }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -66,7 +67,7 @@ jobs:
         texlua buildend.lua
 
     # TODO: generate a list of files related to failed tests, then
-    # upload all them (.tex, .log, .pdf, .png, .md5, etc.)
+    # upload all of them (.tex, .log, .pdf, .png, .md5, etc.)
     - name: Upload diff files
       if: failure()
       uses: actions/upload-artifact@v4
@@ -76,7 +77,9 @@ jobs:
         #   - tblr-diffs-dev
         #   - tblr-diffs-config-old
         #   - tblr-diffs-config-old-dev
-        name: tblr-diffs${{ matrix.config != '' && format('-{0}', matrix.config) || '' }}${{ matrix.option != '' && '-dev' || '' }}
+        name: "tblr-diffs\
+          ${{ matrix.config != '' && format('-{0}', matrix.config) || '' }}\
+          ${{ matrix.option != '' && '-dev' || '' }}"
         path: |
           build/**/*.diff
           build/**/*.diff.png

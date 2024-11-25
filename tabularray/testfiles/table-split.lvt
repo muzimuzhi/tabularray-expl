@@ -1,0 +1,36 @@
+\input{regression-test}
+\documentclass{article}
+
+\ExplSyntaxOn
+\debug_on:n { check-declarations , check-expressions , deprecation }
+\ExplSyntaxOff
+
+\usepackage{tabularray}
+
+\begin{document}
+
+\SetTblrTracing{+text}
+
+\START
+
+% https://github.com/lvjr/tabularray/issues/501
+\BEGINTEST{keep braces when splitting table into cells}
+\begin{tblr}{l}
+  a \\
+  {b} \\
+  {{c}} \\
+  {{{d}}} \\
+  {{{{e}}}}
+\end{tblr}
+
+\begin{tblr}{l}
+  1 & a \\
+  2 & {b} \\
+  3 & {{c}} \\
+  4 & {{{d}}}
+\end{tblr}
+\ENDTEST
+
+\end{document}
+
+\END

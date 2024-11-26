@@ -20,6 +20,29 @@
 \end{tblr}
 \ENDTEST
 
+\BEGINTEST{Smaller table}
+\begin{tblr}{hlines, vlines, colspec={lcr}}
+  One   & Two
+\end{tblr}
+\ENDTEST
+
+\BEGINTEST{Larger table}
+\begin{tblr}{hlines, vlines, colspec={lcr}}
+  One   & Two  & Three & Four \\
+  Alpha & Beta & Gamma & Delta
+\end{tblr}
+\ENDTEST
+
+\ExplSyntaxOn
+\int_gincr:N \g_tblr_level_int
+\ExplSyntaxOff
+
+\BEGINTEST{Nested table}
+\begin{tblr}{hlines, vlines, colspec={lcr}}
+  One
+\end{tblr}
+\ENDTEST
+
 \END
 
 \end{document}

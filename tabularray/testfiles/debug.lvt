@@ -6,7 +6,7 @@
 
 \ExplSyntaxOn
 
-\debug_on:n { check-declarations , deprecation }
+\debug_on:n { check-declarations , check-expressions , deprecation }
 
 \START
 

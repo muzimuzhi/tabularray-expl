@@ -1,0 +1,42 @@
+\input{regression-test}
+\documentclass{article}
+
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\debug_on:n { check-declarations , check-expressions , deprecation }
+% skip table typesetting
+\cs_gset_eq:NN \__tblr_build_whole: \prg_do_nothing:
+\ExplSyntaxOff
+
+\begin{document}
+
+\START
+
+\BEGINTEST{}
+\SetTblrTracing{}
+\begin{tblr}{l}
+
+\end{tblr}
+\ENDTEST
+
+\END
+
+\end{document}
+
+% below are just comments
+
+\ExplSyntaxOn
+% loading tabularray with debug on is tested in tblr-loading.lvt
+% CHECKME: what does "check-expressions" do and is it needed in general?
+\debug_on:n { check-declarations , check-expressions , deprecation }
+% skip table typesetting
+% - tests run quicker
+% - tblr tracing is not affected, as all tracing happen before typesetting
+% - tracing-only .tlg files can be cleaner (by \END-ing before
+%   \end{document}):
+%   - no page shipout markers like "[1]"
+%   - no recording of test file names when \jobname.aux is loaded at
+%     \end{document}), so test renaming won't break checks
+\cs_gset_eq:NN \__tblr_build_whole: \prg_do_nothing:
+\ExplSyntaxOff

@@ -3,11 +3,13 @@
 
 \usepackage{tabularray}
 
-\begin{document}
-
 \ExplSyntaxOn
 \debug_on:n { all }
+% skip table typesetting
+\cs_gset_eq:NN \__tblr_build_whole: \prg_do_nothing:
 \ExplSyntaxOff
+
+\begin{document}
 
 \START
 

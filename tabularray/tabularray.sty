@@ -1392,7 +1392,7 @@
     \group_begin:
     \keys_set_groups:nnn { tblr/__vline } { text } {#3}
     \tl_if_eq:NnF \l__tblr_vline_dash_tl
-      { \exp_not:n { \c__tblr_text_tl } }
+      { \exp_not:n { \q__tblr_text } }
       {
         \__tblr_set_vline_num:n {#1}
         \tl_clear:N \l__tblr_vline_dash_tl

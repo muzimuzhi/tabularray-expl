@@ -1,0 +1,56 @@
+This is a generated file for the l3build validation system.
+Don't change this file in any respect.
+============================================================
+TEST 1: Empty hline/vline text
+============================================================
+> The spec list hline_1 contains the pairs:.
+>  {[1]/@hline-count}  =>  {1}.
+>  {[2]/@hline-count}  =>  {1}.
+>  {[1]/@hline-count}  =>  {1}.
+>  {[1][1](1)/@dash}  =>  {\q__tblr_dash solid}.
+>  {[2]/@hline-count}  =>  {1}.
+>  {[2][1](1)/@dash}  =>  {\q__tblr_dash solid}.
+>  {[1](1)/@hline-height}  =>  {0.4pt}.
+>  {[1]/@hline-height}  =>  {0.4pt}.
+>  {[2](1)/@hline-height}  =>  {0.4pt}.
+>  {[2]/@hline-height}  =>  {0.4pt}.
+> The spec list vline_1 contains the pairs:.
+>  {[1]/@vline-count}  =>  {1}.
+>  {[2]/@vline-count}  =>  {1}.
+>  {[1]/@vline-count}  =>  {1}.
+>  {[1][1](1)/@dash}  =>  {\q__tblr_dash solid}.
+>  {[2]/@vline-count}  =>  {1}.
+>  {[1][2](1)/@dash}  =>  {\q__tblr_dash solid}.
+>  {[1](1)/@vline-width}  =>  {0.4pt}.
+>  {[1]/@vline-width}  =>  {0.4pt}.
+>  {[2](1)/@vline-width}  =>  {0.4pt}.
+>  {[2]/@vline-width}  =>  {0.4pt}.
+============================================================
+============================================================
+TEST 2: Fragile hline/vline text
+============================================================
+> The spec list hline_1 contains the pairs:.
+>  {[1]/@hline-count}  =>  {1}.
+>  {[2]/@hline-count}  =>  {1}.
+>  {[1]/@hline-count}  =>  {1}.
+>  {[1][1](1)/@dash}  =>  {\q__tblr_text \def \x {}\small \rlap {--h--}}.
+>  {[2]/@hline-count}  =>  {1}.
+>  {[2][1](1)/@dash}  =>  {\q__tblr_dash solid}.
+>  {[1](1)/@hline-height}  =>  {6.19849pt}.
+>  {[1]/@hline-height}  =>  {6.19849pt}.
+>  {[2](1)/@hline-height}  =>  {0.4pt}.
+>  {[2]/@hline-height}  =>  {0.4pt}.
+> The spec list vline_1 contains the pairs:.
+>  {[1]/@vline-count}  =>  {1}.
+>  {[2]/@vline-count}  =>  {1}.
+>  {[1]/@vline-count}  =>  {1}.
+>  {[1][1](1)/@dash}  =>  {\q__tblr_text \clap {\textbf {v}}}.
+>  {[2]/@vline-count}  =>  {1}.
+>  {[1][2](1)/@dash}  =>  {\q__tblr_dash solid}.
+>  {[1](1)/@vline-width}  =>  {0.0pt}.
+>  {[1]/@vline-width}  =>  {0.0pt}.
+>  {[2](1)/@vline-width}  =>  {0.4pt}.
+>  {[2]/@vline-width}  =>  {0.4pt}.
+============================================================
+***************
+[test] 0 error(s) encountered.

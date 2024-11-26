@@ -1,0 +1,41 @@
+\input{regression-test}
+\documentclass{article}
+
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\debug_on:n { check-declarations , check-expressions , deprecation }
+% skip table typesetting
+\cs_gset_eq:NN \__tblr_build_whole: \prg_do_nothing:
+\ExplSyntaxOff
+
+\begin{document}
+
+\START
+
+\SetTblrTracing{+hline,+vline}
+
+\BEGINTEST{Empty hline/vline text}
+\begin{tblr}{
+  hlines, vlines,
+  hline{1}={text=},
+  vline{1}={text=},
+}
+  a
+\end{tblr}
+\ENDTEST
+
+% lvjr/tabularray#303
+\BEGINTEST{Fragile hline/vline text}
+\begin{tblr}{
+  hlines, vlines,
+  hline{1}={text={\def\x{}\small\rlap{--h--}}},
+  vline{1}={text={\clap{\textbf{v}}}},
+}
+  a
+\end{tblr}
+\ENDTEST
+
+\END
+
+\end{document}

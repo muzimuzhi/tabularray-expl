@@ -1138,14 +1138,14 @@
     \tblr_set_hline:nnn {#1} {#2} {#3}
   }
 
-%% We need to check "text" quark first
+%% We need to check "text" key first
 %% If it does exist and has empty value, then do nothing
 \cs_new_protected:Npn \tblr_set_hline:nnn #1 #2 #3
   {
     \group_begin:
     \keys_set_groups:nnn { tblr/__hline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_hline_dash_tl
-      { \exp_not:n { \q__tblr_text } }
+    % both tl and quark vars are short (no \long prefix)
+    \tl_if_eq:NNF \l__tblr_hline_dash_tl \q__tblr_text
       {
         \__tblr_set_hline_num:n {#1}
         \tl_clear:N \l__tblr_hline_dash_tl
@@ -1221,12 +1221,8 @@
 
 \keys_define:nn { tblr/__hline }
   {
-    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \q__tblr_dash #1 },
-    text .code:n =
-      {
-        \tl_set:Nn \l__tblr_hline_dash_tl
-          { \exp_not:n { \q__tblr_text #1 } }
-      } ,
+    dash .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_dash #1 },
+    text .code:n = \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_text #1 },
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_hline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_hline_fg_tl {#1},
@@ -1245,7 +1241,7 @@
 \cs_new_protected:Npn \__tblr_hline_unknown_key:n #1
   {
     \prop_if_in:NnTF \g__tblr_defined_hdash_styles_prop {#1}
-      { \tl_set:Nn \l__tblr_hline_dash_tl { \exp_not:N \q__tblr_dash #1 } }
+      { \tl_set:Nn \l__tblr_hline_dash_tl { \q__tblr_dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           { \tl_set:Nn \l__tblr_hline_fg_tl {#1} }
@@ -1262,7 +1258,8 @@
     \__tblr_get_childs:ne {#1} { \int_use:N \c@colcount }
     \clist_map_inline:Nn \l_tblr_childs_clist
       {
-        \__tblr_set_hline_option:nnn { ##1 } { @dash } { \l__tblr_hline_dash_tl }
+        \__tblr_set_hline_option:nnn { ##1 } { @dash }
+          { \exp_not:o \l__tblr_hline_dash_tl }
         \tl_if_empty:NF \l__tblr_hline_wd_tl
           {
             \__tblr_set_hline_option:nnn { ##1 } { wd } { \l__tblr_hline_wd_tl }
@@ -1385,14 +1382,14 @@
     \tblr_set_vline:nnn {#1} {#2} {#3}
   }
 
-%% We need to check "text" quark first
+%% We need to check "text" key first
 %% If it does exist and has empty value, then do nothing
 \cs_new_protected:Npn \tblr_set_vline:nnn #1 #2 #3
   {
     \group_begin:
     \keys_set_groups:nnn { tblr/__vline } { text } {#3}
-    \tl_if_eq:NnF \l__tblr_vline_dash_tl
-      { \exp_not:n { \q__tblr_text } }
+    % both tl and quark vars are short (no \long prefix)
+    \tl_if_eq:NNF \l__tblr_vline_dash_tl \q__tblr_text
       {
         \__tblr_set_vline_num:n {#1}
         \tl_clear:N \l__tblr_vline_dash_tl
@@ -1468,12 +1465,8 @@
 
 \keys_define:nn { tblr/__vline }
   {
-    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \q__tblr_dash #1 },
-    text .code:n =
-      {
-        \tl_set:Nn \l__tblr_vline_dash_tl
-          { \exp_not:n { \q__tblr_text #1 } }
-      } ,
+    dash .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_dash #1 },
+    text .code:n = \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_text #1 },
     text .groups:n = { text },
     wd .code:n = \tl_set:Nn \l__tblr_vline_wd_tl { \dim_eval:n {#1} },
     fg .code:n = \tl_set:Nn \l__tblr_vline_fg_tl {#1},
@@ -1485,7 +1478,7 @@
 \cs_new_protected:Npn \__tblr_vline_unknown_key:n #1
   {
     \prop_if_in:NnTF \g__tblr_defined_vdash_styles_prop {#1}
-      { \tl_set:Nn \l__tblr_vline_dash_tl { \exp_not:N \q__tblr_dash #1 } }
+      { \tl_set:Nn \l__tblr_vline_dash_tl { \q__tblr_dash #1 } }
       {
         \regex_match:NnTF \c__tblr_is_color_key_regex {#1}
           { \tl_set:Nn \l__tblr_vline_fg_tl {#1} }
@@ -1504,7 +1497,7 @@
       {
         \__tblr_spec_gput:nee { vline }
           { [##1][\int_use:N \c@colnum](\l__tblr_vline_num_tl) / @dash }
-          { \l__tblr_vline_dash_tl }
+          { \exp_not:o \l__tblr_vline_dash_tl }
         \tl_if_empty:NF \l__tblr_vline_wd_tl
           {
             \__tblr_spec_gput:nee { vline }

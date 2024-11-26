@@ -142,11 +142,11 @@
 \dim_new:N \rightsep
 
 %% Some functions for lwarp to remove rules and boxes
-\cs_new:Npn \tblr_hrule_ht:n #1
+\cs_new_protected:Npn \tblr_hrule_ht:n #1
   {
     \hrule height ~ #1 \scan_stop:
   }
-\cs_new:Npn \tblr_vrule_wd_ht_dp:nnn #1 #2 #3
+\cs_new_protected:Npn \tblr_vrule_wd_ht_dp:nnn #1 #2 #3
   {
     \vrule width ~ #1 ~ height ~ #2 ~ depth ~ #3 \scan_stop:
   }
@@ -426,7 +426,7 @@
 
 %% #1: data name; #2: array position;
 %% #3: returning tl with index; #4: returning tl with key name
-\cs_new:Npn \__tblr_data_int_to_key:nnNN #1 #2 #3 #4
+\cs_new_protected:Npn \__tblr_data_int_to_key:nnNN #1 #2 #3 #4
   {
     \int_set_eq:Nc \l__tblr_key_count_int { g__tblr_data_#1_key_count_int }
     \int_set:Nn \l__tblr_key_quotient_int
@@ -449,7 +449,7 @@
 %% #1: data name; #2: array position;
 %% #3: returning tl with index 1; #4: returning tl with index 2;
 %% #5: returning tl with key name
-\cs_new:Npn \__tblr_data_int_to_key:nnNNN #1 #2 #3 #4 #5
+\cs_new_protected:Npn \__tblr_data_int_to_key:nnNNN #1 #2 #3 #4 #5
   {
     \int_set_eq:Nc \l__tblr_key_count_int { g__tblr_data_#1_key_count_int }
     \int_set:Nn \l__tblr_key_quotient_int

@@ -11,6 +11,7 @@ on:
   push:
   schedule:
     # at 12:21 UTC (20:21 CST/UTC +8) on every Friday
+    # https://crontab.guru/#21_12_*_*_5
     - cron: "21 12 * * 5"
   workflow_dispatch:
 

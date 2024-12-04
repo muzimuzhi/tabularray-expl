@@ -6,8 +6,8 @@
 -- Repository: https://github.com/lvjr/ppmcheckpdf
 -- License: The LaTeX Project Public License 1.3c
 
-ppmcheckpdf_version = "0.4"
-ppmcheckpdf_date = "2024-11-16"
+ppmcheckpdf_version = "0.5"
+ppmcheckpdf_date = "2024-12-05"
 
 --------------------------------------------
 ---- source code from l3build.lua
@@ -123,7 +123,8 @@ local function saveimgmd5(imgname, md5file, newmd5)
 end
 
 local function ppmcheckpdf(job)
-  rm(testdir, job .."-*.diff.png")
+  -- "job" is already in one of "<test-name>" and "<test-name>-<page>" forms
+  rm(testdir, job .. imgdiffext)
   local errorlevel
   local imgname = job .. imgext
   local md5file = testfiledir .. "/" .. job .. ".md5"

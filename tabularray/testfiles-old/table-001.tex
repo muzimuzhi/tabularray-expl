@@ -9,13 +9,17 @@
 \ExplSyntaxOff
 
 \usepackage{array}
-\START
-\AddToHook{package/zutil/before}{\OMIT}
-\AddToHook{package/zutil/after}{\TIMO}
-\usepackage{tabularray}
 
-\AddToHook{package/varwidth/before}{\OMIT}
-\AddToHook{package/varwidth/after}{\TIMO}
+\ExplSyntaxOn
+\clist_map_inline:nn { varwidth, xcolor, zutil }
+  {
+    \hook_gput_code:nnn { package/#1/before } {.} { \OMIT }
+    \hook_gput_code:nnn { package/#1/after}   {.} { \TIMO }
+  }
+\ExplSyntaxOff
+
+\START
+\usepackage{tabularray}
 
 \UseTblrLibrary{varwidth}
 

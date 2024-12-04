@@ -7,8 +7,13 @@
 
 \START
 
-\AddToHook{package/zutil/before}{\OMIT}
-\AddToHook{package/zutil/after}{\TIMO}
+\ExplSyntaxOn
+\clist_map_inline:nn { xcolor, zutil }
+  {
+    \hook_gput_code:nnn { package/#1/before } {.} { \OMIT }
+    \hook_gput_code:nnn { package/#1/after}   {.} { \TIMO }
+  }
+\ExplSyntaxOff
 \usepackage{tabularray}
 
 \END

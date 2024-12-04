@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Dependency `xcolor`
+
 ### Changed
 
 - Needed LaTeX version updated to 2024-11-01

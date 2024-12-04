@@ -13,7 +13,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2024-11-01]
 
-\ProvidesExplPackage{tabularray}{2024-11-24}{2.0.0-dev1}
+\ProvidesExplPackage{tabularray}{2024-12-05}{2.0.0-dev2}
   {Typeset tabulars and arrays with LaTeX3 (z's dev version)}
 
 \msg_new:nnn { tabularray } { dep-too-old }
@@ -27,6 +27,8 @@
 %       (borrowed from js world).
 
 \RequirePackage{zutil}
+
+\RequirePackage{xcolor}
 
 \AtBeginDocument{
   \IfPackageLoadedTF{hyperref}{
@@ -4748,12 +4750,6 @@
     \tl_set:Ne \l__tblr_use_indent_tl { \GetTblrStyle {#1} { indent } }
     \tl_if_empty:NF \l__tblr_use_indent_tl
       { \exp_args:NNV \setlength \parindent \l__tblr_use_indent_tl }
-  }
-
-\AtBeginDocument
-  {
-    \IfPackageLoadedTF{xcolor}
-      {}{\RenewDocumentCommand \UseTblrColor {m} {}}
   }
 
 %% #1: head/foot element; #2: template name

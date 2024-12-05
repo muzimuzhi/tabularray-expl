@@ -16,6 +16,13 @@
 \ProvidesExplPackage{tabularray}{2024-12-05}{2.0.0-dev2}
   {Typeset tabulars and arrays with LaTeX3 (z's dev version)}
 
+% a general message to replace uses of short and one-time named messages
+\msg_new:nnnn { tabularray } { __general } { #1 }
+
+% #1 is curried
+\cs_new_protected:Npn \__tblr_general_error:n
+  { \msg_error:nnn { tabularray } { __general } }
+
 \msg_new:nnn { tabularray } { dep-too-old }
   {
     You~have~release~'#2'~of~#1,~

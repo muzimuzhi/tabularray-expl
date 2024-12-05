@@ -4198,7 +4198,7 @@
         \prop_put:Nee \l__tblr_col_item_skip_size_prop { item[\l__tblr_j_tl] }
           { \__tblr_data_item:nen { column } { \l__tblr_j_tl } { @col-width } }
       }
-    \__tblr_do_if_tracing:nn { cellspan }
+    \__tblr_trace_any:nn { cellspan }
       { \prop_log:N \l__tblr_col_item_skip_size_prop }
   }
 
@@ -4231,7 +4231,7 @@
         \prop_put:Nee \l__tblr_row_item_skip_size_prop
           { item[\l__tblr_i_tl] } { \l__tblr_h_tl }
       }
-    \__tblr_do_if_tracing:nn { cellspan }
+    \__tblr_trace_any:nn { cellspan }
       { \prop_log:N \l__tblr_row_item_skip_size_prop }
   }
 
@@ -4267,7 +4267,7 @@
               }
           }
       }
-    \__tblr_do_if_tracing:nn { cellspan }
+    \__tblr_trace_any:nn { cellspan }
       { \prop_log:N \l__tblr_col_span_size_prop }
   }
 
@@ -4338,7 +4338,7 @@
               }
           }
       }
-    \__tblr_do_if_tracing:nn { cellspan }
+    \__tblr_trace_any:nn { cellspan }
       {
         \prop_log:N \l__tblr_row_span_to_row_prop
         \prop_log:N \l__tblr_row_span_size_prop
@@ -4407,7 +4407,7 @@
                 \int_step_variable:nnNn
                   { \l__tblr_i_tl } { \l__tblr_j_tl - 1 } \l__tblr_k_tl
                   {
-                    \__tblr_do_if_tracing:nn { cellspan }
+                    \__tblr_trace_any:nn { cellspan }
                       {
                         \tl_log:e
                           { \l__tblr_j_tl : \l__tblr_i_tl -> \l__tblr_k_tl }
@@ -4439,7 +4439,7 @@
               { itemskip[\l__tblr_j_tl] } { \dim_use:N \l__tblr_wd_dim }
           }
       }
-    \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N #2 }
+    \__tblr_trace_any:nn { cellspan } { \prop_log:N #2 }
   }
 \cs_generate_variant:Nn \__tblr_distribute_span_sizes_default:nNN { e }
 
@@ -4460,7 +4460,7 @@
                 \prop_item:Ne #2 { skip[####1] } + \prop_item:Nn #2 { item[####1] }
               }
           }
-        \__tblr_do_if_tracing:nn { cellspan }
+        \__tblr_trace_any:nn { cellspan }
           {
             \tl_log:e { \l__tblr_a_tl -> \l__tblr_b_tl : ~ \dim_use:N \l__tblr_tmpa_dim }
           }
@@ -4474,12 +4474,12 @@
               }
           }
       }
-    \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N \l__tblr_tmpa_prop }
+    \__tblr_trace_any:nn { cellspan } { \prop_log:N \l__tblr_tmpa_prop }
     \prop_map_inline:Nn \l__tblr_tmpa_prop
       {
         \__tblr_add_dimen_value:Nnn #2 {item[##1]} {##2}
       }
-    \__tblr_do_if_tracing:nn { cellspan } { \prop_log:N #2 }
+    \__tblr_trace_any:nn { cellspan } { \prop_log:N #2 }
   }
 \cs_generate_variant:Nn \__tblr_distribute_span_sizes_even:nNN { e }
 
@@ -5550,7 +5550,7 @@
           \l__tblr_tmpa_dim \l__tblr_page_break_curr_bool
         \__tblr_check_table_page_break:NNN
           \l__tblr_remain_height_dim \l__tblr_tmpa_dim \l__tblr_page_break_prev_bool
-        \__tblr_do_if_tracing:nn { page } { \int_log:N \l__tblr_curr_i_int }
+        \__tblr_trace_any:nn { page } { \int_log:N \l__tblr_curr_i_int }
         \bool_if:NTF \l__tblr_page_break_prev_bool
           {
             \int_compare:nNnTF
@@ -6856,19 +6856,35 @@
 
 \NewDocumentCommand \LogTblrTracing { m }
   {
-    \keys_set:nn { tblr/__log-tracing } {#1}
+    \keyval_parse:NNn
+      \__tblr_trace_spec:n
+      \__tblr_trace_spec:nn
+      {#1}
   }
 
-\keys_define:nn { tblr/__log-tracing }
+\cs_new_protected:Npn \__tblr_trace_spec:n #1
   {
-    step .code:n = \__tblr_log_tracing_step:n {#1},
-    unknown .code:n = \__tblr_log_tracing:N \l_keys_key_str
+    \__tblr_trace_spec:nn {#1} {}
   }
 
-\cs_new_protected:Npn \__tblr_log_tracing:N #1
+\cs_new_protected:Npn \__tblr_trace_spec:nn #1#2
   {
-    \bool_if:cT { g__tblr_tracing_ #1 _bool }
-      { \cs:w __tblr_log_tracing _ #1 : \cs_end: }
+    \__tblr_trace_any:nn {#1}
+      {
+        % only "step" uses value, see \__tblr_log_tracing_step:n
+        \cs_if_exist_use:cTF { __tblr_log_tracing_ #1 :n }
+          { {#2} }
+          { \use:c { __tblr_log_tracing_ #1 : } }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_trace_any:nn #1#2
+  {
+    \bool_if_exist:cTF { g__tblr_tracing_ #1 _bool }
+      {
+        \bool_if:cT { g__tblr_tracing_ #1 _bool } {#2}
+      }
+      { \__tblr_general_error:n { Unknown~ tracing~ option~ '#1'. } }
   }
 
 \cs_new_protected:Npn \__tblr_log_tracing_text:
@@ -6965,12 +6981,7 @@
 
 \cs_new_protected:Npn \__tblr_log_tracing_step:n #1
   {
-    \bool_if:NT \g__tblr_tracing_step_bool { \tl_log:e {Step :~ #1} }
-  }
-
-\cs_new_protected:Npn \__tblr_do_if_tracing:nn #1 #2
-  {
-    \bool_if:cT { g__tblr_tracing_ #1 _bool } {#2}
+    \tl_log:n {Step:~ #1}
   }
 
 %%% --------------------------------------------------------

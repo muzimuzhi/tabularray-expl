@@ -8,12 +8,62 @@
 \START
 
 \ExplSyntaxOn
+\OMIT
+% omit log lines produced by loading dependencies of the main package
 \clist_map_inline:nn { xcolor, zutil }
   {
-    \hook_gput_code:nnn { package/#1/before } {.} { \OMIT }
-    \hook_gput_code:nnn { package/#1/after}   {.} { \TIMO }
+    \hook_gput_code:nnn { package/#1/before } { . } { \OMIT }
+    \hook_gput_code:nnn { package/#1/after  } { . } { \TIMO }
   }
-\ExplSyntaxOff
+\TIMO
+
+\BEGINTEST{Load~tabularray}
+% end the group started by \BEGINTEST
+% packages cannot be loaded in a group
+\group_end:
 \usepackage{tabularray}
+\group_begin:
+\ENDTEST
+
+\OMIT
+\int_new:N \g__test_nesting_level_int
+
+% omit log lines produced by loading dependencies of libraries
+\hook_gput_code:nnn { package/before } { . }
+  {
+    \int_if_zero:nT { \g__test_nesting_level_int } { \OMIT }
+    \int_gincr:N \g__test_nesting_level_int
+  }
+\hook_gput_code:nnn { package/after  } { . }
+  {
+    \int_gdecr:N \g__test_nesting_level_int
+    \int_if_zero:nT { \g__test_nesting_level_int } { \TIMO }
+  }
+\TIMO
+
+% "functional" package contains both
+% - deprecated functions (\tl_case:Nn)
+% - and wrongly created variables (\tl_set_eq:NN \cEmptyTl \c_empty_tl)
+\hook_gput_code:nnn { package/functional/before } { . }
+  { \debug_off:n { all } }
+\hook_gput_code:nnn { package/functional/after } { . }
+  { \debug_on:n { check-declarations , check-expressions , deprecation } }
+
+\clist_map_inline:nn
+  {
+    amsmath, booktabs, counter, diagbox, functional
+  , nameref, siunitx, varwidth, zref
+    % skip experimental libraries
+  % , hook, html
+  }
+  {
+    \BEGINTEST{Load~"#1"~library}
+    \group_end:
+    \UseTblrLibrary{#1}
+    \group_begin:
+    \ENDTEST
+  }
+
+\ExplSyntaxOff
 
 \END

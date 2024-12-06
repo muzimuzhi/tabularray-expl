@@ -68,7 +68,8 @@
 %   { [#1] }
 \cs_new:Npn \zutil_debug_use_text:n #1
   {
-    \prg_replicate:nn {\l__zutil_debug_level_int} { \c_space_tl \c_space_tl } >>#1<<
+    \prg_replicate:nn {\l__zutil_debug_level_int}
+      { \c_space_tl \c_space_tl } >>#1<<
   }
 
 

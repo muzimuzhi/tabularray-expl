@@ -36,8 +36,8 @@ TEST 2: Fragile hline/vline text
 >  {[1][1](1)/@dash}  =>  {\q__tblr_text \def \x {}\small \rlap {--h--}}.
 >  {[2]/@hline-count}  =>  {1}.
 >  {[2][1](1)/@dash}  =>  {\q__tblr_dash solid}.
->  {[1](1)/@hline-height}  =>  {6.19849pt}.
->  {[1]/@hline-height}  =>  {6.19849pt}.
+>  {[1](1)/@hline-height}  =>  {6.2pt}.
+>  {[1]/@hline-height}  =>  {6.2pt}.
 >  {[2](1)/@hline-height}  =>  {0.4pt}.
 >  {[2]/@hline-height}  =>  {0.4pt}.
 > The spec list vline_1 contains the pairs:.

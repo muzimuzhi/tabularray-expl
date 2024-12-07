@@ -2,19 +2,19 @@
 ## scheme(s)
 ##
 scheme-basic
-##
-## development versions
-##
-l3backend-dev
-l3kernel-dev
-latex-amsmath-dev
-latex-base-dev
-latex-bin-dev
-latex-firstaid-dev
-latex-graphics-dev
-# latex-lab-dev # seems not needed
-latex-tools-dev
-xelatex-dev
+# ##
+# ## development versions
+# ##
+# l3backend-dev
+# l3kernel-dev
+# latex-amsmath-dev
+# latex-base-dev
+# latex-bin-dev
+# latex-firstaid-dev
+# latex-graphics-dev
+# # latex-lab-dev # seems not needed
+# latex-tools-dev
+# xelatex-dev
 ##
 ## stable packages corresponding to dev versions
 ##

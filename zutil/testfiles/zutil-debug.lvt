@@ -71,6 +71,64 @@
   \zutil_debug:nn { +, reset-level } { text }
 }
 
+\OMIT
+\cs_set:Npn \tests:w #1
+  {
+    #1 { true  } \zutil_debug:nn { } { used }
+    #1 { true  } \zutil_debug:n      { used }
+
+    #1 { false } \zutil_debug:nn { } { \ERROR }
+    #1 { 0 > 1 } \zutil_debug:nn { } { \ERROR }
+    % arg-forms other than "nn"
+    \clist_map_inline:nn
+      {
+        ne, en, ee
+      , nN, nc, eN, ec
+      }
+      {
+        \exp_args:Nnc
+        #1 { false }
+        { zutil_debug: ##1 } { ##1 } \ERROR
+      }
+    \clist_map_inline:nn
+      {
+        n, e
+      , N, c
+      }
+      {
+        \exp_args:Nnc
+        #1 { false }
+        { zutil_debug: ##1 } \ERROR
+      }
+  }
+\TIMO
+
+\TEST{\zutil_debug_if:n}{
+  \tests:w \zutil_debug_if:n
+}
+
+\TEST{\zutil_debug_safe_if:n}{
+  \tests:w \zutil_debug_safe_if:n
+}
+
+\OMIT
+\begin{document}
+\TIMO
+
+\TEST{\zutil_debug_safe_if:n,~safety}{
+  \hbox_set:Nn \l_tmpa_box
+    {
+      \int_use:N \tex_currentgrouplevel:D
+      \zutil_debug_safe_if:n { true } a
+      \zutil_debug_safe_if:n { true }
+        { \int_use:N \tex_currentgrouplevel:D }
+      \zutil_debug_safe_if:n { true } $x^n$
+      \zutil_debug_safe_if:n { true } \scan_stop:
+      \zutil_debug_safe_if:n { true } \use_none:n { \ERROR }
+    }
+  \box_show:N \l_tmpa_box
+}
+
 \ExplSyntaxOff
 
 \END

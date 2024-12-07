@@ -222,11 +222,18 @@
 
 
 % tabularray support
-\hook_gput_code:nnn { package/tabularray/after } { zutil/debug }
+\cs_new_protected:Npn \__zutil_debug_tblr_support:
   {
     \keys_define:nn { zutil/debug }
       {
-        % expansion is delayed to use of labels
+        % expansion is deferred until the label is actually being used
         tblr .meta:n = { label = { \the\c@rownum , \the\c@colnum } }
       }
+  }
+\IfPackageLoadedTF { tabularray }
+  { \__zutil_debug_tblr_support: }
+  {
+    % "package/.../before" hook also works
+    \hook_gput_code:nnn { package/tabularray/after } { zutil/debug }
+      { \__zutil_debug_tblr_support: }
   }

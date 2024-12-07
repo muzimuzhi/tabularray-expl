@@ -2,16 +2,86 @@
   {Z's\space utilities\space for\space debugging}
 
 % TODO: do not load by default
-% TODO: if. May need a new bool expr parser
+% TODO: if option. latex2e interfaces need it
 % TODO: choose how debug info is used, log, term, collect
 
-% label
+% TBD: switch arg order of \zutil_debug:nn?
+
+%%
+%% named variables
+%%
+
+% label keys
 \seq_new:N   \l__zutil_debug_labels_seq
-% level
+% level keys
 \int_new:N   \l__zutil_debug_level_int
-% if
+% if key
 \bool_new:N  \l__zutil_debug_do_bool
 \bool_set_true:N \l__zutil_debug_do_bool
+% if decorators
+\prop_new_linked:N \g__zutil_debug_collectors_prop
+
+% variants
+\cs_generate_variant:Nn \prop_gput_from_keyval:Nn { Ne }
+
+%%
+%% argument collectors
+%%
+
+% wrapper around \cs_generate_variant:Nn which also adds collectors for
+% variants
+%
+% @remarks
+% Every arg spec in #2 (variant arg list) MUST be full. Usage
+%   \zutil_debug_generate_variant:Nn \zutil_debug:nN { e }
+% is INVALID but without errors.
+\cs_new_protected:Npn \zutil_debug_generate_variant:Nn #1#2
+  {
+    \cs_generate_variant:Nn #1 { #2 }
+    % stores the cs name of base form #1, without colon and signature
+    \str_set:Ne \l__zutil_tmp_str
+      {
+        \exp_last_unbraced:Nf \use_i:nnn
+          \cs_split_function:N #1
+      }
+    % stores the collector of base form #1
+    \tl_set:Ne \l__zutil_tmp_tl
+      { \__zutil_debug_collect_args:Nw #1 }
+    \clist_map_inline:nn { #2 }
+      {
+        \__zutil_debug_gput_collector:co
+          { \l__zutil_tmp_str : ##1 }
+          { \l__zutil_tmp_tl }
+      }
+  }
+
+\IfExplAtLeastTF{2024-12-07}
+  {
+    % #1 and #2 are curried
+    \cs_new_protected:Npn \__zutil_debug_gput_collector:Nn
+      {
+        \prop_gput:Nnn \g__zutil_debug_collectors_prop
+      }
+  }
+  {
+    % work around a l3kernel bug latex3/latex3#1630
+    \cs_new_protected:Npn \__zutil_debug_gput_collector:Nn #1#2
+      {
+        \prop_gput:Nnn \g__zutil_debug_collectors_prop
+          {#1} { \exp_not:n {#2} }
+      }
+  }
+\cs_generate_variant:Nn \__zutil_debug_gput_collector:Nn { co }
+
+% all args are curried
+\cs_new:Npn \__zutil_debug_collect_args:Nw
+  {
+    \prop_item:Nn \g__zutil_debug_collectors_prop
+  }
+
+%%
+%% main debug command
+%%
 
 % IDEA: if \iow_wrap:nnnN is needed, then this would be more
 %       like \tl_log:n. Also note \tl_show:n uses \tex_showtokens:D.
@@ -47,7 +117,8 @@
       }
     \group_end:
   }
-\cs_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
+\__zutil_debug_gput_collector:Nn \zutil_debug:nn { \use_none:nn }
+\zutil_debug_generate_variant:Nn \zutil_debug:nn { ne, en, ee }
 
 % #1 : tl = expandable formatted labels
 % #2 : int = level
@@ -73,8 +144,10 @@
       { \c_space_tl \c_space_tl } >>#1<<
   }
 
+%%
+%% key-value processing
+%%
 
-% key-value processing
 % - \zutil_debug:nn should accept as few pre-defined keys as possible
 % - \zutiL_debug_set:n may accept a bit more keys
 
@@ -149,17 +222,71 @@
       }
   }
 
-% if do next debug; can be used as a prefix/decorator, so we don't need
-% separate \zutil_debug_if:nn and friends
+%%
+%% if decorators
+%%
+
+% If decorators are used as a prefix/decorator of \zutil_debug_if:nn and
+% friends, so can be inserted and commented out independently.
 %
-% usage:
-%   \zutil_debug_if:n {<bool expr>}
+% When <fp expr> evaluates to "false" (any non-zero value), an if
+% decorator gobbles the next debugging command along with its arguments.
+% \zutil_debug_if:n requires the following token is one of the debugging
+% commands, while \zutil_debug_safe_if:n skips itself if the next token
+% is not one of debugging commands, thus is safer.
+%
+% Example:
+%   \zutil_debug_if:n {<fp expr>}
 %   \zutil_debug:n {<text>}
-\cs_new_protected:Npn \zutil_debug_if:n
+%
+% @remarks
+% If decorators don't follow the expl3 naming convension. If so they
+% should have "nNw" or "nw" arg-spec.
+\cs_new:Npn \zutil_debug_if:n #1
   {
-    \bool_set:Nn \l__zutil_debug_do_bool
+    \__zutil_debug_if_skip:nT {#1}
+      { \__zutil_debug_collect_args:Nw }
   }
 
+% #2 is curried
+\cs_new:Npn \__zutil_debug_if_skip:nT #1
+  {
+    % treat anything non-zero as "true" (means do debug)
+    % paring \c_zero_fp is quicker than parsing fp operator "false"
+    \fp_compare:nNnT {#1} = { \c_zero_fp }
+  }
+
+\cs_new_protected:Npn \zutil_debug_safe_if:n #1
+  {
+    \__zutil_debug_if_skip:nT {#1}
+      % NOTE: use "\peek_catcode:NT \l_peek_token {...}" if
+      %       \group_align_safe_begin: is needed
+      { \peek_after:Nw \__zutil_debug_safe_collect_args:w }
+  }
+
+\cs_new_protected:Npn \__zutil_debug_safe_collect_args:w
+  {
+    \token_if_cs:NT \l_peek_token
+      { \__zutil_debug_safe_collect_args:Nw }
+  }
+
+\cs_new:Npn \__zutil_debug_safe_collect_args:Nw #1
+  {
+    \exp_args:NNe \__zutil_debug_safe_collect_args:Nnw #1
+      { \__zutil_debug_collect_args:Nw #1 }
+  }
+
+% #1 = \zutil_debug... func., #2: collector
+\cs_new:Npn \__zutil_debug_safe_collect_args:Nnw #1#2
+  {
+    % if #1 is not a debug function, #2 is empty and put #1 back to the
+    % input stream
+    \tl_if_empty:nTF {#2} {#1} {#2}
+  }
+
+%%
+%% more debug commands
+%%
 
 % :nN and its variants
 % nN, nc, eN, ec forms
@@ -171,8 +298,10 @@
   {
     \zutil_debug:ne {#1} { \__zutil_debug_use:c {#2} }
   }
-\cs_generate_variant:Nn \zutil_debug:nN { e }
-\cs_generate_variant:Nn \zutil_debug:nc { e }
+\__zutil_debug_gput_collector:Nn \zutil_debug:nN { \use_none:nn }
+\__zutil_debug_gput_collector:Nn \zutil_debug:nc { \use_none:nn }
+\zutil_debug_generate_variant:Nn \zutil_debug:nN { eN }
+\zutil_debug_generate_variant:Nn \zutil_debug:nc { ec }
 
 \cs_new:Npn \__zutil_debug_use:N #1
   {
@@ -188,12 +317,18 @@
 % :n, :N and their variations, taking only the text
 % n, e, N, c
 \cs_new_protected:Npn \zutil_debug:n { \zutil_debug:nn {} }
-\cs_generate_variant:Nn \zutil_debug:n { e }
+\__zutil_debug_gput_collector:Nn \zutil_debug:n { \use_none:n }
+\zutil_debug_generate_variant:Nn \zutil_debug:n { e }
+
 \cs_new_protected:Npn \zutil_debug:N { \zutil_debug:nN {} }
 \cs_new_protected:Npn \zutil_debug:c { \zutil_debug:nc {} }
+\__zutil_debug_gput_collector:Nn \zutil_debug:N { \use_none:n }
+\__zutil_debug_gput_collector:Nn \zutil_debug:c { \use_none:n }
 
+%%
+%% LaTeX2e interfaces
+%%
 
-% LaTeX2e interfaces
 % pros: shorter names
 % cons: harder expansion indication (no c, e-type)
 
@@ -211,8 +346,10 @@
     \zutil_debug:nN {#1,#3} #2
   }
 
+%%
+%% tabularray support
+%%
 
-% tabularray support
 \cs_new_protected:Npn \__zutil_debug_tblr_support:
   {
     \keys_define:nn { zutil/debug }

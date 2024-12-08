@@ -6,5 +6,11 @@
 \ExplSyntaxOff
 
 \START
+
+\BEGINTEST{Load zutil}
+\endgroup
 \usepackage{zutil}
+\begingroup
+\ENDTEST
+
 \END

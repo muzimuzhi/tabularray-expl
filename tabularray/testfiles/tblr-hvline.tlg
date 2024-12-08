@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: Empty hline/vline text
+TEST: Empty hline/vline text
 ============================================================
 > The spec list hline_1 contains the pairs:.
 >  {[1]/@hline-count}  =>  {1}.
@@ -27,7 +27,7 @@ TEST 1: Empty hline/vline text
 >  {[2]/@vline-width}  =>  {0.4pt}.
 ============================================================
 ============================================================
-TEST 2: Fragile hline/vline text
+TEST: Fragile hline/vline text
 ============================================================
 > The spec list hline_1 contains the pairs:.
 >  {[1]/@hline-count}  =>  {1}.

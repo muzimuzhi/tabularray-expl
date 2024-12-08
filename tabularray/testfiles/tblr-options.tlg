@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: Unknown options
+TEST: Unknown options
 ============================================================
 ! Package tabularray Error: Unknown option "vlines{1}".
 ! Package tabularray Error: Unknown option "unknown-xxx".

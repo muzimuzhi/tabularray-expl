@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: keep braces when splitting table into cells
+TEST: keep braces when splitting table into cells
 ============================================================
 > The spec list text_1 contains the pairs:.
 >  {[1][1]}  =>  {a}.

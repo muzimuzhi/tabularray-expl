@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: zutil_seq_set_split_keep_braces:Nnn
+TEST: zutil_seq_set_split_keep_braces:Nnn
 ============================================================
 The sequence \l_tmpa_seq contains the items (without outer braces):
 >  {}.
@@ -37,14 +37,14 @@ The sequence \l_tmpa_seq contains the items (without outer braces):
 [test] 1 error(s) encountered in this test.
 ============================================================
 ============================================================
-TEST 2: \__zutil_cs_if_defined:NTF 
+TEST: \__zutil_cs_if_defined:NTF 
 ============================================================
 TRUE
 TRUE
 TRUE
 ============================================================
 ============================================================
-TEST 3: \__zutil_cs_if_defined:cTF 
+TEST: \__zutil_cs_if_defined:cTF 
 ============================================================
 TRUE
 TRUE

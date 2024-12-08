@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST 1: labels
+TEST: labels
 ============================================================
 ! debug [label] >>text<<
 ! debug [label]l2/l3 >>text<<
@@ -10,7 +10,7 @@ TEST 1: labels
 ! debug [-NoValue-]\c_novalue_tl/-NoValue- >>text<<
 ============================================================
 ============================================================
-TEST 2: \zutil_debug:n , \zutil_debug:N 
+TEST: \zutil_debug:n , \zutil_debug:N 
 ============================================================
 ! debug >>\c_novalue_tl <<
 ! debug >>-NoValue-<<
@@ -18,14 +18,14 @@ TEST 2: \zutil_debug:n , \zutil_debug:N
 ! debug >>undefined<<
 ============================================================
 ============================================================
-TEST 3: reset-labels
+TEST: reset-labels
 ============================================================
 ! debug [Label] >>text<<
 ! debug [config]l2/ln >>text<<
 ! debug [Label] >>text<<
 ============================================================
 ============================================================
-TEST 4: negative level raises error
+TEST: negative level raises error
 ============================================================
 ! Package zutil Error: Invalid negative debugging level.
 (zutil)                Level will be set to zero.
@@ -33,7 +33,7 @@ TEST 4: negative level raises error
 [test] 1 error(s) encountered in this test.
 ============================================================
 ============================================================
-TEST 5: level options
+TEST: level options
 ============================================================
 ! debug [beg] >>lv0<<
 ! debug [...] >>lv0<<
@@ -52,7 +52,7 @@ TEST 5: level options
 ! debug [end] >>lv0<<
 ============================================================
 ============================================================
-TEST 6: \zutil_debug:nn ignores config options
+TEST: \zutil_debug:nn ignores config options
 ============================================================
 ! debug [Label] >>text<<
 ! debug   >>text<<

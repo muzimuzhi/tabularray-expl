@@ -66,6 +66,12 @@
   \zutil_debug:nn { end } { lv0 }
 }
 
+\TEST{the~"if"~option}{
+  \zutil_debug:nn { if=true } { used }
+  \zutil_debug:nn { if=false } { \ERROR }
+  \zutil_debug:nn { if=2>3 } { \ERROR }
+}
+
 \TEST{\zutil_debug:nn~ignores~config~options}{
   \zutil_debug:nn { Label, reset-labels } { text }
   \zutil_debug:nn { +, reset-level } { text }

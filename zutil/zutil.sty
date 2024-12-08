@@ -2,7 +2,13 @@
   {Z's\space utilities}
 
 
-% curried
+% shared temp variables
+\tl_new:N    \l__zutil_tmp_tl
+
+
+% module loading
+
+% #1 is curried
 \cs_new_protected:Npn \zutil_set:n
   {
     \keys_set:nn { zutil }

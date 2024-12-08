@@ -6,9 +6,7 @@
 % TODO: choose how debug info is used, log, term, collect
 
 % label
-\tl_new:N    \l__zutil_debug_label_tl
-\seq_new:N   \l__zutil_debug_sublabels_seq
-\bool_new:N  \l__zutil_debug_labeled_bool
+\seq_new:N   \l__zutil_debug_labels_seq
 % level
 \int_new:N   \l__zutil_debug_level_int
 % if
@@ -23,20 +21,23 @@
   {
     \keys_set_groups:nnn { zutil/debug } { global } { #1 }
     \group_begin:
-    \keys_set_exclude_groups:nnn { zutil/debug } { config, global } {#1}
+    \keys_set_exclude_groups:nnn { zutil/debug } { config, global } { #1 }
     \bool_if:NT \l__zutil_debug_do_bool
       {
+        % if seq is empty, tl is set to (both contain and equal to)
+        % \q_no_value
+        \seq_pop_left:NN \l__zutil_debug_labels_seq \l__zutil_tmp_tl
         \zutil_debug_do:e
           {
             % pretend it's an error, so can be filtered out by TeXstudio
             !~debug~
-            \bool_if:NT \l__zutil_debug_labeled_bool
+            \tl_if_eq:NNF \l__zutil_tmp_tl \q_no_value
               {
                 % output forms
                 % [label1]
                 % [label1]label2/label3/.../labeln
-                [ \l__zutil_debug_label_tl ]
-                \seq_use:Nn \l__zutil_debug_sublabels_seq {/} ~
+                [ \l__zutil_tmp_tl ]
+                \seq_use:Nn \l__zutil_debug_labels_seq {/} ~
               }
             % TBD: which way is better/quicker, \exp_not:n or
             %      \exp_args:No \cmd { \tl_to_str:n {#1} }?
@@ -77,7 +78,7 @@
 % - \zutil_debug:nn should accept as few pre-defined keys as possible
 % - \zutiL_debug_set:n may accept a bit more keys
 
-% curried
+% #1 is curried
 \cs_new_protected:Npn \zutil_debug_set:n
   {
     \keys_set:nn { zutil/debug }
@@ -109,9 +110,7 @@
     % keys available to \zutil_debug_set:n only
   , reset-labels .code:n =
     {
-      \bool_set_false:N \l__zutil_debug_labeled_bool
-      \tl_clear:N \l__zutil_debug_label_tl
-      \seq_clear:N \l__zutil_debug_sublabels_seq
+      \seq_clear:N \l__zutil_debug_labels_seq
     }
   , reset-labels .value_forbidden:n = true
   , reset-labels .groups:n = { config }
@@ -126,21 +125,13 @@
 % process label keys
 \cs_new_protected:Npn \__zutil_debug_set_label:n
   {
-    \bool_if:NTF \l__zutil_debug_labeled_bool
-      {
-        \seq_put_right:Nn \l__zutil_debug_sublabels_seq
-      }
-      {
-        \bool_set_true:N \l__zutil_debug_labeled_bool
-        \tl_set:Nn \l__zutil_debug_label_tl
-      }
+    \seq_put_right:Nn \l__zutil_debug_labels_seq
   }
 
 % process level keys
 \cs_new_protected:Npn \__zutil_debug_incr_level:
   {
     \int_incr:N \l__zutil_debug_level_int
-    % \__zutil_debug_set_level:V \l__zutil_debug_level_int
   }
 
 \msg_new:nnn { zutil } { debug/negative-level }

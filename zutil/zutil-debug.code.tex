@@ -2,7 +2,6 @@
   {Z's\space utilities\space for\space debugging}
 
 % TODO: do not load by default
-% TODO: if option. latex2e interfaces need it
 % TODO: choose how debug info is used, log, term, collect
 
 % TBD: switch arg order of \zutil_debug:nn?
@@ -175,6 +174,13 @@
   , +.    .value_forbidden:n = true
   , -.    .code:n   = \__zutil_debug_decr_level:
   , -.    .value_forbidden:n = true
+    % the "if" key
+  , if    .code:n   =
+    {
+      \__zutil_debug_if_skip:nT {#1}
+        { \bool_set_false:N \l__zutil_debug_do_bool }
+    }
+  , if    .value_required:n = true
     % unknown keys are treated as string labels and their values are
     % always dropped, if any.
     % pity "unknown .value_forbidden:n = true" doesn't work

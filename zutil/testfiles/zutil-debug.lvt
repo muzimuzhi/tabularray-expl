@@ -135,6 +135,17 @@
   \box_show:N \l_tmpa_box
 }
 
+\TEST{\ZutilDebug and~\ZutilDebugCmd}{
+  \ZutilDebug[label=L1]{text}[L2, e=p\arabic{page}]
+  \ZutilDebug[L, if=false]{\ERROR}
+  \ZutilDebug{\ERROR}[L, if=false]
+
+  \ZutilDebugCmd\ERROR[L]
+  \ZutilDebugCmd\IGNORED[L, if=\value{page}>3]
+  \ExpandArgs{c}\ZutilDebugCmd{ZutilDebug~code}
+    [+., L, if=true]
+}
+
 \ExplSyntaxOff
 
 \END

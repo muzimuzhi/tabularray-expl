@@ -1,5 +1,5 @@
 \ProvidesExplPackage {zutil} {2024-11-21} {0.2}
-  {Z's\space utilities}
+  {Z's utilities}
 
 
 % shared temp variables
@@ -20,7 +20,18 @@
     \cs_if_exist:cF { __zutil_module_[#1]_loaded: }
       {
         \cs_gset:cn { __zutil_module_[#1]_loaded: } {}
-        \file_input:n { zutil-#1.code.tex }
+        % learnt from how tcolorbox loads its libraries
+        %
+        % \@pushfilename records current states of \makeat(letter|other)
+        % and \ExplSyntax(On|Off), and \@popfilename restores them.
+        % \makeatletter and \ExplSyntaxOff set initial catcode scheme for
+        % modules, especially for the description in \ProvidesExplFile.
+        \@pushfilename
+        \xdef\@currname{zutil-#1.code.tex}
+        \makeatletter
+        \ExplSyntaxOff
+        \exp_args:No \file_input:n { \@currname }
+        \@popfilename
       }
   }
 

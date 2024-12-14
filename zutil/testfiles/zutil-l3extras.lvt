@@ -9,6 +9,18 @@
 
 \START
 
+\TEST{\__zutil_cs_if_defined:NTF}{
+  \__zutil_cs_if_defined:NTF \zutil_set:n     \TRUE \ERROR
+  \__zutil_cs_if_defined:NTF \scan_stop:      \TRUE \ERROR
+  \__zutil_cs_if_defined:NTF \tex_undefined:D \ERROR \TRUE
+}
+
+\TEST{\__zutil_cs_if_defined:cTF}{
+  \__zutil_cs_if_defined:cTF { zutil_set:n }      \TRUE \ERROR
+  \__zutil_cs_if_defined:cTF { scan_stop: }       \TRUE \ERROR
+  \__zutil_cs_if_defined:cTF { tex_undefined:D }  \ERROR \TRUE
+}
+
 % based on l3kernel test for \seq_set_split_keep_spaces:Nnn,
 % from l3kernel/testfiles/m3seq004.lvt
 \TEST{zutil_seq_set_split_keep_braces:Nnn}{
@@ -26,18 +38,6 @@
   \seq_log:N \l_tmpa_seq
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { } { abcdefghijklm }
   \seq_log:N \l_tmpa_seq
-}
-
-\TEST{\__zutil_cs_if_defined:NTF}{
-  \__zutil_cs_if_defined:NTF \zutil_set:n     \TRUE \ERROR
-  \__zutil_cs_if_defined:NTF \scan_stop:      \TRUE \ERROR
-  \__zutil_cs_if_defined:NTF \tex_undefined:D \ERROR \TRUE
-}
-
-\TEST{\__zutil_cs_if_defined:cTF}{
-  \__zutil_cs_if_defined:cTF { zutil_set:n }      \TRUE \ERROR
-  \__zutil_cs_if_defined:cTF { scan_stop: }       \TRUE \ERROR
-  \__zutil_cs_if_defined:cTF { tex_undefined:D }  \ERROR \TRUE
 }
 
 \ExplSyntaxOff

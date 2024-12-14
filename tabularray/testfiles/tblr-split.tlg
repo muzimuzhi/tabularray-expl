@@ -44,8 +44,8 @@ TEST: reserve implicit space tokens
 >  {[1][2]}  =>  {a}.
 >  {[2][1]}  =>  {\c_space_tl a\c_space_tl }.
 >  {[2][2]}  =>  {\c_space_tl \SetCell {}\c_space_tl a\c_space_tl }.
->  {[3][1]}  =>  {a\c_space_token }.
->  {[3][2]}  =>  {a\c_space_token }.
+>  {[3][1]}  =>  {\c_space_token a\c_space_token }.
+>  {[3][2]}  =>  {\c_space_token \SetCell {}\c_space_token a\c_space_token }.
 ============================================================
 ============================================================
 TEST: multiline cells

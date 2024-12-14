@@ -2820,7 +2820,7 @@
   {
     \tl_clear:N \l__tblr_cell_table_cmds_tl
     \tl_clear:N \l__tblr_cell_real_text_tl
-    \exp_last_unbraced:No \__tblr_extract_table_commands_aux: #1 \q__tblr_stop
+    \exp_args:No \__tblr_extract_table_commands:n { #1 \q__tblr_stop }
     \tl_if_empty:NF \l__tblr_cell_table_cmds_tl
       {
         \__tblr_prop_gput:neV { command }
@@ -2830,40 +2830,30 @@
     \tl_set_eq:NN #1 \l__tblr_cell_real_text_tl
   }
 
-\cs_new_protected:Npn \__tblr_extract_table_commands_aux:
+\cs_new_protected:Npn \__tblr_extract_table_commands:n #1
   {
-    \peek_after:Nw \__tblr_extract_table_commands_auxi:
+    \peek_after:Nw \__tblr_extract_table_commands_auxi:w #1
   }
 
-\cs_new_protected:Npn \__tblr_extract_table_commands_auxi:
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxi:w
   {
     % if \q__tblr_stop, stop
-    % if space, skip one space and continue
     % if macro,
     %   if table command, extract and continue
     %   otherwise stop and collect
     % otherwise, stop and collect the remaining as real cell text
-    \token_case_meaning:NnF \l_peek_token
+    \token_if_eq_meaning:NNTF \l_peek_token \q__tblr_stop
       {
-        \q__tblr_stop
-          { \__tblr_save_real_cell_text:w \prg_do_nothing: }
-        \c_space_token
-          % similar to \peek_remove_spaces:n, especially its internal
-          % \__peek_true_remove:w, but quicker, as we already know the
-          % next token IS space
-          {
-            \tex_afterassignment:D \__tblr_extract_table_commands_aux:
-            \cs_set_eq:NN \__tblr_unused:w
-          }
+        \__tblr_save_real_cell_text:w
       }
       {
         \token_if_macro:NTF \l_peek_token
-          { \__tblr_extract_table_commands_auxii:N }
-          { \__tblr_save_real_cell_text:w \prg_do_nothing: }
+          { \__tblr_extract_table_commands_auxii:Nw }
+          { \__tblr_save_real_cell_text:w }
       }
   }
 
-\cs_new_protected:Npn \__tblr_extract_table_commands_auxii:N #1
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxii:Nw #1
   {
     % the csname matters in deciding whether it's a table command or not,
     % thus we must test on the real command, not \l_peek_token
@@ -2872,8 +2862,23 @@
         \__tblr_extract_one_table_command:N #1
       }
       {
-        \__tblr_save_real_cell_text:w \prg_do_nothing: #1
+        \__tblr_save_real_cell_text:w #1
       }
+  }
+
+% used in \__tblr_extract_table_command_arg_next:
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxiii:w
+  {
+     \__tblr_extract_table_commands_auxiv:w \prg_do_nothing:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxiv:w
+    #1 \q__tblr_stop
+  {
+    \exp_args:Ne \__tblr_extract_table_commands:n
+      % trim spaces after a table command
+      % \tl_trim_spaces:o works too and is only one or two expansions slower
+      { \zutil_tl_trim_leading_spaces:o { #1 \q__tblr_stop } }
   }
 
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
@@ -2910,10 +2915,16 @@
         \int_decr:N \l__tblr_a_int
         \__tblr_extract_table_command_arg_m:n
       }
-      { \__tblr_extract_table_commands_aux: }
+      { \__tblr_extract_table_commands_auxiii:w }
   }
 
-\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \q__tblr_stop
+\cs_new_protected:Npn \__tblr_save_real_cell_text:w
+  {
+    % \prg_do_nothing: is used to prevent brace stripping
+    \__tblr_save_real_cell_text_aux:w \prg_do_nothing:
+  }
+
+\cs_new_protected:Npn \__tblr_save_real_cell_text_aux:w #1 \q__tblr_stop
   {
     % o-type expansion is used to digest \prg_do_nothing:
     \tl_set:No \l__tblr_cell_real_text_tl {#1}

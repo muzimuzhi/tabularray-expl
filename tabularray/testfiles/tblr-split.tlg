@@ -1,7 +1,7 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST: keep braces when splitting table into cells
+TEST: Keep braces when splitting table into cells
 ============================================================
 > The spec list text_1 contains the pairs:.
 >  {[1][1]}  =>  {a}.
@@ -20,7 +20,7 @@ TEST: keep braces when splitting table into cells
 >  {[4][2]}  =>  {{{{d}}}}.
 ============================================================
 ============================================================
-TEST: keep braces when extracting table commands
+TEST: Keep braces when extracting table commands
 ============================================================
 > The spec list text_1 contains the pairs:.
 >  {[1][1]}  =>  {a}.
@@ -37,7 +37,7 @@ TEST: keep braces when extracting table commands
 >  {[2][2]}  =>  {{a}}.
 ============================================================
 ============================================================
-TEST: reserve implicit space tokens
+TEST: Reserve implicit space tokens
 ============================================================
 > The spec list text_1 contains the pairs:.
 >  {[1][1]}  =>  {a}.
@@ -48,7 +48,7 @@ TEST: reserve implicit space tokens
 >  {[3][2]}  =>  {\c_space_token \SetCell {}\c_space_token a\c_space_token }.
 ============================================================
 ============================================================
-TEST: multiline cells
+TEST: Multiline cells
 ============================================================
 > The spec list text_1 contains the pairs:.
 >  {[1][1]}  =>  {p}.

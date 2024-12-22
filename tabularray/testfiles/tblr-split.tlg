@@ -63,22 +63,22 @@ TEST: Multiline cells
 >  {column[1]/coefficient} =>  {0}.
 >  {column[1]/leftsep} =>  {6pt}.
 >  {column[1]/rightsep} =>  {6pt}.
->  {column[1]/@col-width} =>  {5.55557pt}.
+>  {column[1]/@col-width} =>  {5.5555pt}.
 >  {column[2]/width} =>  {-1pt}.
 >  {column[2]/coefficient} =>  {0}.
 >  {column[2]/leftsep} =>  {6pt}.
 >  {column[2]/rightsep} =>  {6pt}.
->  {column[2]/@col-width} =>  {5.55557pt}.
+>  {column[2]/@col-width} =>  {5.5555pt}.
 >  {column[3]/width} =>  {-1pt}.
 >  {column[3]/coefficient} =>  {0}.
 >  {column[3]/leftsep} =>  {6pt}.
 >  {column[3]/rightsep} =>  {6pt}.
->  {column[3]/@col-width} =>  {5.55557pt}.
+>  {column[3]/@col-width} =>  {5.5555pt}.
 >  {column[4]/width} =>  {-1pt}.
 >  {column[4]/coefficient} =>  {0}.
 >  {column[4]/leftsep} =>  {6pt}.
 >  {column[4]/rightsep} =>  {6pt}.
->  {column[4]/@col-width} =>  {8.8889pt}.
+>  {column[4]/@col-width} =>  {8.88882pt}.
 The property list \g__tblr_column_1_prop is empty
 > .
 ============================================================

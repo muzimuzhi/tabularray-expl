@@ -1,0 +1,81 @@
+\input{regression-test}
+\documentclass{article}
+
+\usepackage{tabularray}
+
+\ExplSyntaxOn
+\debug_on:n { check-declarations , check-expressions , deprecation }
+% skip table typesetting
+\cs_gset_eq:NN \__tblr_build_whole: \prg_do_nothing:
+\ExplSyntaxOff
+
+\begin{document}
+
+\SetTblrTracing{+text}
+
+\START
+
+% https://github.com/lvjr/tabularray/issues/501
+\BEGINTEST{Keep braces when splitting table into cells}
+\begin{tblr}{l}
+  a \\
+  {b} \\
+  {{c}} \\
+  {{{d}}} \\
+  {{{{e}}}}
+\end{tblr}
+
+\begin{tblr}{l}
+  1 & a \\
+  2 & {b} \\
+  3 & {{c}} \\
+  4 & {{{d}}}
+\end{tblr}
+\ENDTEST
+
+% https://github.com/muzimuzhi/tabularray-dev/issues/4
+\BEGINTEST{Keep braces when extracting table commands}
+% leading braces in cell text should be saved as-is
+\begin{tblr}{l}
+  a & {a} & {a}a & {a} a \\
+\end{tblr}
+
+% spaces between table commands or after the last table command should
+% be trimmed
+\begin{tblr}{l}
+  \SetCell{} & \SetCell{} a & \SetCell{} {a} & a \SetCell{} \\
+  \SetCell{} \SetCell{} a & \SetCell{} \SetCell{} {a}
+\end{tblr}
+\ENDTEST
+
+\BEGINTEST{Reserve implicit space tokens}
+\ExplSyntaxOn
+\begin{tblr}{l}
+  ~ a ~
+    & \SetCell{} ~ \SetCell{} ~ a \\
+  \c_space_tl a \c_space_tl
+    & \SetCell{} \c_space_tl \SetCell{} \c_space_tl a \c_space_tl \\
+  \c_space_token a \c_space_token 
+    & \SetCell{} \c_space_token \SetCell{} \c_space_token a \c_space_token
+\end{tblr}
+\ExplSyntaxOff
+\ENDTEST
+
+\SetTblrTracing{+column}
+
+\BEGINTEST{Multiline cells}
+% for multiline cells, an extra space trimming is done on each line
+\begin{tblr}{vlines}
+  % first three columns should have the same width
+  % forth column should be wider than others
+  p & { p \\ p } & { p \\ p \\ p } \\
+  \SetCell{} p
+    & \SetCell{} { p \\ p }
+    & \SetCell{} { p \\ p \\ p }
+    & \SetCell{} { \SetCell{} p \\ p \\ p }
+\end{tblr}
+\ENDTEST
+
+\END
+
+\end{document}

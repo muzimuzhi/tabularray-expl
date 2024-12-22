@@ -114,6 +114,9 @@
 \box_new:N    \l__tblr_tmpa_box
 \box_new:N    \l__tblr_tmpb_box
 
+\tl_new:N     \l__tblr_text_tl
+\quark_new:N  \q__tblr_stop
+
 %% Total number of tblr tables
 \int_new:N \g__tblr_table_count_int
 
@@ -2703,11 +2706,11 @@
     \cs_set_protected:Npn \__tblr_expand_table_body_aux:w ##1 #2
       {
         \tl_put_right:Nn #1 {##1}
-        \peek_meaning:NTF \q_stop
+        \peek_meaning:NTF \q__tblr_stop
           { \use_none:n }
           { \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w #2 }
       }
-    \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w \l__tblr_tmpa_tl #2 \q_stop
+    \exp_last_unbraced:NV \__tblr_expand_table_body_aux:w \l__tblr_tmpa_tl #2 \q__tblr_stop
   }
 
 %% Split table content to a sequence of lines
@@ -2767,13 +2770,13 @@
     \int_zero:N \c@colnum
     \seq_map_inline:Nn \l__tblr_tmpa_seq
       {
-        \tl_set:Nn \l__tblr_tmpa_tl { ##1 }
-        \__tblr_remove_braces:N \l__tblr_tmpa_tl
-        \__tblr_trim_par_space_tokens:N \l__tblr_tmpa_tl
+        \tl_set:Nn \l__tblr_text_tl { ##1 }
+        \__tblr_remove_braces:N \l__tblr_text_tl
+        \__tblr_trim_par_space_tokens:N \l__tblr_text_tl
         \int_incr:N \c@colnum
-        \__tblr_extract_table_commands:N \l__tblr_tmpa_tl
-        \__tblr_trim_par_space_tokens:N \l__tblr_tmpa_tl
-        \__tblr_spec_gput:neV { text } { [#1][\int_use:N \c@colnum] } \l__tblr_tmpa_tl
+        \__tblr_extract_table_commands:N \l__tblr_text_tl
+        \__tblr_trim_par_space_tokens:N \l__tblr_text_tl
+        \__tblr_spec_gput:neV { text } { [#1][\int_use:N \c@colnum] } \l__tblr_text_tl
       }
     %% Decrease row count by 1 if the last row has only one empty cell text
     %% We need to do it here since the > or < column type may add text to cells
@@ -2781,7 +2784,7 @@
       {
         { \int_compare_p:nNn {#1} = {\c@rowcount} }
         { \int_compare_p:nNn {\c@colnum} = {1} }
-        { \tl_if_empty_p:N \l__tblr_tmpa_tl }
+        { \tl_if_empty_p:N \l__tblr_text_tl }
       }
       { \int_decr:N \c@rowcount }
       {
@@ -2810,44 +2813,79 @@
 
 %% Extract table commands defined with \NewTableCommand from cell text
 
-\tl_new:N \l__tblr_saved_table_commands_before_cell_text_tl
-\tl_new:N \l__tblr_saved_cell_text_after_table_commands_tl
+\tl_new:N \l__tblr_cell_table_cmds_tl
+\tl_new:N \l__tblr_cell_real_text_tl
 
 \cs_new_protected:Npn \__tblr_extract_table_commands:N #1
   {
-    \tl_clear:N \l__tblr_saved_table_commands_before_cell_text_tl
-    \tl_clear:N \l__tblr_saved_cell_text_after_table_commands_tl
-    \exp_last_unbraced:NV \__tblr_extract_table_commands_next:n #1 \q_stop
-    \tl_if_empty:NF \l__tblr_saved_table_commands_before_cell_text_tl
+    \tl_clear:N \l__tblr_cell_table_cmds_tl
+    \tl_clear:N \l__tblr_cell_real_text_tl
+    \exp_args:No \__tblr_extract_table_commands:n { #1 \q__tblr_stop }
+    \tl_if_empty:NF \l__tblr_cell_table_cmds_tl
       {
         \__tblr_prop_gput:neV { command }
           {[\int_use:N \c@rownum][\int_use:N \c@colnum]}
-          \l__tblr_saved_table_commands_before_cell_text_tl
+          \l__tblr_cell_table_cmds_tl
       }
-    \tl_set_eq:NN #1 \l__tblr_saved_cell_text_after_table_commands_tl
+    \tl_set_eq:NN #1 \l__tblr_cell_real_text_tl
   }
 
-%% #1 maybe a single token or multiple tokens from a pair of braces
-\cs_new_protected:Npn \__tblr_extract_table_commands_next:n #1
+\cs_new_protected:Npn \__tblr_extract_table_commands:n #1
   {
-    \tl_if_single_token:nTF {#1}
+    \peek_after:Nw \__tblr_extract_table_commands_auxi:w #1
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxi:w
+  {
+    % if \q__tblr_stop, stop
+    % if macro,
+    %   if table command, extract and continue
+    %   otherwise stop and collect
+    % otherwise, stop and collect the remaining as real cell text
+    \token_if_eq_meaning:NNTF \l_peek_token \q__tblr_stop
       {
-        \__tblr_if_table_command:NTF #1
-          { \__tblr_extract_one_table_command:N #1 }
-          {
-            \token_if_eq_meaning:NNF #1 \q_stop
-              { \__tblr_save_real_cell_text:w #1 }
-          }
+        \__tblr_save_real_cell_text:w
       }
-      % prefix #1 with \prg_do_nothing: to prevent brace stripping
-      { \__tblr_save_real_cell_text_aux:w \prg_do_nothing: {#1} }
+      {
+        \token_if_macro:NTF \l_peek_token
+          { \__tblr_extract_table_commands_auxii:Nw }
+          { \__tblr_save_real_cell_text:w }
+      }
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxii:Nw #1
+  {
+    % the csname matters in deciding whether it's a table command or not,
+    % thus we must test on the real command, not \l_peek_token
+    \__tblr_if_table_command:NTF #1
+      {
+        \__tblr_extract_one_table_command:N #1
+      }
+      {
+        \__tblr_save_real_cell_text:w #1
+      }
+  }
+
+% used in \__tblr_extract_table_command_arg_next:
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxiii:w
+  {
+     \__tblr_extract_table_commands_auxiv:w \prg_do_nothing:
+  }
+
+\cs_new_protected:Npn \__tblr_extract_table_commands_auxiv:w
+    #1 \q__tblr_stop
+  {
+    \exp_args:Ne \__tblr_extract_table_commands:n
+      % trim spaces after a table command
+      % \tl_trim_spaces:o works too and is only one or two expansions slower
+      { \zutil_tl_trim_leading_spaces:o { #1 \q__tblr_stop } }
   }
 
 \cs_new_protected:Npn \__tblr_extract_one_table_command:N #1
   {
     \int_set:Nn \l__tblr_a_int
       { \tl_use:c { g__tblr_table_cmd_ \cs_to_str:N #1 _arg_numb_tl } }
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl {#1}
+    \tl_put_right:Nn \l__tblr_cell_table_cmds_tl {#1}
     \int_compare:nNnTF {\l__tblr_a_int} < {0}
       {
         \int_set:Nn \l__tblr_a_int { \int_abs:n {\l__tblr_a_int} - 1 }
@@ -2860,13 +2898,13 @@
 
 \cs_new_protected:Npn \__tblr_extract_table_command_arg_o:w [#1]
   {
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { [#1] }
+    \tl_put_right:Nn \l__tblr_cell_table_cmds_tl { [#1] }
     \__tblr_extract_table_command_arg_next:
   }
 
 \cs_new_protected:Npn \__tblr_extract_table_command_arg_m:n #1
   {
-    \tl_put_right:Nn \l__tblr_saved_table_commands_before_cell_text_tl { {#1} }
+    \tl_put_right:Nn \l__tblr_cell_table_cmds_tl { {#1} }
     \__tblr_extract_table_command_arg_next:
   }
 
@@ -2877,19 +2915,19 @@
         \int_decr:N \l__tblr_a_int
         \__tblr_extract_table_command_arg_m:n
       }
-      { \__tblr_extract_table_commands_next:n }
+      { \__tblr_extract_table_commands_auxiii:w }
   }
 
-%% The outermost set of braces of cell text #1 will be removed
-\cs_new_protected:Npn \__tblr_save_real_cell_text:w #1 \q_stop
+\cs_new_protected:Npn \__tblr_save_real_cell_text:w
   {
-    \tl_set:Nn \l__tblr_saved_cell_text_after_table_commands_tl {#1}
+    % \prg_do_nothing: is used to prevent brace stripping
+    \__tblr_save_real_cell_text_aux:w \prg_do_nothing:
   }
 
-\cs_new_protected:Npn \__tblr_save_real_cell_text_aux:w #1 \q_stop
+\cs_new_protected:Npn \__tblr_save_real_cell_text_aux:w #1 \q__tblr_stop
   {
     % o-type expansion is used to digest \prg_do_nothing:
-    \tl_set:No \l__tblr_saved_cell_text_after_table_commands_tl {#1}
+    \tl_set:No \l__tblr_cell_real_text_tl {#1}
   }
 
 %%% --------------------------------------------------------
@@ -7224,7 +7262,7 @@
         \cs_set_protected:Npn \__tblr_evaluate_table_body_aux:w ####1 ##2
           {
             \tl_gput_right:Nn \g__tblr_functional_result_tl {####1}
-            \peek_meaning:NTF \q_stop { \use_none:n } {##2}
+            \peek_meaning:NTF \q__tblr_stop { \use_none:n } {##2}
           }
         \fun_run_return_processor:nn
           {
@@ -7232,7 +7270,7 @@
           }
           {
             \exp_last_unbraced:NV
-              \__tblr_evaluate_table_body_aux:w ##1 ##2 \q_stop
+              \__tblr_evaluate_table_body_aux:w ##1 ##2 \q__tblr_stop
           }
         \tl_set_eq:NN ##1 \g__tblr_functional_result_tl
       }

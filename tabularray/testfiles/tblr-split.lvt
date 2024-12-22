@@ -61,10 +61,10 @@
 \ExplSyntaxOff
 \ENDTEST
 
-\SetTblrTracing{+column = @col-width}
+\SetTblrTracing{+column}
 
 \BEGINTEST{Multiline cells}
-% for multiline cells, space trimming is done on a line-by-line basis
+% for multiline cells, an extra space trimming is done on each line
 \begin{tblr}{vlines}
   % first three columns should have the same width
   % forth column should be wider than others

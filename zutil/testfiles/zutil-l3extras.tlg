@@ -132,16 +132,8 @@ The sequence \l_tmpa_seq is empty
 > .
 ! Package zutil Error: Empty delimiter is not supported in \zutil_seq_gset_split_keep_braces:Nnn .
 (zutil)                The existing definition of '\g_tmpa_seq ' will not be altered.
-The sequence \g_tmpa_seq contains the items (without outer braces):
->  {a}
->  {b}
->  {c}
->  {{|}}
->  {{ |{} }}
->  {d}
->  {{e}e}
->  {\ERROR }
->  {}.
+The sequence \g_tmpa_seq is empty
+> .
 [test] 2 error(s) encountered in this test.
 ============================================================
 ***************

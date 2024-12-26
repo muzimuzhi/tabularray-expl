@@ -110,6 +110,8 @@
   \seq_log:N \g_tmpa_seq
 }
 
+\seq_gclear:N \g_tmpa_seq
+
 \TEST{Empty~delimiter}{
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { } { abcdefghijklm }
   \seq_log:N \l_tmpa_seq

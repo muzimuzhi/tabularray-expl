@@ -81,7 +81,7 @@ TEST: \zutil_tl_trim_trailing_spaces_apply:nN
 >>  ab c <<
 ============================================================
 ============================================================
-TEST: zutil_seq_set_split_keep_braces:Nnn
+TEST: \zutil_seq_set_split_keep_braces:Nnn 
 ============================================================
 The sequence \l_tmpa_seq contains the items (without outer braces):
 >  {}.
@@ -97,7 +97,10 @@ The sequence \l_tmpa_seq contains the items (without outer braces):
 >  {c}
 >  {{|}}
 >  {{ |{} }}
->  {d}.
+>  {d}
+>  {{e}e}
+>  {\ERROR }
+>  {}.
 The sequence \l_tmpa_seq contains the items (without outer braces):
 >  {Hello,}
 >  {world,}
@@ -105,16 +108,41 @@ The sequence \l_tmpa_seq contains the items (without outer braces):
 >  {name}
 >  {is}
 >  {LaTeX!}.
+============================================================
+============================================================
+TEST: gset
+============================================================
+The sequence \g_tmpa_seq contains the items (without outer braces):
+>  {a}
+>  {b}
+>  {c}
+>  {{|}}
+>  {{ |{} }}
+>  {d}
+>  {{e}e}
+>  {\ERROR }
+>  {}.
+============================================================
+============================================================
+TEST: Empty delimiter
+============================================================
 ! Package zutil Error: Empty delimiter is not supported in \zutil_seq_set_split_keep_braces:Nnn .
 (zutil)                The existing definition of '\l_tmpa_seq ' will not be altered.
-The sequence \l_tmpa_seq contains the items (without outer braces):
->  {Hello,}
->  {world,}
->  {my}
->  {name}
->  {is}
->  {LaTeX!}.
-[test] 1 error(s) encountered in this test.
+The sequence \l_tmpa_seq is empty
+> .
+! Package zutil Error: Empty delimiter is not supported in \zutil_seq_gset_split_keep_braces:Nnn .
+(zutil)                The existing definition of '\g_tmpa_seq ' will not be altered.
+The sequence \g_tmpa_seq contains the items (without outer braces):
+>  {a}
+>  {b}
+>  {c}
+>  {{|}}
+>  {{ |{} }}
+>  {d}
+>  {{e}e}
+>  {\ERROR }
+>  {}.
+[test] 2 error(s) encountered in this test.
 ============================================================
 ***************
-[test] 1 error(s) encountered.
+[test] 2 error(s) encountered.

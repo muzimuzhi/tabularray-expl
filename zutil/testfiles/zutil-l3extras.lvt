@@ -87,7 +87,7 @@
 
 % based on l3kernel test for \seq_set_split_keep_spaces:Nnn,
 % from l3kernel/testfiles/m3seq004.lvt
-\TEST{zutil_seq_set_split_keep_braces:Nnn}{
+\TEST{\zutil_seq_set_split_keep_braces:Nnn}{
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { | } { }
   \seq_log:N \l_tmpa_seq
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { , } { a, }
@@ -95,13 +95,26 @@
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { , } { a~,~b }
   \seq_log:N \l_tmpa_seq
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { | }
-    { ~ a | b | ~c~ | {|} | ~{~|{}~} | d ~ }
+    { ~ a | b | ~c~ | {|} | ~{~|{}~} | d ~ | {e}e | \ERROR | }
   \seq_log:N \l_tmpa_seq
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { ~ }
     { Hello,~world,~my~name~is~LaTeX! }
   \seq_log:N \l_tmpa_seq
+}
+
+\TEST{gset}{
+  \group_begin:
+  \zutil_seq_gset_split_keep_braces:Nnn \g_tmpa_seq { | }
+    { ~ a | b | ~c~ | {|} | ~{~|{}~} | d ~ | {e}e | \ERROR | }
+  \group_end:
+  \seq_log:N \g_tmpa_seq
+}
+
+\TEST{Empty~delimiter}{
   \zutil_seq_set_split_keep_braces:Nnn \l_tmpa_seq { } { abcdefghijklm }
   \seq_log:N \l_tmpa_seq
+  \zutil_seq_gset_split_keep_braces:Nnn \g_tmpa_seq { } { abcdefghijklm }
+  \seq_log:N \g_tmpa_seq
 }
 
 \ExplSyntaxOff

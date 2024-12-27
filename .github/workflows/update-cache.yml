@@ -1,0 +1,41 @@
+name: Update cache
+
+on:
+  # schedule:
+  #   # at 11:31 UTC (19:31 CST/UTC +8) on every Friday
+  #   # https://crontab.guru/#31_11_*_*_5
+  #   - cron: "31 11 * * 5"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  update-cache:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Delete setup-texlive-action caches
+      run: |
+        cache_keys=$(\
+            gh cache list --key setup-texlive --json key --jq '.[].key')
+        for key in $cache_keys; do
+            echo "Deleting cache $key"
+            gh cache delete $key
+        done
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create new cache
+      uses: teatimeguest/setup-texlive-action@v3
+      with:
+        package-file: .github/tl_packages
+        update-all-packages: true
+
+    - name: List new cache
+      run: |
+        GH_PAGER="" \
+            gh cache list --key setup-texlive --json id,key,ref,createdAt,lastAccessedAt
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

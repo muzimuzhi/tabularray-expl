@@ -1,11 +1,10 @@
 name: Update cache
 
 on:
-  # schedule:
-  #   # at 11:31 UTC (19:31 CST/UTC +8) on every Friday
-  #   # https://crontab.guru/#31_11_*_*_5
-  #   - cron: "31 11 * * 5"
-  pull_request:
+  schedule:
+    # at 11:31 UTC (19:31 CST/UTC +8) on every Friday
+    # https://crontab.guru/#31_11_*_*_5
+    - cron: "31 11 * * 5"
   workflow_dispatch:
 
 jobs:
@@ -22,7 +21,7 @@ jobs:
             gh cache list --key setup-texlive --json key --jq '.[].key')
         for key in $cache_keys; do
             echo "Deleting cache $key"
-            gh cache delete $key
+            gh cache delete "$key"
         done
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

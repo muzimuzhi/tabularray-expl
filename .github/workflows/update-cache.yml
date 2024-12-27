@@ -32,10 +32,3 @@ jobs:
       with:
         package-file: .github/tl_packages
         update-all-packages: true
-
-    - name: List new cache
-      run: |
-        GH_PAGER="" \
-            gh cache list --key setup-texlive --json id,key,ref,createdAt,lastAccessedAt
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

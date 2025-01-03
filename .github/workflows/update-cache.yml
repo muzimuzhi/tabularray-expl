@@ -23,7 +23,8 @@ jobs:
         cache_keys=$(\
             gh cache list --key setup-texlive --json key --jq '.[].key')
         for key in $cache_keys; do
-            echo "$key"
+            echo "Deleting cache $key"
+            gh cache delete "$key"
         done
         if [[ $(wc -l <<< "$cache_keys") -gt 1 ]]; then
             echo "Multiple setup-texlive-action caches found"
@@ -34,7 +35,8 @@ jobs:
 
     - name: Create new cache
       uses: teatimeguest/setup-texlive-action@v3
-      if: false
+      # if: false
       with:
-        package-file: .github/tl_packages
-        update-all-packages: true
+        packages: scheme-minimal
+        # package-file: .github/tl_packages
+        # update-all-packages: true

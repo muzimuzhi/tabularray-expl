@@ -19,6 +19,7 @@ jobs:
     # https://cli.github.com/manual/gh_cache_delete
     - name: Delete setup-texlive-action caches
       run: |
+        set -x
         cache_keys=$(\
             gh cache list --key setup-texlive --json key --jq '.[].key')
         if [[ $(wc -l <<< "$cache_keys") -gt 1 ]]; then

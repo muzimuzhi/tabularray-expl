@@ -21,10 +21,13 @@ jobs:
       run: |
         cache_keys=$(\
             gh cache list --key setup-texlive --json key --jq '.[].key')
-        for key in $cache_keys; do
-            echo "Deleting cache $key"
-            gh cache delete "$key"
-        done
+        if [[ $(wc -l <<< "$cache_keys") -gt 1 ]]; then
+            echo "Multiple setup-texlive-action caches found"
+            for key in $cache_keys; do
+                echo "$key"
+            done
+            exit 1
+        fi
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

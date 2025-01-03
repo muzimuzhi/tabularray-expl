@@ -19,6 +19,8 @@ jobs:
     # https://cli.github.com/manual/gh_cache_delete
     - name: Delete setup-texlive-action caches
       run: |
+        # to find why 'cache_keys' contain dup items
+        set -x
         cache_keys=$(\
             gh cache list --key setup-texlive --json key --jq '.[].key')
         for key in $cache_keys; do

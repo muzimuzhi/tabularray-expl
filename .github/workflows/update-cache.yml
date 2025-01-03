@@ -23,6 +23,10 @@ jobs:
         set -x
         cache_keys=$(\
             gh cache list --key setup-texlive --json key --jq '.[].key')
+        if [[ $(wc -l <<< "$cache_keys") -gt 1 ]]; then
+            echo "Multiple setup-texlive-action caches found"
+            exit 1
+        fi
         for key in $cache_keys; do
             echo "Deleting cache $key"
             gh cache delete "$key"

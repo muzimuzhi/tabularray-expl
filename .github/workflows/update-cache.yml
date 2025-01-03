@@ -21,7 +21,7 @@ jobs:
       run: |
         set -x
         cache_keys=$(\
-            gh cache list --key setup-texlive --json key --jq '.[].key')
+            gh cache list --json key --jq '.[].key')
         for key in $cache_keys; do
             echo "Deleting cache $key"
             gh cache delete "$key"

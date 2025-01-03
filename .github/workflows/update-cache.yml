@@ -37,6 +37,6 @@ jobs:
       uses: teatimeguest/setup-texlive-action@v3
       # if: false
       with:
-        packages: scheme-minimal
+        packages: scheme-infraonly
         # package-file: .github/tl_packages
         # update-all-packages: true

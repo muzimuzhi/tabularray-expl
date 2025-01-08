@@ -21,6 +21,15 @@
   \zutil_cs_if_defined:cTF { tex_undefined:D }  \ERROR \TRUE
 }
 
+\TEST{\zutil_cs_ensure_variant:N}{
+  \zutil_cs_ensure_variant:N \tl_new:N
+  \zutil_cs_ensure_variant:N \tl_new:c
+  \TYPE { [before]~\cs_meaning:N \zutil_set:V }
+  \zutil_cs_ensure_variant:N \zutil_set:V
+  \TYPE { [after]~\cs_meaning:N \zutil_set:V }
+  \zutil_cs_ensure_variant:N \zutil_set:X
+}
+
 \OMIT
 % \char_generate:nn {33} {10} => character "!" with catcode 10
 % \char_generate:nn {65} {10} => character "A" with catcode 10

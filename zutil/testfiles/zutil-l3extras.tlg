@@ -15,6 +15,28 @@ TRUE
 TRUE
 ============================================================
 ============================================================
+TEST: \zutil_cs_ensure_variant:N 
+============================================================
+[before] undefined
+[after] \protected\long macro:->\exp_args:NV \zutil_set:n 
+! Use of \??? doesn't match its definition.
+<argument> \???  
+                 ! Package zutil Error: Invalid argument specifier 'X'.
+l. ...}
+If you say, e.g., `\def\a1{...}', then you must always
+put `1' after `\a', since control sequence names are
+made up of letters only. The macro here has not been
+followed by the required stuff, so I'm ignoring it.
+! LaTeX Error: Control sequence \zutil_set:X undefined.
+For immediate help type H <return>.
+ ...                                              
+l. ...}
+This is a coding error.
+LaTeX has been asked to use a control sequence '\zutil_set:X':
+this has not been defined yet.
+[test] 2 error(s) encountered in this test.
+============================================================
+============================================================
 TEST: \tl_trim_spaces:n 
 ============================================================
 >>ab c<<
@@ -137,4 +159,4 @@ The sequence \g_tmpa_seq is empty
 [test] 2 error(s) encountered in this test.
 ============================================================
 ***************
-[test] 2 error(s) encountered.
+[test] 4 error(s) encountered.

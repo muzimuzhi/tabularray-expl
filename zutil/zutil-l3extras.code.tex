@@ -1,4 +1,4 @@
-\ProvidesExplFile {zutil-l3extras.code.tex} {2024-12-14} {0.3}
+\ProvidesExplFile {zutil-l3extras.code.tex} {2025-01-09} {0.4}
   {Z's utilities, the l3kernel extras module}
 
 %%
@@ -22,6 +22,60 @@
       \prg_return_false:
     \fi:
   }
+
+%%
+%% l3expan extras
+%%
+
+\msg_new:nnn { zutil } { cs/invalid-arg-spec }
+  {
+    Invalid~argument~specifier~'#1'.
+  }
+
+% Example:
+%     \zutil_cs_ensure_variant:N \zutil_set:V
+\cs_new_protected:Npn \zutil_cs_ensure_variant:N #1
+  {
+    \cs_if_exist:NF #1
+      {
+        % \cs_split_function:N <function> expands to
+        % "{<name:str>} {<signature:str>} <if colon found:bool>"
+        \exp_last_unbraced:Nf \__zutil_cs_ensure_variant:nnN
+          \cs_split_function:N #1
+      }
+  }
+\cs_new_protected:Npn \__zutil_cs_ensure_variant:nnN #1#2#3
+  {
+    \bool_if:NT #3
+      {
+        \cs_generate_variant:cn
+          { #1: \__zutil_cs_get_base:w #2 \q_stop } { #2 }
+      }
+  }
+\cs_new:Npn \__zutil_cs_get_base:w #1
+  {
+    \cs_if_eq:NNF #1 \q_stop
+      {
+        \cs_if_exist_use:cF { __zutil_cs_base_form_#1: }
+          {
+            #1
+            \msg_expandable_error:nnn
+              { zutil } { cs/invalid-arg-spec } { #1 }
+          }
+        \__zutil_cs_get_base:w
+      }
+  }
+\cs_new:Npn \__zutil_cs_base_form_N: { N }
+\cs_new:Npn \__zutil_cs_base_form_c: { N }
+\cs_new:Npn \__zutil_cs_base_form_n: { n }
+\cs_new:Npn \__zutil_cs_base_form_o: { n }
+\cs_new:Npn \__zutil_cs_base_form_f: { n }
+\cs_new:Npn \__zutil_cs_base_form_e: { n }
+\cs_new:Npn \__zutil_cs_base_form_x: { n }
+\cs_new:Npn \__zutil_cs_base_form_V: { n }
+\cs_new:Npn \__zutil_cs_base_form_v: { n }
+\cs_new:Npn \__zutil_cs_base_form_T: { T }
+\cs_new:Npn \__zutil_cs_base_form_F: { F }
 
 %%
 %% l3tl extras

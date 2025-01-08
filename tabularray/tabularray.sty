@@ -906,7 +906,7 @@
         \exp_args:NcV \NewDocumentCommand
           { __tblr_table_cmd_ \l__tblr_tmpa_tl :w } \l__tblr_tmpb_tl { #4 }
         %% we can not use \cs_if_exist:NTF here (see issue #328)
-        \__zutil_cs_if_defined:NTF #1
+        \zutil_cs_if_defined:NTF #1
           {
             \cs_set_eq:cN { __tblr_table_cmd_ \l__tblr_tmpa_tl _saved:w } #1
           }
@@ -927,7 +927,7 @@
   }
 
 \cs_new:Npn \__tblr_if_table_command:NTF #1
-  { \__zutil_cs_if_defined:cTF { __tblr_table_cmd_ \cs_to_str:N #1 :w } }
+  { \zutil_cs_if_defined:cTF { __tblr_table_cmd_ \cs_to_str:N #1 :w } }
 
 \cs_new_protected:Npn \__tblr_enable_table_commands:
   {

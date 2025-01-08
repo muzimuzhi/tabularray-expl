@@ -308,12 +308,12 @@
 
 \cs_new:Npn \__zutil_debug_use:N #1
   {
-    \__zutil_cs_if_defined:NTF #1
+    \zutil_cs_if_defined:NTF #1
       { \cs_replacement_spec:N #1 } { \tl_to_str:n { undefined } }
   }
 \cs_new:Npn \__zutil_debug_use:c #1
   {
-    \__zutil_cs_if_defined:cTF {#1}
+    \zutil_cs_if_defined:cTF {#1}
       { \cs_replacement_spec:c {#1} } { \tl_to_str:n { undefined } }
   }
 

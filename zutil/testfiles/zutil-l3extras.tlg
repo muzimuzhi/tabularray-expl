@@ -1,14 +1,14 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
 ============================================================
-TEST: \__zutil_cs_if_defined:NTF 
+TEST: \zutil_cs_if_defined:NTF 
 ============================================================
 TRUE
 TRUE
 TRUE
 ============================================================
 ============================================================
-TEST: \__zutil_cs_if_defined:cTF 
+TEST: \zutil_cs_if_defined:cTF 
 ============================================================
 TRUE
 TRUE

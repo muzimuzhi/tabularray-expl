@@ -49,33 +49,35 @@
     \bool_if:NT #3
       {
         \cs_generate_variant:cn
-          { #1: \__zutil_cs_get_base:w #2 \q_stop } { #2 }
+          { #1: \__zutil_cs_sig_base_form:w #2 \q_stop } { #2 }
       }
   }
-\cs_new:Npn \__zutil_cs_get_base:w #1
+\cs_new:Npn \__zutil_cs_sig_base_form:w #1
   {
     \cs_if_eq:NNF #1 \q_stop
       {
-        \cs_if_exist_use:cF { __zutil_cs_base_form_#1: }
+        \cs_if_exist_use:cF { __zutil_cs_sig_base_form_#1: }
           {
             #1
             \msg_expandable_error:nnn
               { zutil } { cs/invalid-arg-spec } { #1 }
           }
-        \__zutil_cs_get_base:w
+        \__zutil_cs_sig_base_form:w
       }
   }
-\cs_new:Npn \__zutil_cs_base_form_N: { N }
-\cs_new:Npn \__zutil_cs_base_form_c: { N }
-\cs_new:Npn \__zutil_cs_base_form_n: { n }
-\cs_new:Npn \__zutil_cs_base_form_o: { n }
-\cs_new:Npn \__zutil_cs_base_form_f: { n }
-\cs_new:Npn \__zutil_cs_base_form_e: { n }
-\cs_new:Npn \__zutil_cs_base_form_x: { n }
-\cs_new:Npn \__zutil_cs_base_form_V: { n }
-\cs_new:Npn \__zutil_cs_base_form_v: { n }
-\cs_new:Npn \__zutil_cs_base_form_T: { T }
-\cs_new:Npn \__zutil_cs_base_form_F: { F }
+% space for time. l3doc uses a \str_case:nnTF in
+% \@@_signature_base_form_aux:n (<@@=codedoc>)
+\cs_new:Npn \__zutil_cs_sig_base_form_N: { N }
+\cs_new:Npn \__zutil_cs_sig_base_form_c: { N }
+\cs_new:Npn \__zutil_cs_sig_base_form_n: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_o: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_f: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_e: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_x: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_V: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_v: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_T: { T }
+\cs_new:Npn \__zutil_cs_sig_base_form_F: { F }
 
 %%
 %% l3tl extras

@@ -29,7 +29,8 @@
 
 \msg_new:nnn { zutil } { cs/invalid-arg-spec }
   {
-    Invalid~argument~specifier~'#1'.
+    Invalid~argument~specifier~'#1'.~
+    Accepted~specifiers~are~'NcnofexVvpTF'.
   }
 
 % Example:
@@ -67,6 +68,7 @@
   }
 % space for time. l3doc uses a \str_case:nnTF in
 % \@@_signature_base_form_aux:n (<@@=codedoc>)
+% Specifiers 'w' and 'D' are _not_ accepted.
 \cs_new:Npn \__zutil_cs_sig_base_form_N: { N }
 \cs_new:Npn \__zutil_cs_sig_base_form_c: { N }
 \cs_new:Npn \__zutil_cs_sig_base_form_n: { n }
@@ -76,6 +78,7 @@
 \cs_new:Npn \__zutil_cs_sig_base_form_x: { n }
 \cs_new:Npn \__zutil_cs_sig_base_form_V: { n }
 \cs_new:Npn \__zutil_cs_sig_base_form_v: { n }
+\cs_new:Npn \__zutil_cs_sig_base_form_p: { p }
 \cs_new:Npn \__zutil_cs_sig_base_form_T: { T }
 \cs_new:Npn \__zutil_cs_sig_base_form_F: { F }
 

@@ -27,6 +27,13 @@
   \TYPE { [before]~\cs_meaning:N \zutil_set:V }
   \zutil_cs_ensure_variant:N \zutil_set:V
   \TYPE { [after]~\cs_meaning:N \zutil_set:V }
+  \TYPE { [before]~\cs_meaning:N \cs_new:Npo }
+  \zutil_cs_ensure_variant:N \cs_new:Npo
+  \TYPE { [after]~\cs_meaning:N \cs_new:Npo }
+}
+
+\TEST{\zutil_cs_ensure_variant:N invalid~specifier}{
+  \zutil_cs_ensure_variant:N \exp_after:wc
   \zutil_cs_ensure_variant:N \zutil_set:X
 }
 

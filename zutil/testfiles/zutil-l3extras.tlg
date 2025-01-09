@@ -19,9 +19,30 @@ TEST: \zutil_cs_ensure_variant:N
 ============================================================
 [before] undefined
 [after] \protected\long macro:->\exp_args:NV \zutil_set:n 
+[before] undefined
+[after] \protected\long macro:->\exp_args:NNpo \cs_new:Npn 
+============================================================
+============================================================
+TEST: \zutil_cs_ensure_variant:N invalid specifier
+============================================================
 ! Use of \??? doesn't match its definition.
 <argument> \???  
-                 ! Package zutil Error: Invalid argument specifier 'X'.
+                 ! Package zutil Error: Invalid argument specifier 'w'. Acce...
+l. ...}
+If you say, e.g., `\def\a1{...}', then you must always
+put `1' after `\a', since control sequence names are
+made up of letters only. The macro here has not been
+followed by the required stuff, so I'm ignoring it.
+! LaTeX Error: Variant form 'wc' deprecated for base form '\exp_after:wN'. One should not change an argument from type 'w' to type 'w': base form is already a variant.
+Type <return> to continue.
+ ...                                              
+l. ...}
+LaTeX does not know anything more about this error, sorry.
+Try typing <return> to proceed.
+If that doesn't work, type X <return> to quit.
+! Use of \??? doesn't match its definition.
+<argument> \???  
+                 ! Package zutil Error: Invalid argument specifier 'X'. Acce...
 l. ...}
 If you say, e.g., `\def\a1{...}', then you must always
 put `1' after `\a', since control sequence names are
@@ -34,7 +55,7 @@ l. ...}
 This is a coding error.
 LaTeX has been asked to use a control sequence '\zutil_set:X':
 this has not been defined yet.
-[test] 2 error(s) encountered in this test.
+[test] 4 error(s) encountered in this test.
 ============================================================
 ============================================================
 TEST: \tl_trim_spaces:n 
@@ -159,4 +180,4 @@ The sequence \g_tmpa_seq is empty
 [test] 2 error(s) encountered in this test.
 ============================================================
 ***************
-[test] 4 error(s) encountered.
+[test] 6 error(s) encountered.

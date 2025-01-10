@@ -10,15 +10,15 @@
 \START
 
 \TEST{\zutil_cs_if_defined:NTF}{
-  \zutil_cs_if_defined:NTF \zutil_set:n     \TRUE \ERROR
-  \zutil_cs_if_defined:NTF \scan_stop:      \TRUE \ERROR
-  \zutil_cs_if_defined:NTF \tex_undefined:D \ERROR \TRUE
+  \zutil_cs_if_defined:NTF \zutil_set:n     \PASSED \FAILED
+  \zutil_cs_if_defined:NTF \scan_stop:      \PASSED \FAILED
+  \zutil_cs_if_defined:NTF \tex_undefined:D \FAILED \PASSED
 }
 
 \TEST{\zutil_cs_if_defined:cTF}{
-  \zutil_cs_if_defined:cTF { zutil_set:n }      \TRUE \ERROR
-  \zutil_cs_if_defined:cTF { scan_stop: }       \TRUE \ERROR
-  \zutil_cs_if_defined:cTF { tex_undefined:D }  \ERROR \TRUE
+  \zutil_cs_if_defined:cTF { zutil_set:n }      \PASSED \FAILED
+  \zutil_cs_if_defined:cTF { scan_stop: }       \PASSED \FAILED
+  \zutil_cs_if_defined:cTF { tex_undefined:D }  \FAILED \PASSED
 }
 
 \TEST{\zutil_cs_ensure_variant:N}{

@@ -37,11 +37,21 @@
   \zutil_cs_ensure_variant:N \zutil_set:X
 }
 
+\TEST{\zutil_prg_new_conditional_tl_if_in:Nnn}{
+  \zutil_prg_new_conditional_tl_if_in:Nnn \test_if_colon_in:n {:} { p, TF }
+  \test_if_colon_in:nTF { ab } { \FAILED } { \PASSED }
+  \bool_if:nTF { \test_if_colon_in_p:n { a:b } } { \PASSED } { \FAILED }
+
+  \zutil_prg_new_conditional_tl_if_in:Non \test_if_str_colon_in:n
+    { \c_colon_str } { T, F }
+  \test_if_str_colon_in:nF { ab } { \PASSED }
+  \zutil_cs_ensure_variant:N \test_if_str_colon_in:eT
+  \test_if_str_colon_in:eT { a \c_colon_str b } { \PASSED }
+}
+
 \OMIT
-% \char_generate:nn {33} {10} => character "!" with catcode 10
-% \char_generate:nn {65} {10} => character "A" with catcode 10
-\tl_set:Ne \l_tmpa_tl { \char_generate:nn {33} {10} }
-\tl_set:Ne \l_tmpb_tl { \char_generate:nn {65} {10} }
+\tl_set:Ne \l_tmpa_tl { \char_generate:nn {33} {10} } % "!" with catcode 10
+\tl_set:Ne \l_tmpb_tl { \char_generate:nn {65} {10} } % "A" with catcode 10
 
 \cs_set_protected:Npn \test:w #1
   {

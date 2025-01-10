@@ -89,6 +89,37 @@
 %% l3tl extras
 %%
 
+% Example
+%     \zutil_prg_new_conditional_tl_if_in:Nnn \zutil_if_colon_in:n
+%       { : } { TF }
+% defines \zutil_if_colon_in:nTF so that
+%     \zutil_if_colon_in:nTF {<token list>} {<true code>} {<false code>}
+% is an expandable variant of
+%     \tl_if_in:nnTF {<token list>} { : } {<true code>} {<false code>}
+
+% #1: func = cs, #2: tl = test-in, #4: clist = conditions
+% #2 and #3 are curried
+\cs_new_protected:Npn \zutil_prg_new_conditional_tl_if_in:Nnn #1
+  {
+    \exp_args:Ne \__zutil_prg_new_conditional_tl_if_in:nNnn
+      { \exp_last_unbraced:Nf \use_i:nnn \cs_split_function:N #1 } #1
+  }
+% #1: str = name, #2: func = cs, #3: tl = test-in, #4: clist = conditions
+\cs_new_protected:Npn \__zutil_prg_new_conditional_tl_if_in:nNnn #1#2#3#4
+  {
+    \cs_new:cpn { #1_aux : w } ##1 #3 { }
+    \prg_new_conditional:Npne #2 ##1 {#4}
+      {
+        \exp_not:N \tl_if_empty:oTF
+          { \exp_not:c { #1_aux : w } ##1 {} {} #3 }
+          { \exp_not:N \prg_return_false: }
+          { \exp_not:N \prg_return_true: }
+      }
+  }
+\zutil_cs_ensure_variant:N \prg_new_conditional:Npne
+\cs_generate_variant:Nn \zutil_prg_new_conditional_tl_if_in:Nnn
+  { No, NV, Ne }
+
 % To better understand how \tl_trim_spaces:n works, consult latex3 commits 
 % dc98b75d (\tl_trim_spaces:n trimming recursively, only explicit spaces.,
 % 2011-08-13)

@@ -24,8 +24,12 @@
         %
         % \@pushfilename records current states of \makeat(letter|other)
         % and \ExplSyntax(On|Off), and \@popfilename restores them.
-        % \makeatletter and \ExplSyntaxOff set initial catcode scheme for
-        % modules, especially for the description in \ProvidesExplFile.
+        % This way, \zutil_load_module:n can be used in any category code
+        % schemes.
+        %
+        % \makeatletter and \ExplSyntaxOff set initial category code
+        % scheme for modules, especially for the description arg of
+        % \ProvidesExplFile.
         \@pushfilename
         \xdef\@currname{zutil-#1.code.tex}
         \makeatletter

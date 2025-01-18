@@ -51,7 +51,7 @@
       }
   }
 
-\IfExplAtLeastTF{2024-12-07}
+\IfExplAtLeastTF{2024-12-07} % noqa: S204
   {
     % #1 and #2 are curried
     \cs_new_protected:Npn \__zutil_debug_gput_collector:Nn
@@ -103,7 +103,7 @@
                 % [label1]
                 % [label1]label2/label3/.../labeln
                 [ \l__zutil_tmp_tl ]
-                \seq_use:Nn \l__zutil_debug_labels_seq {/} ~
+                \seq_use:Nn \l__zutil_debug_labels_seq { / } ~
               }
             % TBD: which way is better/quicker, \exp_not:n or
             %      \exp_args:No \cmd { \tl_to_str:n {#1} }?
@@ -136,7 +136,7 @@
 %   { [#1] }
 \cs_new:Npn \zutil_debug_use_text:n #1
   {
-    \prg_replicate:nn {\l__zutil_debug_level_int}
+    \prg_replicate:nn { \l__zutil_debug_level_int }
       { \c_space_tl \c_space_tl } >>#1<<
   }
 
@@ -339,12 +339,12 @@
 %     \ZutilDebug[label=x]{msg}
 %     \ExpandArgs{e}\ZutilDebug{\value{page}}[label=x]
 %     \ExpandArgs{c}\ZutilDebugCmd{__tblr_...}
-\NewDocumentCommand \ZutilDebug { O{} m O{} }
+\NewDocumentCommand \ZutilDebug { O{} m O{} } % noqa: S204
   {
     \zutil_debug:nn {#1,#3} {#2}
   }
 
-\NewDocumentCommand \ZutilDebugCmd { O{} m O{} }
+\NewDocumentCommand \ZutilDebugCmd { O{} m O{} } % noqa: S204
   {
     \zutil_debug:nN {#1,#3} #2
   }

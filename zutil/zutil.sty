@@ -31,7 +31,7 @@
         % scheme for modules, especially for the description arg of
         % \ProvidesExplFile.
         \@pushfilename
-        \xdef\@currname{zutil-#1.code.tex}
+        \xdef\@currname{zutil-#1.code.tex} % noqa: s204
         \makeatletter
         \ExplSyntaxOff
         \exp_args:No \file_input:n { \@currname }

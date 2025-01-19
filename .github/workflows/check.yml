@@ -12,6 +12,11 @@ on:
     # https://crontab.guru/#21_12_*_*_5
     - cron: "21 12 * * 5"
   workflow_dispatch:
+    inputs:
+      update-cache:
+        description: "If update the TeX live cache"
+        type: boolean
+        default: false
 
 jobs:
   tests:
@@ -32,7 +37,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Delete TeX Live cache(s)
-      if: github.event_name == 'schedule'
+      if: github.event_name == 'schedule' || inputs.update-cache
       # https://cli.github.com/manual/gh_cache_list
       # https://cli.github.com/manual/gh_cache_delete
       run: |

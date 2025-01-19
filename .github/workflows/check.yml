@@ -1,5 +1,3 @@
-# Based on https://github.com/CTeX-org/ctex-kit/blob/master/.github/workflows/test.yml
-
 name: Test suite
 
 on:
@@ -27,9 +25,27 @@ jobs:
     name: "Tests: ${{ matrix.config }}\
       ${{ matrix.option != '' && ' (latex-dev)' || '' }}"
     runs-on: ubuntu-latest
+    permissions:
+      actions: write # for "gh cache delete"
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Delete TeX Live cache(s)
+      if: github.event_name == 'schedule'
+      # https://cli.github.com/manual/gh_cache_list
+      # https://cli.github.com/manual/gh_cache_delete
+      run: |
+        # to find why 'cache_keys' might contain dup items
+        set -x
+        cache_keys=$(\
+            gh cache list --key setup-texlive --json key --jq '.[].key')
+        for key in $cache_keys; do
+            echo "Deleting cache \"$key\""
+            gh cache delete "$key"
+        done
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup TeX Live
       # v3.3.4 is too sensitive to cache update

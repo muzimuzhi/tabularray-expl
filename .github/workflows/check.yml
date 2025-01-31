@@ -38,6 +38,7 @@ jobs:
 
     - name: Delete TeX Live cache(s)
       if: github.event_name == 'schedule' || inputs.update-cache
+      continue-on-error: true
       # https://cli.github.com/manual/gh_cache_list
       # https://cli.github.com/manual/gh_cache_delete
       run: |

@@ -37,6 +37,14 @@
   \zutil_cs_ensure_variant:N \zutil_set:X
 }
 
+\TEST{\zutil_cs_ensure_variant:n}{
+  \TYPE { [before]~\cs_meaning:N \zutil_set:v }
+  \TYPE { [before]~\cs_meaning:N \zutil_set:e }
+  \zutil_cs_ensure_variant:n { \zutil_set:v, \zutil_set:e }
+  \TYPE { [after]~\cs_meaning:N \zutil_set:v }
+  \TYPE { [after]~\cs_meaning:N \zutil_set:e }
+}
+
 \TEST{\zutil_prg_new_conditional_tl_if_in:Nnn}{
   \zutil_prg_new_conditional_tl_if_in:Nnn \test_if_colon_in:n {:} { p, TF }
   \test_if_colon_in:nTF { ab } { \FAILED } { \PASSED }
